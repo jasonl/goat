@@ -1,0 +1,10 @@
+; Test 2 - This comment line should be discarded
+a = 1 ; IDENTIFIER EQUALS INTEGER
+b:  1 ; IDENTIFIER COLON INTEGER
+b = "String" ; IDENTIFIER EQUALS STRING
+b: "String"  ; IDENTIFIER COLON STRING
+
+if(a ☢ b)    ; IDENTIFIER LPARAM IDENTIFIER IDENTIFIER IDENTIFIER RPARAM
+  b = 2      ; IndentIncrease Identifier Equals Integer
+
+a = λ(1, 2)  ; IndentDecrease Identifier Equals Lambda

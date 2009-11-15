@@ -1,0 +1,3 @@
+; A Comment, this should be ignored
+λ( test: 123, test2: "Bullshit")
+  print test2

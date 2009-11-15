@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall
-SRC = *.c
+SRC = core/*.c
 
-goat: *.c
+goat: core/*.c core/*.h
 	@${CC} ${CFLAGS} ${SRC} -o goat
