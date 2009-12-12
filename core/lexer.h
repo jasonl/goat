@@ -11,6 +11,37 @@
 // 32-bit wide integer to hold the code-point value
 typedef unsigned long w_char;
 
+// Token types
+enum TOKEN_TYPE { Whitespace,
+                  Indent,
+                  Comment,
+                  Newline,
+                  Identifier,
+                  RightParen,
+                  LeftParen,
+                  Lambda,
+                  Colon,
+                  Period,
+                  Comma,
+                  Equals,
+                  End,
+                  Integer,
+                  String,
+                  If,
+                  Else,
+                  HashRocket,
+                  IndentIncrease,
+                  IndentDecrease
+                  };
+
+// holds a lexical token
+typedef struct _Token {
+    enum TOKEN_TYPE type;
+    int line_no;
+    char *content;
+    struct _Token *next;
+} Token;
+
 // This struct holds the UTF-8 and Unicode representation
 typedef struct {
     w_char wchar;            // The unencoded value

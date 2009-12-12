@@ -40,6 +40,7 @@ typedef struct _Token {
 
 typedef struct _GoatState {
     Token *tokens;          // Head node of the linked list of lexical tokens
+    Node *astRoot;          // Root node of the AST tree
 } GoatState;
 
 void goatPrintTokens( GoatState* );

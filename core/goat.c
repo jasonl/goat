@@ -6,6 +6,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <malloc.h>
 
 #include "goat.h"
 #include "lexer.h"
@@ -62,5 +63,9 @@ void goatPrintTokens( GoatState *G ) {
         printf("\n");
         curr = curr->next;
     }
+}
+
+void goatFatalError( char *msg ) {
+    printf("FATAL ERROR: %s\n", msg);
 }
 

@@ -26,6 +26,9 @@
     default: lexer_state = Identifier; thunk_start = curr; thunk_end=curr+cp.bytes-1; \
    }
 
+// Implements a basic state-machine based tokenizer, which splits the source
+// file into a linked list of Tokens. Expects a UTF8-encoded source file, and
+// maintains the UTF8 encoding for string literals and identifiers.
 int goatLexer( GoatState *G, char* sourceFileName ) {
     int indent=0, prev_indent=0, line_no = 1; // Number of indent spaces on the current and previous lines
     char *curr, *next, *end; // Position pointers into the source code
@@ -50,7 +53,7 @@ int goatLexer( GoatState *G, char* sourceFileName ) {
         printf("%s", cp.utf8);
         switch( lexer_state ) {
 
-            case Indent:
+            case Indent: // Indent is just Whitespace before any non-space characters on a line.
                 if(cp.wchar == ' ') { indent++; break; }
                 PUSH_INDENT_TOKEN;
                 if(cp.wchar >= 0x30 && cp.wchar <= 0x39) { lexer_state = Integer; thunk_start = curr; thunk_end = curr+cp.bytes-1; break; }
@@ -97,11 +100,13 @@ int goatLexer( GoatState *G, char* sourceFileName ) {
                         break; // If it's not listed above, it's part of the identifier
                 }
                 break;
+                
             case Integer:
                 if( cp.wchar >= '0' && cp.wchar <= '9') { thunk_end+=cp.bytes; break; }
                 PUSH_TOKEN;
                 DEFAULT_LEXER_STATE_TRANSITIONS(cp.wchar);
                 break;
+
             case String:
                 switch(cp.wchar) {
                     case '"':
