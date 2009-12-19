@@ -11,20 +11,21 @@
 #include "lexer.h"
 
 #define DEFAULT_LEXER_STATE_TRANSITIONS( next_char ) \
-   switch( next_char ) { \
-    case '(': lexer_state = LeftParen; break; \
-    case ')': lexer_state = RightParen; break; \
-    case '"': lexer_state = String; thunk_start = next; thunk_end=next; break; \
-    case '.': lexer_state = Period; break; \
-    case 0x03bb: lexer_state = Lambda; break; \
-    case ':': lexer_state = Colon; break; \
-    case '=': lexer_state = Equals; break; \
-    case ',': lexer_state = Comma; break; \
-    case ';': lexer_state = Comment; break; \
-    case ' ': lexer_state = Whitespace; break; \
-    case '\n': lexer_state = Newline; break; \
-    default: lexer_state = Identifier; thunk_start = curr; thunk_end=curr+cp.bytes-1; \
-   }
+  switch( next_char ) {							\
+ case '(': lexer_state = LeftParen; break;				\
+ case ')': lexer_state = RightParen; break;				\
+ case '"': lexer_state = String; thunk_start=next; thunk_end=next; break; \
+ case '.': lexer_state = Period; break;					\
+ case 0x03bb: lexer_state = Lambda; break;     \
+ case ':': lexer_state = Colon; break;	       \
+ case '=': lexer_state = Equals; break;	       \
+ case ',': lexer_state = Comma; break;	       \
+ case ';': lexer_state = Comment; break;       \
+ case ' ': lexer_state = Whitespace; break;    \
+ case '\n': lexer_state = Newline; break;      \
+ case '\r': lexer_state = Newline; break;      \
+ default: lexer_state = Identifier; thunk_start = curr; thunk_end=curr+cp.bytes-1; \
+}
 
 // Implements a basic state-machine based tokenizer, which splits the source
 // file into a linked list of Tokens. Expects a UTF8-encoded source file, and
@@ -50,6 +51,10 @@ int goatLexer( GoatState *G, char* sourceFileName ) {
     while (next < end) {
         curr = next; // Save the address of the current character
         goatGetNextCodePoint( &cp, &next, &end);
+
+	// Ignore \r
+	if ( cp.wchar == '\r') goatGetNextCodePoint( &cp, &next, &end );
+
         printf("%s", cp.utf8);
         switch( lexer_state ) {
 
@@ -82,7 +87,29 @@ int goatLexer( GoatState *G, char* sourceFileName ) {
                 prev_indent = indent; indent = 0; line_no++; lexer_state = Indent; break;
 
             case Newline:
-                prev_indent = indent; indent = 0; line_no++; lexer_state = Indent; break;
+                prev_indent = indent; indent = 0; line_no++;
+
+		if (cp.wchar == ' ') {
+		  lexer_state = Indent;
+		  break;
+		}
+
+		PUSH_INDENT_TOKEN;
+
+		switch( cp.wchar ) {
+		case '(': lexer_state = LeftParen; PUSH_EMPTY_TOKEN; break;
+		case ')': lexer_state = RightParen; PUSH_EMPTY_TOKEN; break;		
+		case '"': lexer_state = String; thunk_start=next; thunk_end=next; break;
+		case '.': lexer_state = Period; PUSH_EMPTY_TOKEN;  break;					
+		case 0x03bb: lexer_state = Lambda; PUSH_EMPTY_TOKEN; break;
+		case ':': lexer_state = Colon; PUSH_EMPTY_TOKEN; break;
+		case '=': lexer_state = Equals; PUSH_EMPTY_TOKEN; break;		
+		case ',': lexer_state = Comma; PUSH_EMPTY_TOKEN; break;		
+		case ';': lexer_state = Comment; PUSH_EMPTY_TOKEN; break;	       
+		case '\n': lexer_state = Newline; break;    
+		default: lexer_state = Identifier; thunk_start = curr; thunk_end=curr+cp.bytes-1; \
+		}	
+		break;
 
             case Identifier:
                 switch(cp.wchar) {
@@ -91,6 +118,7 @@ int goatLexer( GoatState *G, char* sourceFileName ) {
                     case '(': PUSH_TOKEN; lexer_state = LeftParen; break;
                     case 0x03bb: PUSH_TOKEN; lexer_state = Lambda; break;
                     case '.': PUSH_TOKEN; lexer_state = Period; break;
+        	    case '"': PUSH_TOKEN; lexer_state = String; break;
                     case ':': PUSH_TOKEN; lexer_state = Colon; break;
                     case ',': PUSH_TOKEN; lexer_state = Comma; break;
                     case ')': PUSH_TOKEN; lexer_state = RightParen; break;

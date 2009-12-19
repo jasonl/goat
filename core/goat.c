@@ -8,11 +8,12 @@
 #include <stdlib.h>
 #include <malloc.h>
 
-#include "goat.h"
 #include "lexer.h"
+#include "goat.h"
 
+#ifndef TEST
 int main(int argc, char** argv) {
-    GoatState *G;
+  GoatState *G;
     
     if (argc < 2) {
         printf("You must supply an input file\n");
@@ -25,6 +26,7 @@ int main(int argc, char** argv) {
     goatPrintTokens( G );
     return (EXIT_SUCCESS);
 }
+#endif
 
 void goatPrintTokens( GoatState *G ) {
     Token *curr = G->tokens;
