@@ -15,16 +15,23 @@
 int main(int argc, char** argv) {
   GoatState *G;
     
-    if (argc < 2) {
-        printf("You must supply an input file\n");
-        return (EXIT_FAILURE);
+  G = (GoatState*)malloc( sizeof(GoatState) );
+  G->verbose = 0;
+  G->sourceFile = NULL;
+  
+  goatParseArguments( G, argc, argv );
+
+  if (G->sourceFile == NULL) {
+    printf("You must supply an input file\n");
+    free(G);
+    return ( EXIT_FAILURE );
     }
+  
+  goatLexer( G, G->sourceFile );
+  if(G->verbose) goatPrintTokens( G );
 
-    G = (GoatState *)malloc(sizeof(GoatState));
-
-    goatLexer( G, argv[1] );
-    goatPrintTokens( G );
-    return (EXIT_SUCCESS);
+  free(G);
+  return ( EXIT_SUCCESS );
 }
 #endif
 
@@ -32,6 +39,8 @@ void goatPrintTokens( GoatState *G ) {
     Token *curr = G->tokens;
 
     if (curr == 0) { printf("No tokens\n"); return; }
+    
+    printf("Token List\n");
 
     while(curr != 0) {
         printf("%d ", curr->line_no);
@@ -70,4 +79,38 @@ void goatPrintTokens( GoatState *G ) {
 void goatFatalError( char *msg ) {
     printf("FATAL ERROR: %s\n", msg);
 }
+
+void goatParseArguments( GoatState *G, int argc, char *argv[]) {
+  int i;
+
+  if (argc == 1) {
+    printf("Goat - An experimental language\n");
+    printf("----------\n");
+    printf("Correct usage:\n");
+    printf("goat <options> input_file.gt\n");
+    printf("options:\n");
+    printf("-v              Run in verbose mode.\n");
+    exit(0);
+  }
+  
+  for ( i=1; i <= (argc - 1); ++i) {
+
+    if(argv[i][0] == '-') {
+      // Option switch
+      switch( argv[i][1] ){
+      case 'v':
+	G->verbose = 1;
+	break;
+      default:
+	printf("Invalid option: %s\n", argv[i] );
+	exit(0);
+      }
+    }
+    else {
+      // Input file
+      if(G->sourceFile == NULL) G->sourceFile = argv[i];
+    }
+  }
+}
+
 

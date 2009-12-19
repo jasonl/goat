@@ -54,8 +54,10 @@ int goatLexer( GoatState *G, char* sourceFileName ) {
 
 	// Ignore \r
 	if ( cp.wchar == '\r') goatGetNextCodePoint( &cp, &next, &end );
+	
+	// Print the character in verbose mode
+        if (G->verbose) printf("%s", cp.utf8);
 
-        printf("%s", cp.utf8);
         switch( lexer_state ) {
 
             case Indent: // Indent is just Whitespace before any non-space characters on a line.
@@ -83,7 +85,10 @@ int goatLexer( GoatState *G, char* sourceFileName ) {
                 break;
 
             case Comment:
-                while(cp.wchar != '\n' && next < end) { goatGetNextCodePoint( &cp, &next, &end); printf("%s", cp.utf8); }
+                while(cp.wchar != '\n' && next < end) { 
+		  goatGetNextCodePoint( &cp, &next, &end); 
+		  if(G->verbose) printf("%s", cp.utf8); 
+		}
                 prev_indent = indent; indent = 0; line_no++; lexer_state = Indent; break;
 
             case Newline:

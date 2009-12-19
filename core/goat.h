@@ -14,10 +14,12 @@ struct _Node;
 typedef struct _GoatState {
   struct _Token *tokens;          // Head node of the linked list of lexical tokens
   struct _Node *astRoot;          // Root node of the AST tree
-  int verbose;                      // Print more information than usual
+  int verbose;                    // Print more information than usual
+  char *sourceFile;               // Input filename
 } GoatState;
 
 void goatPrintTokens( GoatState* );
+void goatParseArguments( GoatState*, int, char**);
 
 #endif	/* _GOAT_H */
 
