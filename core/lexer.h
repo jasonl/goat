@@ -79,7 +79,9 @@ typedef struct {
   last_token = t; t = (Token *)malloc(sizeof(Token)); \
 
 // Function prototypes
-int goatLexer( GoatState*, char* );
+struct _GoatState; // declared in goat.h
+
+int goatLexer( struct _GoatState*, char* );
 void goatMapFileToMemory( char*, char**, char** );
 void goatGetNextCodePoint( CodePoint*, char**, char**);
 

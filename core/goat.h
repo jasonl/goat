@@ -8,39 +8,13 @@
 #ifndef _GOAT_H
 #define	_GOAT_H
 
-// Token types
-enum TOKEN_TYPE { Whitespace,
-                  Indent,
-                  Comment,
-                  Newline,
-                  Identifier,
-                  RightParen,
-                  LeftParen,
-                  Lambda,
-                  Colon,
-                  Period,
-                  Comma,
-                  Equals,
-                  End,
-                  Integer,
-                  String,
-                  If,
-                  Else,
-                  HashRocket,
-                  IndentIncrease,
-                  IndentDecrease
-                  };
-
-typedef struct _Token {
-    enum TOKEN_TYPE type;
-    int line_no;
-    char *content;
-    struct _Token *next;
-} Token;
+struct _Token;
+struct _Node;
 
 typedef struct _GoatState {
-    Token *tokens;          // Head node of the linked list of lexical tokens
-    Node *astRoot;          // Root node of the AST tree
+  struct _Token *tokens;          // Head node of the linked list of lexical tokens
+  struct _Node *astRoot;          // Root node of the AST tree
+  int verbose;                      // Print more information than usual
 } GoatState;
 
 void goatPrintTokens( GoatState* );
