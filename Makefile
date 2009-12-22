@@ -8,3 +8,4 @@ goat: core/*.c core/*.h
 
 goat-test: core/*.c core/*.h test/*.c test/*.gt test/*.h
 	@$(CC) ${CFLAGS} -D TEST -I ./core ${SRC} ${TEST_SRC} -o goat-test
+	@./goat-test

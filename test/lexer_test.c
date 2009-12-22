@@ -49,7 +49,7 @@ void testFunctionLexing() {
   printf("\n");
   free(G);
 }
-s
+
 void testTokenLexing() {
   GoatState *G;
   Token *T;
@@ -74,7 +74,7 @@ void testTokenLexing() {
   T = T->next;
 
   // The lexer should skip a comment here
-s  assert( T->type == Identifier, "Fifth token was not an Identifier" );
+  assert( T->type == Identifier, "Fifth token was not an Identifier" );
   T = T->next;
 
   assert( T->type == Period, "Sixth token was not a Period" );
