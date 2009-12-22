@@ -4,7 +4,10 @@
 void assert( int, char* );
 
 void LexerTest();
-void TestTokenLexing();
-void TestFunctionLexing();
+void testTokenLexing();
+void testFunctionLexing();
+
+void ParserTest();
+void testExpressionParsing();
 
 #endif

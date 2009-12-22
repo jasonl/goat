@@ -20,6 +20,6 @@ typedef struct _GoatState {
 
 void goatPrintTokens( GoatState* );
 void goatParseArguments( GoatState*, int, char**);
-
+void goatFatalError( char* );
 #endif	/* _GOAT_H */
 

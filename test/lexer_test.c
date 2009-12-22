@@ -6,23 +6,24 @@
 
 int main() {
   LexerTest();
+  ParserTest();
   return 0;
 }
 
 void LexerTest() {
   printf("Lexer Test\n");
   
-  TestTokenLexing();
-  TestFunctionLexing();
+  testTokenLexing();
+  testFunctionLexing();
 }
 
-void TestFunctionLexing() {
+void testFunctionLexing() {
   GoatState *G;
   Token *T;
   
   G = malloc(sizeof(GoatState));
 
-  printf("TestFunctionLexing");  
+  printf("- testFunctionLexing");  
 
   goatLexer(G, "test/function_test.gt");
   T = G->tokens;
@@ -48,14 +49,14 @@ void TestFunctionLexing() {
   printf("\n");
   free(G);
 }
-
-void TestTokenLexing() {
+s
+void testTokenLexing() {
   GoatState *G;
   Token *T;
   
   G = malloc(sizeof(GoatState));
 
-  printf("TestFunctionLexing");  
+  printf("- testFunctionLexing");  
 
   goatLexer(G, "test/token_test.gt");
   T = G->tokens;
@@ -73,7 +74,7 @@ void TestTokenLexing() {
   T = T->next;
 
   // The lexer should skip a comment here
-  assert( T->type == Identifier, "Fifth token was not an Identifier" );
+s  assert( T->type == Identifier, "Fifth token was not an Identifier" );
   T = T->next;
 
   assert( T->type == Period, "Sixth token was not a Period" );
