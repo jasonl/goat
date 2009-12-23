@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
+#include <stdarg.h>
 
 #include "lexer.h"
 #include "goat.h"
@@ -78,6 +79,18 @@ void goatPrintTokens( GoatState *G ) {
 
 void goatFatalError( char *msg ) {
     printf("FATAL ERROR: %s\n", msg);
+}
+
+void goatError( int lineNo, char *fmt, ... ) {
+  va_list arg;
+  va_start( arg, fmt );
+#ifdef TEST
+  printf("\n");
+#endif
+  printf( "\x1b[1;31mError\x1b[0;37;00m:");
+  vprintf( fmt, arg );
+  printf( "[Line %d]\n", lineNo);
+  va_end(arg);
 }
 
 void goatParseArguments( GoatState *G, int argc, char *argv[]) {

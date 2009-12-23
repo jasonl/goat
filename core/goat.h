@@ -8,6 +8,9 @@
 #ifndef _GOAT_H
 #define	_GOAT_H
 
+#define TRUE 1
+#define FALSE 0
+
 struct _Token;
 struct _Node;
 
@@ -21,5 +24,6 @@ typedef struct _GoatState {
 void goatPrintTokens( GoatState* );
 void goatParseArguments( GoatState*, int, char**);
 void goatFatalError( char* );
+void goatError( int, char*, ... );
 #endif	/* _GOAT_H */
 
