@@ -47,9 +47,17 @@ typedef struct _Node {
 // Appends the subtree to a new node, and returns it; Note that it requires
 // an available Node* named newNode in scope.
 #define RETURN_SUBTREE( headNodeType, childSubTree ) \
-  newNode = astCreateNode( headNodeType ); \
-  newNode->parent = childSubTree; \
-  return newNode;
+  thisNode = astCreateNode( headNodeType ); \
+  thisNode->firstChild = childSubTree; \
+  childSubTree->parent = thisNode; \
+  return thisNode;
+
+// Creates a new terminal node (i.e. without any children) from the current
+// token, and returns it
+#define RETURN_TERMINAL_NODE( nodeType ) \
+  thisNode = astCreateNode( nodeType); \
+  thisNode->token = (*curr); \
+  return thisNode;
 
 // Function Prototypes
 //------------------------------------------------------------------------------

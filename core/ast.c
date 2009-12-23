@@ -83,35 +83,26 @@ void astFreeNode( Node *node ) {
 }
 
 MATCHER_FOR( Expression ) {
-  Node *newNode = NULL;
+  Node *thisNode = NULL;
   
   if( TOKEN_IS_A( String ) ) {
-    newNode = astCreateNode( StringLiteral );
-    newNode->token = *curr;
-    *curr = (*curr)->next;
-    return newNode;
+    RETURN_TERMINAL_NODE( StringLiteral );
   }
 
   if( TOKEN_IS_A( Integer )) {
-    newNode = astCreateNode( IntegerLiteral );
-    newNode->token = *curr;
-    *curr = (*curr)->next;
-    return newNode;
+    RETURN_TERMINAL_NODE( IntegerLiteral );
   }
 
   if( TOKEN_IS_A( Identifier )) {
-    newNode = astCreateNode( Variable );
-    newNode->token = *curr;
-    *curr = (*curr)->next;
-    return newNode;
+    RETURN_TERMINAL_NODE( Variable );
   }
 
-  if((newNode = MATCH( FunctionCall ))) {
-    return newNode;
+  if((thisNode = MATCH( FunctionCall ))) {
+    return thisNode;
   }
 
-  if((newNode = MATCH( FunctionDefinition ))) {
-    return newNode;
+  if((thisNode = MATCH( FunctionDefinition ))) {
+    return thisNode;
   }
   
   return NULL;
@@ -184,6 +175,14 @@ MATCHER_FOR( FunctionDefinition ) {
 }
 
 MATCHER_FOR( Parameter ) {
+  Node *thisNode, *newChild;
+
+  //TODO: Add matching for named parameters
+
+  if(( newChild = MATCH( Expression ))) {
+    RETURN_SUBTREE( Parameter, newChild );
+  }
+  
   return NULL;
 }
 

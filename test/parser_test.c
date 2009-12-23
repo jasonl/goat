@@ -57,26 +57,56 @@ void testFunctionCallParsing() {
 
   // Don't match a single identifier; that's a variable
   tokens = createToken( NULL, Identifier, "function_name");
-  assert(!(int)(astMatchFunctionCall( &tokens )), "Matched a lone Identifier as a function call");
+  assert( !(int)(astMatchFunctionCall( &tokens )), "Matched a lone Identifier as a function call");
 
   // Match a identifier-leftparen-rightparen sequence
   tokens = createToken( NULL, Identifier, "function_name");
   lastToken = createToken( tokens, LeftParen, NULL);
   createToken( lastToken, RightParen, NULL);
-  assert((int)(newNode = astMatchFunctionCall( &tokens )), "Function-call token stream not matched as FunctionCall");
-  assert(newNode->type == FunctionCall, "Function-call token stream not transformed into a FunctionCall AST-Node");
+  assert( (int)(newNode = astMatchFunctionCall( &tokens )), "Function-call token stream not matched as FunctionCall");
+  assert( newNode->type == FunctionCall, "Function-call token stream not transformed into a FunctionCall AST-Node");
   
   // Don't match an identifier-rightparen sequence
   tokens = createToken( NULL, Identifier, "function_name");
   lastToken = createToken( tokens, RightParen, NULL );
-  assert(!(int)(astMatchFunctionCall( &tokens )), "Matched a Identifier-RightParen sequence as a FunctionCall");
+  assert( !(int)(astMatchFunctionCall( &tokens )), "Matched a Identifier-RightParen sequence as a FunctionCall");
 
   // TODO: Function Call Parsing with parameters
   printf("\n");
 }
 
 void testFunctionParameterParsing() {
+  Token *tokens, *lastToken;
+  Node *newNode;
+  
+  printf( "- testFunctionParameterParsing");
 
+  // Match a single string literal
+  tokens = createToken( NULL, String, "Some string" );
+  assert( (int)(newNode = astMatchParameter( &tokens )), "String literal token not matched as Parameter");
+  assert( newNode->type == Parameter, "String literal not transformed into a Parameter AST-Node");
+  assert( (int)(newNode->firstChild), "No child-node was attached to the Parameter AST-Node");
+  assert( newNode->firstChild->type == StringLiteral, "Child node was not created as a StringLiteral AST-Node");
+
+  // Match a single string literal
+  tokens = createToken( NULL, Integer, "23212" );
+  assert( (int)(newNode = astMatchParameter( &tokens )), "Integer literal token not matched as Parameter");
+  assert( newNode->type == Parameter, "Integer literal not transformed into a Parameter AST-Node");
+  assert( (int)(newNode->firstChild), "No child-node was attached to the Parameter AST-Node");
+  assert( newNode->firstChild->type == IntegerLiteral, "Child node was not created as a IntegerLiteral AST-Node");
+  
+  // Should not match a single leftparen
+  tokens = createToken( NULL, LeftParen, NULL );
+  assert( !(int)astMatchParameter( &tokens ), "LeftParen token erroneously matched as Parameter AST-Node");
+
+  // Should not match a single RightParen
+  tokens = createToken( NULL, RightParen, NULL );
+  assert( !(int)astMatchParameter( &tokens ), "RightParen token erroneously matched as Parameter AST-Node");
+
+  // Should not match a single Colon
+  tokens = createToken( NULL, Colon, NULL );
+  assert( !(int)astMatchParameter( &tokens ), "Colon token erroneously matched as Parameter AST-Node");
+  printf("\n");
 }
 
 
