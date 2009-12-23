@@ -9,5 +9,6 @@ void testFunctionLexing();
 
 void ParserTest();
 void testExpressionParsing();
-
+void testFunctionCallParsing();
+void testFunctionParameterParsing();
 #endif
