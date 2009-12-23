@@ -15,6 +15,7 @@ void ParserTest() {
   testExpressionParsing();
   testFunctionCallParsing();
   testFunctionParameterParsing();
+  testFunctionDefinitionParsing();
   printf("\n");
 }
 
@@ -109,4 +110,23 @@ void testFunctionParameterParsing() {
   printf("\n");
 }
 
+void testFunctionDefinitionParsing() {
+  Token *tokens, *lastToken, *savedToken;
+  Node *newNode;
 
+  printf("- testFunctionDefinitionParsing");
+
+  // Should not match a lone parenthesis
+  tokens = createToken( NULL, LeftParen, NULL );
+  assert( !(int)astMatchParameter( &tokens ), "LeftParen token erroneously matched as a FunctionDefinition AST-Node");
+
+  // Should raise an error when a Lambda is not followed by a LeftParen
+  tokens = createToken( NULL, Lambda, NULL);
+  lastToken = createToken( tokens, RightParen, NULL);
+  savedToken = tokens;
+  assert( !(int)astMatchParameter( &tokens ), "Lambda-RightParen token stream should not match as a FunctionDefintiion AST-Node");
+  tokens = savedToken;
+  ASSERT_ERROR( astMatchParameter( &tokens ));
+
+  printf("\n");
+}

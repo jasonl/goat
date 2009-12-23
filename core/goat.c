@@ -81,17 +81,19 @@ void goatFatalError( char *msg ) {
     printf("FATAL ERROR: %s\n", msg);
 }
 
+#ifndef TEST
+// We don't use this during tests so we can replace this function with
+// an mocked goatError() to allow us to test that errors are raised. It's
+// in test/test_helper.c
 void goatError( int lineNo, char *fmt, ... ) {
   va_list arg;
   va_start( arg, fmt );
-#ifdef TEST
-  printf("\n");
-#endif
   printf( "\x1b[1;31mError\x1b[0;37;00m:");
   vprintf( fmt, arg );
   printf( "[Line %d]\n", lineNo);
   va_end(arg);
 }
+#endif
 
 void goatParseArguments( GoatState *G, int argc, char *argv[]) {
   int i;

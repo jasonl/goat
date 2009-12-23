@@ -171,6 +171,19 @@ MATCHER_FOR( FunctionCall) {
 }
 
 MATCHER_FOR( FunctionDefinition ) {
+  Node *thisNode, *newChild;
+  Token *savedcurr = *curr;
+
+  if( TOKEN_IS_NOT_A( Lambda )) { return NULL; }
+  *curr = (*curr)->next;
+
+  if( TOKEN_IS_NOT_A( LeftParen )) {
+    goatError((*curr)->line_no, "Unexpected %s found when a left parenthesis ')' was expected.", TOKEN_TYPES[(*curr)->type]);
+    (*curr) = savedcurr;
+    return NULL; 
+  }
+  
+  thisNode = astCreateNode( FunctionDefinition );
   return NULL;
 }
 

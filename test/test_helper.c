@@ -4,6 +4,8 @@
 #include "lexer.h"
 #include "test.h"
 
+int error_count = 0;
+
 void assert( int condition, char* message) {
   char failure[] = "\x1b[1;33mTest Failed\x1b[0;37;00m:";
 
@@ -25,4 +27,9 @@ Token *createToken( Token *prev, enum TOKEN_TYPE type, char *content ) {
   if(prev) prev->next = newToken;
   
   return(newToken);
+}
+
+// Mock error function so we can test for errors;
+void goatError( int line_no, char *fmt, ... ) {
+  error_count++;
 }
