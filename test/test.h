@@ -13,6 +13,8 @@ void testFunctionCallParsing();
 void testFunctionParameterParsing();
 void testFunctionDefinitionParsing();
 void testBlockParsing();
+void testMutableAssignmentParsing();
+void testImmutableAssignmentParsing();
 
 extern int error_count;
 extern int assert_count;

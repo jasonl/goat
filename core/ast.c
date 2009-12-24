@@ -312,23 +312,31 @@ MATCHER_FOR( NamedParameter ) {
     }
     *curr = savedCurr; return NULL;
 }
+*/
 
 MATCHER_FOR( MutableAssignment ) {
-    Token *savedCurr = *curr;
-    Node *newChild = NULL, *newNode = NULL;
+  Token *savedCurr = *curr, *identifier = NULL;
+  Node *newChild = NULL, *variable = NULL, *thisNode = NULL;
     
-    if(*curr->type != Identifier) { return NULL; }
-    *curr = *curr->next;
+    if(TOKEN_IS_NOT_A( Identifier)) { return NULL; }
+    identifier = (*curr);
+    *curr = (*curr)->next;
     
-    if(*curr->type != Equals) { *curr = savedCurr; return NULL; }
-    *curr = *curr->next;
+    if(TOKEN_IS_NOT_A( Equals )) { *curr = savedCurr; return NULL; }
+    *curr = (*curr)->next;
 
-    if(newChild = MATCH( Expression )) {
-        RETURN_SUBTREE(MutableAssignment, newChild);
+    if((newChild = MATCH( Expression ))) {
+      thisNode = astCreateNode( MutableAssignment );
+      variable = astCreateNode( Variable );
+      variable->token = identifier;
+      astAppendChild(variable, thisNode);
+      astAppendChild(newChild, thisNode);
+      return thisNode;
     }
     *curr = savedCurr; return NULL;
 }
 
+/*
 MATCHER_FOR( ImmutableAssignment ) {
     Token *savedCurr = *curr;
     Node *newChild = NULL, *newNode = NULL;

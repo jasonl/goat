@@ -17,6 +17,9 @@ void ParserTest() {
   testFunctionParameterParsing();
   testFunctionDefinitionParsing();
   testBlockParsing();
+  testMutableAssignmentParsing();
+  testImmutableAssignmentParsing();
+
   printf("\n");
 }
 
@@ -151,7 +154,7 @@ void testFunctionDefinitionParsing() {
 }
 
 void testBlockParsing() {
-  Token *tokens, *lastToken, *savedToken;
+  Token *tokens, *lastToken;
   Node *newNode;
 
   printf("- testBlockParsing");
@@ -174,4 +177,28 @@ void testBlockParsing() {
   assert( (int)(newNode = astMatchBlock( &tokens )), "Token stream not matched as Block AST-Node");
   //  assert( (int)(newNode->firstChild), "No child AST-Node generated for Block");
   printf("\n");
+}
+
+void testMutableAssignmentParsing() {
+  Token *tokens, *lastToken;
+  Node *newNode;
+
+  printf("- testMutableAssignmentParsing");
+
+  tokens = createToken( NULL, Identifier, "var");
+  lastToken = createToken( tokens, Equals, NULL);
+  lastToken = createToken( lastToken, Integer, "123");
+
+  assert((int)(newNode = astMatchMutableAssignment( &tokens )), "Mutable assignment token stream not matched as AST-Node");
+  assert(newNode->type == MutableAssignment, "Mutable assignment token stream not matched as a MutableAssignment AST-Node");
+  assert((int)(newNode->firstChild), "MutableAssignment AST-Node has no children");
+  assert(newNode->firstChild->type == Variable, "MutableAssignment AST-Node not a Variable");
+  assert((int)newNode->firstChild->nextSibling, "MutableAssignment AST-Node has no second sibling");
+  
+  printf("\n");
+}
+
+void testImmutableAssignmentParsing() {
+  Token *tokens, *lastToken;
+  Node *newNode;
 }
