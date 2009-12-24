@@ -15,6 +15,8 @@ void testFunctionDefinitionParsing();
 void testBlockParsing();
 
 extern int error_count;
+extern int assert_count;
+extern int failure_count;
 
 #define ASSERT_ERROR( function ) \
   int curr_error_count = error_count; \

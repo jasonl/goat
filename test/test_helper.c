@@ -5,13 +5,25 @@
 #include "test.h"
 
 int error_count = 0;
+int assert_count = 0;
+int failure_count = 0;
+
+int main() {
+  LexerTest();
+  ParserTest();
+  printf("%d assertions, %d failures\n", assert_count, failure_count);
+  return 0;
+}
 
 void assert( int condition, char* message) {
   char failure[] = "\x1b[1;33mTest Failed\x1b[0;37;00m:";
+  
+  assert_count++;
 
   if(condition) {
     printf(".");
   } else {
+    failure_count++;
     printf("\n%s %s", failure, message);
   }
 }

@@ -4,11 +4,7 @@
 #include "lexer.h"
 #include "test.h"
 
-int main() {
-  LexerTest();
-  ParserTest();
-  return 0;
-}
+
 
 void LexerTest() {
   printf("Lexer Test\n");
