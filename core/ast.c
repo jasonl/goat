@@ -5,10 +5,8 @@
  *
  * Grammar (EBNF)
  * -----------------------------------------------------------------------------
- * block                 = indent_increase, statement_group , indent_decrease;
- * statement_group       = statement, { statement };
- * statement             = [ assignment | function_call | conditional | class_def], newline;
- * class_statement       = assignment, newline;
+ * block                 = indent_increase,{ statement }, indent_decrease;
+ * statement             = [ assignment | function_call | conditional | class_def];
  *
  * assignment            = mutable_assignment | immutable_assignment;
  * mutable_assignment    = identifier, equals, expression;
@@ -17,7 +15,7 @@
  * conditional           = if, expression, block, [ else, block ];
  *
  * (* Class Definition *)
- * class_def             = class, identifier, indent_increase, { class_statement }, indent_decrease
+ * class_def             = class, identifier, indent_increase, { assignment }, indent_decrease
  *
  * (* An expression is something which evaluates to an object: In the case of
  * a function, it evaluates to a function object *)
@@ -82,6 +80,29 @@ void astFreeNode( Node *node ) {
   free(node);
 }
 
+void astAppendChild( Node *child, Node *parent ) {
+  Node *lastSibling;
+
+  child->parent = parent;
+  if( !(int)parent->firstChild ) {
+    parent->firstChild = child;
+    return;
+  }
+
+  // Find the last child node
+  while((int)lastSibling) {
+    if((int)lastSibling->nextSibling) {
+      lastSibling = lastSibling->nextSibling;
+    } else {
+      break;
+    }
+  }
+
+  lastSibling->nextSibling = child;
+  child->prevSibling = lastSibling;
+  return;
+}
+
 MATCHER_FOR( Expression ) {
   Node *thisNode = NULL;
   
@@ -101,7 +122,7 @@ MATCHER_FOR( Expression ) {
     return thisNode;
   }
 
-  if((thisNode = MATCH( FunctionDefinition ))) {
+  if((thisNode = MATCH( FunctionDef ))) {
     return thisNode;
   }
   
@@ -170,7 +191,7 @@ MATCHER_FOR( FunctionCall) {
   }
 }
 
-MATCHER_FOR( FunctionDefinition ) {
+MATCHER_FOR( FunctionDef ) {
   Node *thisNode, *newChild;
   Token *savedcurr = *curr;
 
@@ -182,8 +203,34 @@ MATCHER_FOR( FunctionDefinition ) {
     (*curr) = savedcurr;
     return NULL; 
   }
+  *curr = (*curr)->next;
   
-  thisNode = astCreateNode( FunctionDefinition );
+  thisNode = astCreateNode( FunctionDef );
+
+  while((newChild = MATCH( ParameterDef ))) {
+    astAppendChild(newChild, thisNode);    
+  }
+
+  if( TOKEN_IS_NOT_A( RightParen )) {
+    goatError((*curr)->line_no, "Unexpected %s found when a right parenthesis ')' was expected.", TOKEN_TYPES[(*curr)->type]);
+    astFreeNode(thisNode);
+    (*curr) = savedcurr;
+    return NULL;
+  }
+  *curr = (*curr)->next;
+  
+  if((int)(newChild = MATCH( Block ))) {
+    astAppendChild(newChild, thisNode);
+    return thisNode;  
+  } else {
+    //goatError((*curr)->line_no, "No Block found");
+    astFreeNode(thisNode);
+    (*curr) = savedcurr;
+    return NULL;
+  }
+}
+
+MATCHER_FOR( ParameterDef ) {
   return NULL;
 }
 
@@ -199,44 +246,43 @@ MATCHER_FOR( Parameter ) {
   return NULL;
 }
 
-/*
 // Matches a block - a group of statements with a common indent
 MATCHER_FOR( Block ) {
   Node *newChild = NULL, *thisNode = NULL, *prevChild = NULL;
   Token *savedCurr = *curr;
+  
+  if(!(*curr)) { return NULL; }
 
-  if(*curr->type != IndentIncrease) { return NULL }
-  *curr = *curr->next;
+  if(TOKEN_IS_NOT_A( IndentIncrease )) { return NULL; }
+  *curr = (*curr)->next;
 
-  while(newChild = MATCH(Statement)) {
-    if(thisNode == NULL) {
-      thisNode = astCreateNode( Block );
-    }
-    
-    newChild->parent = newNode;
-    if(prevChild == NULL) {
-      // This is the first child node
-      newChild->nextSibling = NULL;
-      newChild->prevSibling = NULL;
-      thisNode->firstChild = newChild;
-      prevChild = newChild; // Keep a pointer for the next iteration
-    }
-    else {
-      // There is already a child node
-      newChild->nextSibling = NULL;
-      newChild->prevSibling = prevChild;
-      prevChild = newChild
-    }
+  thisNode = astCreateNode( Block );
+  
+  if((int)(newChild = MATCH( Statement ))) {
+    astAppendChild(newChild, thisNode);
+  } else {
+    goatError((*curr)->line_no, "Could not find a statement in this block.");
+    astFreeNode( thisNode );
+    return NULL;
   }
 
-  if( *curr->type != IndentDecrease ) {
-    goatError("Invalid token %s found in block.");
-    astfreeNode( thisNode );
+  while((newChild = MATCH( Statement ))) {
+    astAppendChild(newChild, thisNode);
+  }
+
+  if( TOKEN_IS_NOT_A( IndentDecrease )) {
+    goatError((*curr)->line_no, "Invalid token %s found in block.", TOKEN_TYPES[(*curr)->type]);
+    astFreeNode( thisNode );
     return NULL;
   }
   return thisNode;
 }
 
+MATCHER_FOR( Statement ) {
+  return NULL;
+}
+
+/*
 
 // Matches a parameter passed to a function call
 MATCHER_FOR( Parameter ){

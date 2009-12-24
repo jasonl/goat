@@ -15,7 +15,7 @@ enum NODE_TYPE {
   MutableAssignment, ImmutableAssignment,
   Conditional,
   ClassDefinition,
-  FunctionDefinition, OneLineFunctionDef, BlockFunctionDef,
+  FunctionDef, OneLineFunctionDef, BlockFunctionDef,
   ParameterDef,
   FunctionCall, Parameter, NamedParameter,
   IntegerLiteral, Variable, StringLiteral
@@ -63,9 +63,14 @@ typedef struct _Node {
 //------------------------------------------------------------------------------
 Node *astCreateNote( enum NODE_TYPE );
 void astFreeNode( Node* );
+void astAppendChild( Node*, Node* );
+
 MATCHER_PROTOTYPE_FOR( Expression );
-MATCHER_PROTOTYPE_FOR( FunctionDefinition );
+MATCHER_PROTOTYPE_FOR( FunctionDef );
 MATCHER_PROTOTYPE_FOR( FunctionCall );
 MATCHER_PROTOTYPE_FOR( Parameter );
+MATCHER_PROTOTYPE_FOR( ParameterDef );
+MATCHER_PROTOTYPE_FOR( Statement );
+MATCHER_PROTOTYPE_FOR( Block );
 #endif	/* _AST_H */
 

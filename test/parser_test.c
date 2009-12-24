@@ -16,6 +16,7 @@ void ParserTest() {
   testFunctionCallParsing();
   testFunctionParameterParsing();
   testFunctionDefinitionParsing();
+  testBlockParsing();
   printf("\n");
 }
 
@@ -118,15 +119,59 @@ void testFunctionDefinitionParsing() {
 
   // Should not match a lone parenthesis
   tokens = createToken( NULL, LeftParen, NULL );
-  assert( !(int)astMatchParameter( &tokens ), "LeftParen token erroneously matched as a FunctionDefinition AST-Node");
+  assert( !(int)astMatchFunctionDef( &tokens ), "LeftParen token erroneously matched as a FunctionDef AST-Node");
 
   // Should raise an error when a Lambda is not followed by a LeftParen
   tokens = createToken( NULL, Lambda, NULL);
   lastToken = createToken( tokens, RightParen, NULL);
   savedToken = tokens;
-  assert( !(int)astMatchParameter( &tokens ), "Lambda-RightParen token stream should not match as a FunctionDefintiion AST-Node");
+  assert( !(int)astMatchFunctionDef( &tokens ), "Lambda-RightParen token stream should not match as a FunctionDef AST-Node");
   tokens = savedToken;
-  ASSERT_ERROR( astMatchParameter( &tokens ));
+  ASSERT_ERROR( astMatchFunctionDef( &tokens ));
 
+  // Should not return a FunctionDefinitionNode for a Function def with no block
+  tokens = createToken( NULL, Lambda, NULL);
+  lastToken = createToken( tokens, LeftParen, NULL );
+  lastToken = createToken( lastToken, RightParen, NULL );
+  assert( !(int)(newNode = astMatchFunctionDef( &tokens )), "Lambda-etc with no block erroneously matched as a FunctionDef");
+  
+  // Should return a FunctionDefinition Node for Lambda-RightParen-LeftParen-Block
+  tokens = createToken( NULL, Lambda, NULL);
+  lastToken = createToken( tokens, LeftParen, NULL );
+  lastToken = createToken( lastToken, RightParen, NULL );
+  lastToken = createToken( lastToken, IndentIncrease, NULL);
+  lastToken = createToken( lastToken, Identifier, "var");
+  lastToken = createToken( lastToken, Equals, NULL);
+  lastToken = createToken( lastToken, String, "Blah");
+  lastToken = createToken( lastToken, IndentDecrease, NULL);
+  assert( (int)(newNode = astMatchFunctionDef( &tokens )), "Lambda-etc expected to match as a FunctionDef AST Node" );
+  //assert( (newNode->type == FunctionDef), "Function Def token stream not matched as FunctionDef AST-Node");
+  
+  printf("\n");
+}
+
+void testBlockParsing() {
+  Token *tokens, *lastToken, *savedToken;
+  Node *newNode;
+
+  printf("- testBlockParsing");
+
+  // Should not match anything that doesn't start with an IndentIncrease
+  tokens = createToken( NULL, IndentDecrease, NULL);
+  assert( !(int)astMatchBlock( &tokens ), "IndentDecrease token erroneously matched as a block.");
+ 
+  // Should not match an empty block
+  tokens = createToken( NULL, IndentIncrease, NULL);
+  createToken( tokens, IndentDecrease, NULL);
+  assert( !(int)astMatchBlock( &tokens ), "IndentIncrease-Decrease erroneously matched as a block.");
+  
+  // Should match a block with an assignment
+  tokens = createToken( NULL, IndentIncrease, NULL);
+  lastToken = createToken( tokens, Identifier, "test");
+  lastToken = createToken( lastToken, Equals, NULL);
+  lastToken = createToken( lastToken, Integer, "123");
+  lastToken = createToken( lastToken, IndentDecrease, NULL);
+  assert( (int)(newNode = astMatchBlock( &tokens )), "Token stream not matched as Block AST-Node");
+  //  assert( (int)(newNode->firstChild), "No child AST-Node generated for Block");
   printf("\n");
 }

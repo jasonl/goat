@@ -12,6 +12,7 @@ void testExpressionParsing();
 void testFunctionCallParsing();
 void testFunctionParameterParsing();
 void testFunctionDefinitionParsing();
+void testBlockParsing();
 
 extern int error_count;
 
