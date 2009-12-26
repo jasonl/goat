@@ -4,13 +4,12 @@
 #include "lexer.h"
 #include "test.h"
 
-
-
 void LexerTest() {
   printf("Lexer Test\n");
   
   testTokenLexing();
   testFunctionLexing();
+  testKeywordLexing();
 }
 
 void testFunctionLexing() {
@@ -99,4 +98,28 @@ void testTokenLexing() {
 
   printf("\n");
   free(G);
+}
+
+void testKeywordLexing() {
+  GoatState *G;
+  Token *T;
+  
+  G = malloc(sizeof(GoatState));
+
+  printf("- testKeywordLexing");  
+
+  goatLexer(G, "test/keywords.gt");
+  T = G->tokens;  
+
+  assert( T->type == If, "First token was not an If" );
+  T = T->next;
+
+  assert( T->type == Else, "Second token was not a Else" );
+  T = T->next;
+
+  assert( T->type == Class, "Third token was not a Class" );
+  T = T->next;
+
+  assert( T->type == Return, "Fourth token was not an Return" );
+  T = T->next;
 }

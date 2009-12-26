@@ -53,7 +53,7 @@
 
 const char *TOKEN_TYPES[]={"Whitespace", "Indent", "Comment", "NewLine", "Identifier",
 			   "RightParen", "LeftParen", "Lambda", "Colon", "Period", "Comma",
-			   "Equals", "End", "Integer", "String", "If", "Else", "HashRocket",
+			   "Equals", "End", "Integer", "String", "If", "Else", "Class", "Return", "HashRocket",
 			   "IndentIncrease", "IndentDecrease"};
 
 inline Node *astCreateNode( enum NODE_TYPE type ) {

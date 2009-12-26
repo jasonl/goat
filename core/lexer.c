@@ -156,7 +156,70 @@ int goatLexer( GoatState *G, char* sourceFileName ) {
         }
     }
     
+    // Close out the last token
+    switch( lexer_state ) {
+    case String:
+      goatError( line_no, "Unclosed string found at end of file.");
+      break;
+    case Integer:
+    case Identifier:
+      PUSH_TOKEN;
+      break;
+    default:
+      break;
+    }
+
+    goatTranslateKeywordTokens( G );
     return 1;
+}
+
+// After the first tokenizing pass, the lexer will have created Identifier
+// tokens for all non-quoted strings of characters, including keywords such
+// as "if", "end", "else" etc. This function iterates over the token stream,
+// and changes those tokens.
+void goatTranslateKeywordTokens( GoatState *G ) {
+  Token *curr_token, *next_token;
+
+  next_token = curr_token = G->tokens;
+
+  while( next_token ) {
+    curr_token = next_token;
+
+    if(curr_token->type != Identifier || curr_token->content == NULL) {
+      next_token = curr_token->next;
+      continue;
+    }
+    
+    next_token = curr_token->next;
+    
+    if( strcmp("if", curr_token->content) == 0 ) {
+      curr_token->type = If;
+      free(curr_token->content);
+      curr_token->content = NULL;
+      continue;
+    }
+
+    if( strcmp("else", curr_token->content) == 0 ) {
+      curr_token->type = Else;
+      free(curr_token->content);
+      curr_token->content = NULL;
+      continue;
+    }
+
+    if( strcmp("class", curr_token->content) == 0 ) {
+      curr_token->type = Class;
+      free(curr_token->content);
+      curr_token->content = NULL;
+      continue;
+    }
+    
+    if( strcmp("return", curr_token->content) == 0 ) {
+      curr_token->type = Return;
+      free(curr_token->content);
+      curr_token->content = NULL;
+      continue;
+    }
+  }
 }
 
 
