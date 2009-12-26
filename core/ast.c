@@ -333,28 +333,38 @@ MATCHER_FOR( MutableAssignment ) {
       astAppendChild(newChild, thisNode);
       return thisNode;
     }
-    *curr = savedCurr; return NULL;
+    
+    goatError((*curr)->line_no, "Unexpected token %s found after equals sign.", TOKEN_TYPES[(*curr)->type]);
+    *curr = savedCurr; 
+    return NULL;
+}
+
+MATCHER_FOR( ImmutableAssignment ) {
+  Token *savedCurr = *curr, *identifier = NULL;
+  Node *newChild = NULL, *variable = NULL, *thisNode = NULL;
+    
+    if(TOKEN_IS_NOT_A( Identifier)) { return NULL; }
+    identifier = (*curr);
+    *curr = (*curr)->next;
+    
+    if(TOKEN_IS_NOT_A( Colon )) { *curr = savedCurr; return NULL; }
+    *curr = (*curr)->next;
+
+    if((newChild = MATCH( Expression ))) {
+      thisNode = astCreateNode( ImmutableAssignment );
+      variable = astCreateNode( Variable );
+      variable->token = identifier;
+      astAppendChild(variable, thisNode);
+      astAppendChild(newChild, thisNode);
+      return thisNode;
+    }
+    
+    goatError((*curr)->line_no, "Unexpected token %s found after equals sign.", TOKEN_TYPES[(*curr)->type]);
+    *curr = savedCurr; 
+    return NULL;
 }
 
 /*
-MATCHER_FOR( ImmutableAssignment ) {
-    Token *savedCurr = *curr;
-    Node *newChild = NULL, *newNode = NULL;
-    
-    if(*curr->type != Identifier) { return NULL; }
-    *curr = *curr->next;
-    
-    if(*curr->type != Colon) { *curr = savedCurr; return NULL; }
-    *curr = *curr->next;
-
-    if(newChild = MATCH( Expression )) {
-        RETURN_SUBTREE(ImmutableAssignment, newChild);
-    }
-    else {
-        goatError("Unexpected %s found; expecting an Expression to be evaluated", *NODE_TYPES[*curr->type])
-        *curr = savedCurr; return NULL;
-    }
-}
 
 MATCHER_FOR( FunctionCall ) {
     Token *savedCurr = *curr;

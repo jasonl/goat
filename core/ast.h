@@ -73,6 +73,7 @@ MATCHER_PROTOTYPE_FOR( ParameterDef );
 MATCHER_PROTOTYPE_FOR( Statement );
 MATCHER_PROTOTYPE_FOR( Block );
 MATCHER_PROTOTYPE_FOR( MutableAssignment );
+MATCHER_PROTOTYPE_FOR( ImmutableAssignment );
 
 #endif	/* _AST_H */
 

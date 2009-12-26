@@ -201,4 +201,18 @@ void testMutableAssignmentParsing() {
 void testImmutableAssignmentParsing() {
   Token *tokens, *lastToken;
   Node *newNode;
+
+  printf("- testImmutableAssignmentParsing");
+
+  tokens = createToken( NULL, Identifier, "var");
+  lastToken = createToken( tokens, Colon, NULL);
+  lastToken = createToken( lastToken, Integer, "123");
+
+  assert((int)(newNode = astMatchImmutableAssignment( &tokens )), "Immutable assignment token stream not matched as AST-Node");
+  assert(newNode->type == ImmutableAssignment, "Immutable assignment token stream not matched as a MutableAssignment AST-Node");
+  assert((int)(newNode->firstChild), "ImmutableAssignment AST-Node has no children");
+  assert(newNode->firstChild->type == Variable, "ImmutableAssignment AST-Node not a Variable");
+  assert((int)newNode->firstChild->nextSibling, "ImmutableAssignment AST-Node has no second sibling");
+  
+  printf("\n");
 }
