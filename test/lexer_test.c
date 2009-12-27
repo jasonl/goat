@@ -10,6 +10,8 @@ void LexerTest() {
   testTokenLexing();
   testFunctionLexing();
   testKeywordLexing();
+  
+  printf("\n");
 }
 
 void testFunctionLexing() {

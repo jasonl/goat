@@ -6,6 +6,7 @@ void assert( int, char* );
 void LexerTest();
 void testTokenLexing();
 void testFunctionLexing();
+void testKeywordLexing();
 
 void ParserTest();
 void testExpressionParsing();

@@ -56,12 +56,15 @@ const char *TOKEN_TYPES[]={"Whitespace", "Indent", "Comment", "NewLine", "Identi
 			   "Equals", "End", "Integer", "String", "If", "Else", "Class", "Return", "HashRocket",
 			   "IndentIncrease", "IndentDecrease"};
 
-inline Node *astCreateNode( enum NODE_TYPE type ) {
+Node *astCreateNode( enum NODE_TYPE type ) {
   Node *newNode = malloc( sizeof(Node) );
   if (newNode == NULL) {
       goatFatalError("Unable to allocate sufficient memory during parsing.");
   }
   newNode->type = type; 
+  newNode->nextSibling = NULL;
+  newNode->parent = NULL;
+  newNode->prevSibling = NULL;
   return newNode;
 }
 
@@ -81,7 +84,7 @@ void astFreeNode( Node *node ) {
 }
 
 void astAppendChild( Node *child, Node *parent ) {
-  Node *lastSibling;
+  Node *lastSibling = child;
 
   child->parent = parent;
   if( !(int)parent->firstChild ) {
@@ -317,26 +320,25 @@ MATCHER_FOR( NamedParameter ) {
 MATCHER_FOR( MutableAssignment ) {
   Token *savedCurr = *curr, *identifier = NULL;
   Node *newChild = NULL, *variable = NULL, *thisNode = NULL;
-    
-    if(TOKEN_IS_NOT_A( Identifier)) { return NULL; }
-    identifier = (*curr);
-    *curr = (*curr)->next;
-    
-    if(TOKEN_IS_NOT_A( Equals )) { *curr = savedCurr; return NULL; }
-    *curr = (*curr)->next;
-
-    if((newChild = MATCH( Expression ))) {
-      thisNode = astCreateNode( MutableAssignment );
-      variable = astCreateNode( Variable );
-      variable->token = identifier;
-      astAppendChild(variable, thisNode);
-      astAppendChild(newChild, thisNode);
-      return thisNode;
-    }
-    
-    goatError((*curr)->line_no, "Unexpected token %s found after equals sign.", TOKEN_TYPES[(*curr)->type]);
-    *curr = savedCurr; 
-    return NULL;
+  
+  if(TOKEN_IS_NOT_A( Identifier)) { return NULL; }
+  thisNode = astCreateNode( MutableAssignment );
+  variable = astCreateNode( Variable );
+  variable->token = (*curr);
+  astAppendChild(variable, thisNode);
+  *curr = (*curr)->next;
+  
+  if(TOKEN_IS_NOT_A( Equals )) { *curr = savedCurr; return NULL; }
+  *curr = (*curr)->next;
+  
+  if((newChild = MATCH( Expression ))) {
+    astAppendChild(newChild, thisNode);
+    return thisNode;
+  }
+  
+  goatError((*curr)->line_no, "Unexpected token %s found after equals sign.", TOKEN_TYPES[(*curr)->type]);
+  *curr = savedCurr; 
+  return NULL;
 }
 
 MATCHER_FOR( ImmutableAssignment ) {

@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <malloc.h>
+#include <stdarg.h>
 
 #include "lexer.h"
 #include "test.h"
+
 
 int error_count = 0;
 int assert_count = 0;
@@ -43,5 +45,8 @@ Token *createToken( Token *prev, enum TOKEN_TYPE type, char *content ) {
 
 // Mock error function so we can test for errors;
 void goatError( int line_no, char *fmt, ... ) {
+  va_list arg;
+  va_start( arg, fmt );
   error_count++;
+  va_end( arg );
 }

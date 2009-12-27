@@ -1,10 +1,13 @@
-CC = gcc
-CFLAGS = -Wall -ggdb
+CC = /home/jason/llvm/Debug/bin/clang
+CFLAGS = -Wall -x c -ggdb 
 SRC = core/*.c
 TEST_SRC = test/*.c
 
-goat: core/*.c core/*.h
-	@${CC} ${CFLAGS} ${SRC} -o goat
+debug: core/*.c core/*.h
+	@${CC} ${CFLAGS} -ggdb ${SRC} -o goat
+
+release: core/*.c core/*.h
+	@${CC} ${CFLAGS} -O1 ${SRC} -o goat
 
 goat-test: core/*.c core/*.h test/*.c test/*.gt test/*.h
-	@$(CC) ${CFLAGS} -D TEST -I ./core ${SRC} ${TEST_SRC} -o goat-test
+	@$(CC) ${CFLAGS} -O1 -D TEST -I ./core ${SRC} ${TEST_SRC} -o goat-test

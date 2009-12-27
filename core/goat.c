@@ -97,7 +97,6 @@ void goatError( int lineNo, char *fmt, ... ) {
 
 void goatParseArguments( GoatState *G, int argc, char *argv[]) {
   int i;
-
   if (argc == 1) {
     printf("Goat - An experimental language\n");
     printf("----------\n");
