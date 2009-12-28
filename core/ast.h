@@ -44,6 +44,8 @@ typedef struct _Node {
 #define TOKEN_IS_A( token_type ) ((*curr) && (*curr)->type == token_type)
 #define TOKEN_IS_NOT_A( token_type ) (!(*curr) || (*curr)->type != token_type)
 
+#define CONSUME_TOKEN *curr = (*curr)->next;
+
 // Appends the subtree to a new node, and returns it; Note that it requires
 // an available Node* named newNode in scope.
 #define RETURN_SUBTREE( headNodeType, childSubTree ) \
