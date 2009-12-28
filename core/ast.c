@@ -47,6 +47,7 @@
  *
  */
 #include <malloc.h>
+#include <string.h>
 
 #include "lexer.h"
 #include "ast.h"
@@ -62,10 +63,8 @@ Node *astCreateNode( enum NODE_TYPE type ) {
   if (newNode == NULL) {
       goatFatalError("Unable to allocate sufficient memory during parsing.");
   }
+  memset(newNode, 0, sizeof(Node));
   newNode->type = type; 
-  newNode->nextSibling = NULL;
-  newNode->parent = NULL;
-  newNode->prevSibling = NULL;
   return newNode;
 }
 
@@ -140,6 +139,16 @@ MATCHER_FOR( Block ) {
 }
 
 MATCHER_FOR( Statement ) {
+  Node *thisNode;
+
+  if((thisNode = MATCH( Assignment ))) {
+    return thisNode;
+  }
+
+  if((thisNode = MATCH( FunctionCall ))) {
+    return thisNode;
+  }
+
   return NULL;
 }
 
@@ -148,14 +157,17 @@ MATCHER_FOR( Expression ) {
   Node *thisNode = NULL;
   
   if( TOKEN_IS_A( String ) ) {
+    CONSUME_TOKEN;
     RETURN_TERMINAL_NODE( StringLiteral );
   }
 
   if( TOKEN_IS_A( Integer )) {
+    CONSUME_TOKEN;
     RETURN_TERMINAL_NODE( IntegerLiteral );
   }
 
   if( TOKEN_IS_A( Identifier )) {
+    CONSUME_TOKEN;
     RETURN_TERMINAL_NODE( Variable );
   }
 
@@ -185,23 +197,11 @@ MATCHER_FOR( FunctionCall) {
     return NULL;
   }
   
-  *curr = (*curr)->next;
+  CONSUME_TOKEN;
   thisNode = astCreateNode( FunctionCall );
 
   while((newChild = MATCH( Parameter ))) {
-    if(prevChild == NULL) {
-      // This is the first child node
-      newChild->nextSibling = NULL;
-      newChild->prevSibling = NULL;
-      thisNode->firstChild = newChild;
-      prevChild = newChild; // Keep a pointer for the next iteration
-    }
-    else {
-      // There is already a child node
-      newChild->nextSibling = NULL;
-      newChild->prevSibling = prevChild;
-      prevChild = newChild;
-    }
+    astAppendChild(newChild, thisNode);
 
     // So if we match a right Parenthesis, that's a complete function call
     if( TOKEN_IS_A( RightParen )) {
@@ -281,15 +281,13 @@ MATCHER_FOR( Parameter ) {
   //TODO: Add matching for named parameters
 
   if(( newChild = MATCH( Expression ))) {
-    RETURN_SUBTREE( Parameter, newChild );
+    thisNode = astCreateNode( Parameter );
+    astAppendChild( newChild, thisNode);
+    return thisNode;
   }
   
   return NULL;
 }
-
-
-
-
 
 MATCHER_FOR( Conditional ) {
   return NULL;

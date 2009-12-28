@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <stdarg.h>
+#include <string.h>
 
 #include "lexer.h"
 #include "test.h"
@@ -35,6 +36,7 @@ Token *createToken( Token *prev, enum TOKEN_TYPE type, char *content ) {
   Token *newToken = NULL;
 
   newToken = (Token *)malloc(sizeof(Token));
+  memset(newToken, 0, sizeof(Token));
   newToken->type = type;
   newToken->next = NULL;
   newToken->content = content;

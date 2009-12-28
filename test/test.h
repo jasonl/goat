@@ -14,6 +14,7 @@ void testFunctionCallParsing();
 void testFunctionParameterParsing();
 void testFunctionDefinitionParsing();
 void testBlockParsing();
+void testStatementParsing();
 void testMutableAssignmentParsing();
 void testImmutableAssignmentParsing();
 

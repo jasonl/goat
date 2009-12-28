@@ -11,14 +11,49 @@ Token *createToken( Token*, enum TOKEN_TYPE, char*);
    to call each individual test in order */
 void ParserTest() {
   printf("Parser Test\n");
-  
+
+  testBlockParsing();
+  testStatementParsing();
   testExpressionParsing();
   testFunctionCallParsing();
   testFunctionParameterParsing();
   testFunctionDefinitionParsing();
-  testBlockParsing();
   testMutableAssignmentParsing();
   testImmutableAssignmentParsing();
+
+  printf("\n");
+}
+
+void testStatementParsing() {
+  Token *tokens = NULL, *lastToken;
+  Node *newNode = NULL;
+  
+  printf("- testStatementParsing");
+
+  // Should match a immutable assignment as a statement
+  tokens = createToken( NULL, Identifier, "var");
+  lastToken = createToken( tokens, Colon, NULL);
+  lastToken = createToken( lastToken, Integer, "123");
+
+  assert((int)(newNode = astMatchStatement( &tokens )), "Immutable assignement token stream not match as a statement");
+  assert(newNode->type == ImmutableAssignment, "Immutable assignement token stream not matched as ImmutableAssignment AST-Node");
+
+  // Should match a immutable assignment as a statement
+  tokens = createToken( NULL, Identifier, "var");
+  lastToken = createToken( tokens, Equals, NULL);
+  lastToken = createToken( lastToken, Integer, "123");
+
+  assert((int)(newNode = astMatchStatement( &tokens )), "Mutable assignement token stream not match as a statement");
+  assert(newNode->type == MutableAssignment, "Immutable assignement token stream not matched as MutableAssignment AST-Node");
+
+  // Should match a function call as a statement
+  tokens = createToken( NULL, Identifier, "function_name");
+  lastToken = createToken( tokens, LeftParen, NULL);
+  lastToken = createToken( lastToken, Integer, "1");
+  lastToken = createToken( lastToken, RightParen, NULL);
+
+  assert((int)(newNode = astMatchStatement( &tokens )), "Function call token stream not matched as a statement");
+  //assert(newNode->type == FunctionCall, "Function call token stream not matched as FunctionCall AST-Node");
 
   printf("\n");
 }
@@ -70,13 +105,35 @@ void testFunctionCallParsing() {
   createToken( lastToken, RightParen, NULL);
   assert( (int)(newNode = astMatchFunctionCall( &tokens )), "Function-call token stream not matched as FunctionCall");
   assert( newNode->type == FunctionCall, "Function-call token stream not transformed into a FunctionCall AST-Node");
-  
+  assert( newNode->firstChild == NULL, "Function call AST-Node has an illegitimate child.");  
+
   // Don't match an identifier-rightparen sequence
   tokens = createToken( NULL, Identifier, "function_name");
   lastToken = createToken( tokens, RightParen, NULL );
   assert( !(int)(astMatchFunctionCall( &tokens )), "Matched a Identifier-RightParen sequence as a FunctionCall");
 
-  // TODO: Function Call Parsing with parameters
+
+  // Match a function call with parameters
+  tokens = createToken( NULL, Identifier, "function_name");
+  lastToken = createToken( tokens, LeftParen, NULL);
+  lastToken = createToken( lastToken, String, "1");
+  lastToken = createToken( lastToken, RightParen, NULL);
+
+  assert( (int)(newNode = astMatchFunctionCall( &tokens )), "Function-call token stream not matched as FunctionCall");
+  assert( newNode->type == FunctionCall, "Function-call token stream not transformed into a FunctionCall AST-Node");
+  assert( (int) newNode->firstChild, "Function call AST-Node has no children with parameters");  
+
+  // Match a function call with multiple parameters
+  tokens = createToken( NULL, Identifier, "function_name");
+  lastToken = createToken( tokens, LeftParen, NULL);
+  lastToken = createToken( lastToken, String, "rah");
+  lastToken = createToken( lastToken, Comma, NULL);
+  lastToken = createToken( lastToken, Integer, "1");
+  lastToken = createToken( lastToken, RightParen, NULL);
+
+  assert( (int)(newNode = astMatchFunctionCall( &tokens )), "Function-call token stream not matched as FunctionCall");
+  assert( newNode->type == FunctionCall, "Function-call token stream not transformed into a FunctionCall AST-Node");
+  assert( (int) newNode->firstChild, "Function call AST-Node has no children with parameters");  
   printf("\n");
 }
 
