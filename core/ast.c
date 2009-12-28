@@ -84,17 +84,18 @@ void astFreeNode( Node *node ) {
 }
 
 void astAppendChild( Node *child, Node *parent ) {
-  Node *lastSibling = child;
+  Node *lastSibling = parent->firstChild;
 
   child->parent = parent;
+
   if( !(int)parent->firstChild ) {
     parent->firstChild = child;
     return;
   }
 
   // Find the last child node
-  while((int)lastSibling) {
-    if((int)lastSibling->nextSibling) {
+  while( (int)lastSibling ) {
+    if( (int)lastSibling->nextSibling ) {
       lastSibling = lastSibling->nextSibling;
     } else {
       break;
