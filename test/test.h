@@ -17,6 +17,7 @@ void testBlockParsing();
 void testStatementParsing();
 void testMutableAssignmentParsing();
 void testImmutableAssignmentParsing();
+void testConditionalParsing();
 
 extern int error_count;
 extern int assert_count;

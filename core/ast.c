@@ -135,6 +135,7 @@ MATCHER_FOR( Block ) {
     astFreeNode( thisNode );
     return NULL;
   }
+  CONSUME_TOKEN;
   return thisNode;
 }
 
@@ -184,7 +185,7 @@ MATCHER_FOR( Expression ) {
 
 MATCHER_FOR( FunctionCall) {
   Token *savedcurr = *curr;
-  Node *thisNode = NULL, *newChild = NULL, *prevChild = NULL;
+  Node *thisNode = NULL, *newChild = NULL;
   int must_match = FALSE;
 
   // TODO: Add parsing logic for reciever object
@@ -290,7 +291,44 @@ MATCHER_FOR( Parameter ) {
 }
 
 MATCHER_FOR( Conditional ) {
-  return NULL;
+  Node *thisNode, *exprChild, *ifChild, *elseChild;
+  Token *saved_curr = *curr;
+
+  if( TOKEN_IS_NOT_A( If )) { return NULL; }
+  thisNode = astCreateNode( Conditional );
+  CONSUME_TOKEN;
+
+  if(!(int)(exprChild = MATCH( Expression))) {
+    astFreeNode(thisNode);
+    (*curr) = saved_curr;
+    goatError((*curr)->line_no, "Unexpected token %s found after if keyword.", TOKEN_TYPES[(*curr)->type]);
+    return NULL;
+  }
+  astAppendChild(exprChild, thisNode);
+
+  // Match the block to be run if the condition executes to true
+  if(!(int)(ifChild = MATCH( Block ))) {
+    goatError((*curr)->line_no, "Unexpected token %s found after if keyword.", TOKEN_TYPES[(*curr)->type]);
+    astFreeNode(thisNode);
+    (*curr) = saved_curr;
+    return NULL;
+  }
+  astAppendChild(ifChild, thisNode);
+
+  if( TOKEN_IS_NOT_A( Else ) ) {
+    // So no else clause
+    return thisNode;
+  }
+  CONSUME_TOKEN;
+
+  if(!(int)(elseChild = MATCH( Block ))) {
+    goatError((*curr)->line_no, "Unexpected token %s found after else keyword.", TOKEN_TYPES[(*curr)->type]);
+    astFreeNode(thisNode);
+    (*curr) = saved_curr;
+    return NULL;
+  }
+  astAppendChild(elseChild, thisNode);
+  return thisNode;
 }
 
 MATCHER_FOR( ClassDef ) {

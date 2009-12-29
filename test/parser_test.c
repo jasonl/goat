@@ -20,6 +20,7 @@ void ParserTest() {
   testFunctionDefinitionParsing();
   testMutableAssignmentParsing();
   testImmutableAssignmentParsing();
+  testConditionalParsing();
 
   printf("\n");
 }
@@ -272,4 +273,72 @@ void testImmutableAssignmentParsing() {
   assert((int)newNode->firstChild->nextSibling, "ImmutableAssignment AST-Node has no second sibling");
   
   printf("\n");
+}
+
+void testConditionalParsing() {
+  Token *tokens, *lastToken;
+  Node *newNode;
+
+  printf("- testConditionalParsing");
+  // Don't match anything that doesn't start with an If token
+  tokens = createToken( NULL, Else, NULL );
+  assert(!(int)astMatchConditional( &tokens ), "Else-token incorrectly matched as a Conditional AST-Node");
+  
+  // Test parsing of a block with only an if clause
+  tokens = createToken( NULL, If, NULL);
+  lastToken = createToken( tokens, Identifier, "blah");
+  lastToken = createToken( lastToken, IndentIncrease, NULL);
+  lastToken = createToken( lastToken, Identifier, "var");
+  lastToken = createToken( lastToken, Equals, NULL);
+  lastToken = createToken( lastToken, Integer, "23");
+  lastToken = createToken( lastToken, IndentDecrease, NULL);
+
+  assert((int)(newNode = astMatchConditional( &tokens )), "Conditional token stream not matched as Conditional AST node" );
+  assert(newNode->type == Conditional, "Conditional token stream not matched as a Conditional-type AST-Node");
+  assert((int)newNode->firstChild, "Conditional AST-Node has no children nodes");
+  assert(newNode->firstChild->type == Variable, "First child-node was not a Variable type");
+  assert((int)newNode->firstChild->nextSibling, "Conditional AST-Node hasn't a second child node");
+  assert(newNode->firstChild->nextSibling->type == Block, "Conditional AST-Node's second child not a Block");
+
+  // Test parsing of a block with only an if and an else clause
+  tokens = createToken( NULL, If, NULL);
+  lastToken = createToken( tokens, Identifier, "blah");
+  lastToken = createToken( lastToken, IndentIncrease, NULL);
+  lastToken = createToken( lastToken, Identifier, "var");
+  lastToken = createToken( lastToken, Equals, NULL);
+  lastToken = createToken( lastToken, Integer, "23");
+  lastToken = createToken( lastToken, IndentDecrease, NULL);
+  lastToken = createToken( lastToken, Else, NULL);
+  lastToken = createToken( lastToken, IndentIncrease, NULL);
+  lastToken = createToken( lastToken, Identifier, "function");
+  lastToken = createToken( lastToken, LeftParen, NULL);
+  lastToken = createToken( lastToken, RightParen, NULL);
+  lastToken = createToken( lastToken, IndentDecrease, NULL);
+
+  assert((int)(newNode = astMatchConditional( &tokens )), "Conditional token stream not matched as Conditional AST node" );
+  assert(newNode->type == Conditional, "Conditional token stream not matched as a Conditional-type AST-Node");
+  assert((int)newNode->firstChild, "Conditional AST-Node has no children nodes");
+  assert(newNode->firstChild->type == Variable, "First child-node was not a Variable type");
+  assert((int)newNode->firstChild->nextSibling, "Conditional AST-Node hasn't a second child node");
+  assert(newNode->firstChild->nextSibling->type == Block, "Conditional AST-Node's second child not a Block");
+  assert((int)newNode->firstChild->nextSibling->nextSibling, "No third child AST-Node found for else clause");
+  assert(newNode->firstChild->nextSibling->nextSibling->type == Block, "Third child AST-Node was not a Block");
+
+  // Should not match a condition block with an Else token but no statement
+  tokens = createToken( NULL, If, NULL);
+  lastToken = createToken( tokens, Identifier, "blah");
+  lastToken = createToken( lastToken, IndentIncrease, NULL);
+  lastToken = createToken( lastToken, Identifier, "var");
+  lastToken = createToken( lastToken, Equals, NULL);
+  lastToken = createToken( lastToken, Integer, "23");
+  lastToken = createToken( lastToken, IndentDecrease, NULL);
+  lastToken = createToken( lastToken, Else, NULL);
+  lastToken = createToken( lastToken, Identifier, "function");
+  lastToken = createToken( lastToken, LeftParen, NULL);
+  lastToken = createToken( lastToken, RightParen, NULL);
+
+  assert(!(int)astMatchConditional( &tokens ), "Conditional block with missing else clause matched as block");
+  ASSERT_ERROR(astMatchConditional( &tokens ));
+  printf("\n");
+  
 }

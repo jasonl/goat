@@ -51,4 +51,4 @@ void goatError( int line_no, char *fmt, ... ) {
   va_start( arg, fmt );
   error_count++;
   va_end( arg );
-}
+  }

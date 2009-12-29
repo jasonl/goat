@@ -77,6 +77,7 @@ MATCHER_PROTOTYPE_FOR( Block );
 MATCHER_PROTOTYPE_FOR( Assignment );
 MATCHER_PROTOTYPE_FOR( MutableAssignment );
 MATCHER_PROTOTYPE_FOR( ImmutableAssignment );
+MATCHER_PROTOTYPE_FOR( Conditional );
 
 #endif	/* _AST_H */
 
