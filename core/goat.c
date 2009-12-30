@@ -10,6 +10,7 @@
 #include <stdarg.h>
 
 #include "lexer.h"
+#include "ast.h"
 #include "goat.h"
 
 #ifndef TEST
@@ -31,6 +32,11 @@ int main(int argc, char** argv) {
   goatLexer( G, G->sourceFile );
   if(G->verbose) goatPrintTokens( G );
 
+  goatBuildAST( G );
+  if( G->astRoot == NULL ) return( EXIT_FAILURE );
+
+  if(G->verbose) goatPrintASTNode( G->astRoot, 0 );
+
   free(G);
   return ( EXIT_SUCCESS );
 }
@@ -46,19 +52,20 @@ void goatPrintTokens( GoatState *G ) {
     while(curr != 0) {
         printf("%d ", curr->line_no);
         switch( curr->type ) {
-            case IndentIncrease:    printf("IndentIncrease ");break;
-            case IndentDecrease:    printf("IndentDecrease ");break;
-            case Comma:             printf("Comma          ");break;
-            case Period:            printf("Period         ");break;
-            case Lambda:            printf("Lambda         ");break;
-            case Colon:             printf("Colon          ");break;
-            case RightParen:        printf("RightParen     ");break;
-            case LeftParen:         printf("LeftParen      ");break;
-            case Equals:            printf("Equals         ");break;
-            case Integer:           printf("Integer        ");break;
-            case String:            printf("String         ");break;
-            case Identifier:        printf("Identifier     ");break;
-            default:                printf("???            ");break;
+	case IndentIncrease:    printf("IndentIncrease ");break;
+	case IndentDecrease:    printf("IndentDecrease ");break;
+	case Comma:             printf("Comma          ");break;
+	case Period:            printf("Period         ");break;
+	case Lambda:            printf("Lambda         ");break;
+	case Colon:             printf("Colon          ");break;
+	case RightParen:        printf("RightParen     ");break;
+	case LeftParen:         printf("LeftParen      ");break;
+	case Equals:            printf("Equals         ");break;
+	case Integer:           printf("Integer        ");break;
+	case String:            printf("String         ");break;
+	case Identifier:        printf("Identifier     ");break;
+	case EndOfFile:         printf("EndOfFile      ");break;
+	default:                printf("???            ");break;
         }
 
         switch(curr -> type) {
@@ -67,7 +74,7 @@ void goatPrintTokens( GoatState *G ) {
             case Identifier:
                 printf("%s", curr->content);
                 break;
-            default:
+	default:
                 break;
 
         }
@@ -75,6 +82,35 @@ void goatPrintTokens( GoatState *G ) {
         printf("\n");
         curr = curr->next;
     }
+}
+
+void goatPrintASTNode( Node *node, int depth ) {
+  Node *lastChild;
+  int i;
+  
+  printf("%s\n", NODE_TYPES[node->type]);
+  
+  if( node->firstChild == NULL ) {
+    return;
+  }
+  
+  lastChild = node->firstChild;
+  while( (int)lastChild ) {
+    i = 0;
+    while(i < depth) {
+      printf("\u2502");
+      i++;
+    }
+
+    if (lastChild->nextSibling == NULL) {
+      printf("\u2514");
+    } else {
+      printf("\u251c");
+    }
+    
+    goatPrintASTNode(lastChild, depth+1);
+    lastChild = lastChild->nextSibling;
+  }
 }
 
 void goatFatalError( char *msg ) {
@@ -88,9 +124,9 @@ void goatFatalError( char *msg ) {
 void goatError( int lineNo, char *fmt, ... ) {
   va_list arg;
   va_start( arg, fmt );
-  printf( "\x1b[1;31mError\x1b[0;37;00m:");
+  printf( "\x1b[1;31mError\x1b[0;37;00m[%d]", lineNo );
   vprintf( fmt, arg );
-  printf( "[Line %d]\n", lineNo);
+  printf("\n");
   va_end(arg);
 }
 #endif

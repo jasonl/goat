@@ -9,9 +9,9 @@
 #define	_AST_H
 
 enum NODE_TYPE {
+  SourceFile,
   Block,
   StatementGroup, Statement, ClassStatement,
-  Expression,
   MutableAssignment, ImmutableAssignment,
   Conditional,
   ClassDefinition,
@@ -21,8 +21,18 @@ enum NODE_TYPE {
   IntegerLiteral, Variable, StringLiteral
 };
 
-static char *NODE_TYPES[] = { "Expression", "Parameter", "Named Parameter",
-                             "Mutable Assignment", "Immutable Assignment"};
+static char *NODE_TYPES[] = { 
+  "SourceFile",
+  "Block",
+  "StatementGroup", "Statement", "ClassStatement",
+  "MutableAssignment", "ImmutableAssignment",
+  "Conditional",
+  "ClassDefinition",
+  "FunctionDef", "OneLineFunctionDef", "BlockFunctionDef",
+  "ParameterDef",
+  "FunctionCall", "Parameter", "NamedParameter",
+  "IntegerLiteral", "Variable", "StringLiteral"
+};
 
 // AST node
 typedef struct _Node {
@@ -33,6 +43,8 @@ typedef struct _Node {
     struct _Node *nextSibling;
     struct _Node *prevSibling;
 } Node;
+
+struct _GoatState;
 
 // Macros
 //------------------------------------------------------------------------------
@@ -66,6 +78,7 @@ typedef struct _Node {
 Node *astCreateNote( enum NODE_TYPE );
 void astFreeNode( Node* );
 void astAppendChild( Node*, Node* );
+int goatBuildAST( struct _GoatState* );
 
 MATCHER_PROTOTYPE_FOR( Expression );
 MATCHER_PROTOTYPE_FOR( FunctionDef );

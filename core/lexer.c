@@ -170,6 +170,11 @@ int goatLexer( GoatState *G, char* sourceFileName ) {
     }
 
     goatTranslateKeywordTokens( G );
+    
+    // Add an End-of-File marker
+    lexer_state = EndOfFile;
+    PUSH_EMPTY_TOKEN;
+
     return 1;
 }
 

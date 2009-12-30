@@ -33,7 +33,8 @@ enum TOKEN_TYPE { Whitespace,
 		  Class,
                   HashRocket,
                   IndentIncrease,
-                  IndentDecrease
+                  IndentDecrease,
+		  EndOfFile
                   };
 
 // holds a lexical token

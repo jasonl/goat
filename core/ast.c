@@ -48,7 +48,6 @@
  */
 #include <malloc.h>
 #include <string.h>
-
 #include "lexer.h"
 #include "ast.h"
 #include "goat.h"
@@ -56,7 +55,7 @@
 const char *TOKEN_TYPES[]={"Whitespace", "Indent", "Comment", "NewLine", "Identifier",
 			   "RightParen", "LeftParen", "Lambda", "Colon", "Period", "Comma",
 			   "Equals", "End", "Integer", "String", "If", "Else", "Class", "Return", "HashRocket",
-			   "IndentIncrease", "IndentDecrease"};
+			   "IndentIncrease", "IndentDecrease", "End of File"};
 
 Node *astCreateNode( enum NODE_TYPE type ) {
   Node *newNode = malloc( sizeof(Node) );
@@ -105,6 +104,27 @@ void astAppendChild( Node *child, Node *parent ) {
   lastSibling->nextSibling = child;
   child->prevSibling = lastSibling;
   return;
+}
+
+int goatBuildAST( GoatState *G ) {
+  Node *astRoot = astCreateNode( SourceFile );
+  Node *newChild;
+
+  Token *source = G->tokens;
+  Token **curr = &source;  
+
+  while((newChild = MATCH(Statement))) {
+    astAppendChild( newChild, astRoot );
+  }
+
+  if( TOKEN_IS_A( EndOfFile )) {
+    G->astRoot = astRoot;
+    return 1;
+  }
+
+  goatError((*curr)->line_no, "Unexpected token %s found.", TOKEN_TYPES[(*curr)->type]);
+  astFreeNode(astRoot);
+  return 0;
 }
 
 // Matches a block - a group of statements with a common indent
@@ -156,6 +176,14 @@ MATCHER_FOR( Statement ) {
 // Match an expression
 MATCHER_FOR( Expression ) {
   Node *thisNode = NULL;
+
+  if((thisNode = MATCH( FunctionCall ))) {
+    return thisNode;
+  }
+
+  if((thisNode = MATCH( FunctionDef ))) {
+    return thisNode;
+  }
   
   if( TOKEN_IS_A( String ) ) {
     CONSUME_TOKEN;
@@ -172,14 +200,6 @@ MATCHER_FOR( Expression ) {
     RETURN_TERMINAL_NODE( Variable );
   }
 
-  if((thisNode = MATCH( FunctionCall ))) {
-    return thisNode;
-  }
-
-  if((thisNode = MATCH( FunctionDef ))) {
-    return thisNode;
-  }
-  
   return NULL;
 }
 

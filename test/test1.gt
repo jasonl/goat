@@ -1,3 +1,8 @@
-; A Comment, this should be ignored
-λ( test: 123, test2: "Bullshit")
-  print test2
+; Some assignment tests
+a = 1
+b = "Crapola"
+foo:1
+bar:"Foo"
+
+a = foo + 1
+
