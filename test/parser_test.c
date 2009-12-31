@@ -140,7 +140,7 @@ void testFunctionCallParsing() {
 }
 
 void testFunctionParameterParsing() {
-  Token *tokens, *lastToken;
+  Token *tokens;
   Node *newNode;
   
   printf( "- testFunctionParameterParsing");

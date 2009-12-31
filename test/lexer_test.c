@@ -41,7 +41,10 @@ void testFunctionLexing() {
   T = T->next;
 
   assert( T->type == RightParen, "Sixth token was not an LeftParen");
-  assert( T->next == NULL, "Unexpected seventh token found.");
+  T = T->next;
+
+  assert( T->type == EndOfFile, "Seventh token was not an EndOfFile");
+  assert( T->next == NULL, "Unexpected eighth token found.");
   
   printf("\n");
   free(G);
@@ -96,7 +99,10 @@ void testTokenLexing() {
   T = T->next;
 
   assert( T->type == String, "Thirteenth token was not a String");
-  assert( T->next == NULL, "Unexpected fourteenth token found");
+  T = T->next;
+
+  assert( T->type == EndOfFile, "Fourthteenth token was not an EndOfFile");
+  assert( T->next == NULL, "Unexpected fifteenth token found");
 
   printf("\n");
   free(G);
