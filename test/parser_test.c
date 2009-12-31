@@ -79,6 +79,7 @@ void testExpressionParsing() {
   tokens = createToken( NULL, Identifier, "variable_name");
   assert((int)(newNode = astMatchExpression( &tokens )), "Identifier token not matched as an Expression");
   assert(newNode->type == Variable, "Identifier token not transformed into a Variable AST-Node");
+  assert((int)newNode->token, "No token linked to the Variable AST-Node");
 
   tokens = createToken( NULL, Identifier, "function_name");
   lastToken = createToken( tokens, RightParen, NULL );

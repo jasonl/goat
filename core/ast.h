@@ -71,6 +71,7 @@ struct _GoatState;
 #define RETURN_TERMINAL_NODE( nodeType ) \
   thisNode = astCreateNode( nodeType); \
   thisNode->token = (*curr); \
+  *curr = (*curr)->next; \
   return thisNode;
 
 // Function Prototypes

@@ -190,17 +190,14 @@ MATCHER_FOR( Expression ) {
   }
   
   if( TOKEN_IS_A( String ) ) {
-    CONSUME_TOKEN;
     RETURN_TERMINAL_NODE( StringLiteral );
   }
 
   if( TOKEN_IS_A( Integer )) {
-    CONSUME_TOKEN;
     RETURN_TERMINAL_NODE( IntegerLiteral );
   }
 
   if( TOKEN_IS_A( Identifier )) {
-    CONSUME_TOKEN;
     RETURN_TERMINAL_NODE( Variable );
   }
 
@@ -298,7 +295,6 @@ MATCHER_FOR( FunctionDef ) {
 
 MATCHER_FOR( ParameterDef ) {
   Node *thisNode;
-  Token *savedcurr = *curr;
 
   if(TOKEN_IS_A(Identifier)) {
     thisNode = astCreateNode( ParameterDef );
