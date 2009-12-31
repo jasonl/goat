@@ -122,7 +122,7 @@ int goatBuildAST( GoatState *G ) {
     return 1;
   }
 
-  goatError((*curr)->line_no, "Unexpected token %s found.", TOKEN_TYPES[(*curr)->type]);
+  goatError((*curr)->line_no, "Unexpected token %s found at end of token stream.", TOKEN_TYPES[(*curr)->type]);
   astFreeNode(astRoot);
   return 0;
 }
@@ -167,6 +167,10 @@ MATCHER_FOR( Statement ) {
   }
 
   if((thisNode = MATCH( FunctionCall ))) {
+    return thisNode;
+  }
+
+  if((thisNode = MATCH( Conditional ))) {
     return thisNode;
   }
 
@@ -293,7 +297,17 @@ MATCHER_FOR( FunctionDef ) {
 }
 
 MATCHER_FOR( ParameterDef ) {
-  return NULL;
+  Node *thisNode;
+  Token *savedcurr = *curr;
+
+  if(TOKEN_IS_A(Identifier)) {
+    thisNode = astCreateNode( ParameterDef );
+    thisNode->token = (*curr);
+    CONSUME_TOKEN;
+    return thisNode;
+  } else {
+    return NULL;
+  }
 }
 
 MATCHER_FOR( Parameter ) {

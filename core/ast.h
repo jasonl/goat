@@ -23,14 +23,14 @@ enum NODE_TYPE {
 
 static char *NODE_TYPES[] = { 
   "SourceFile",
-  "Block",
+  "\x1b[1;33mBlock\x1b[0;37;00m",
   "StatementGroup", "Statement", "ClassStatement",
-  "MutableAssignment", "ImmutableAssignment",
-  "Conditional",
+  "\x1b[0;36mMutableAssignment\x1b[0;37;00m", "\x1b[0;36mImmutableAssignment\x1b[0;37;00m",
+  "\x1b[1;31mConditional\x1b[0;37;00m",
   "ClassDefinition",
   "FunctionDef", "OneLineFunctionDef", "BlockFunctionDef",
   "ParameterDef",
-  "FunctionCall", "Parameter", "NamedParameter",
+  "\x1b[1;34mFunctionCall\x1b[0;37;00m", "Parameter", "NamedParameter",
   "IntegerLiteral", "Variable", "StringLiteral"
 };
 

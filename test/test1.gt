@@ -4,5 +4,10 @@ b = "Crapola"
 foo:1
 bar:"Foo"
 
-a = foo + 1
+if foo
+  ast = 1
+else
+  ast( rah, gah )
+
+a=b
 
