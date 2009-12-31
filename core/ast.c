@@ -288,7 +288,7 @@ MATCHER_FOR( FunctionDef ) {
     astAppendChild(newChild, thisNode);
     return thisNode;  
   } else {
-    //goatError((*curr)->line_no, "No Block found");
+    goatError((*curr)->line_no, "No Block found for function definition");
     astFreeNode(thisNode);
     (*curr) = savedcurr;
     return NULL;
