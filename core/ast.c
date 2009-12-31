@@ -205,13 +205,14 @@ MATCHER_FOR( Expression ) {
 }
 
 MATCHER_FOR( FunctionCall) {
-  Token *savedcurr = *curr;
+  Token *savedcurr = *curr, *functionName;
   Node *thisNode = NULL, *newChild = NULL;
   int must_match = FALSE;
 
   // TODO: Add parsing logic for reciever object
 
   if( TOKEN_IS_NOT_A( Identifier )) { return NULL; }
+  functionName = (*curr);
   CONSUME_TOKEN;
 
   if( TOKEN_IS_NOT_A( LeftParen )) {
@@ -221,6 +222,7 @@ MATCHER_FOR( FunctionCall) {
   
   CONSUME_TOKEN;
   thisNode = astCreateNode( FunctionCall );
+  thisNode->token = functionName;
 
   while((newChild = MATCH( Parameter ))) {
     astAppendChild(newChild, thisNode);
