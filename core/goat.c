@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <malloc.h>
 #include <stdarg.h>
+#include <string.h>
 
 #include "lexer.h"
 #include "ast.h"
@@ -15,6 +16,7 @@
 
 #ifndef TEST
 int main(int argc, char** argv) {
+  char prev_cols[100];
   GoatState *G;
     
   G = (GoatState*)malloc( sizeof(GoatState) );
@@ -35,7 +37,10 @@ int main(int argc, char** argv) {
   goatBuildAST( G );
   if( G->astRoot == NULL ) return( EXIT_FAILURE );
 
-  if(G->verbose) goatPrintASTNode( G->astRoot, 0 );
+  if(G->verbose) {
+    memset(prev_cols, 0, 100);
+    goatPrintASTNode( G->astRoot, 0, 0, prev_cols );
+  }
 
   free(G);
   return ( EXIT_SUCCESS );
@@ -84,12 +89,16 @@ void goatPrintTokens( GoatState *G ) {
     }
 }
 
-void goatPrintASTNode( Node *node, int depth ) {
+void goatPrintASTNode( Node *node, int depth, int skip, char *prev_cols ) {
   Node *lastChild;
   int i;
   
-  printf("%s\n", NODE_TYPES[node->type]);
-  
+  printf("%s", NODE_TYPES[node->type]);
+  if( node->token ) {
+    printf(":%s", node->token->content);
+  }
+  printf("\n");
+
   if( node->firstChild == NULL ) {
     return;
   }
@@ -97,18 +106,23 @@ void goatPrintASTNode( Node *node, int depth ) {
   lastChild = node->firstChild;
   while( (int)lastChild ) {
     i = 0;
-    while(i < depth) {
-      printf("\u2502");
+    while(i < (depth)) {
+      if( prev_cols[i] == 1) printf("\u2502");
+      if( prev_cols[i] == 0) printf(" ");
       i++;
     }
 
     if (lastChild->nextSibling == NULL) {
       printf("\u2514");
+      prev_cols[depth] = 0;
+      goatPrintASTNode(lastChild, depth+1, skip+1, prev_cols);
     } else {
       printf("\u251c");
+      prev_cols[depth] = 1;
+	goatPrintASTNode(lastChild, depth+1, skip, prev_cols);
     }
     
-    goatPrintASTNode(lastChild, depth+1);
+    
     lastChild = lastChild->nextSibling;
   }
 }

@@ -22,7 +22,7 @@ typedef struct _GoatState {
 } GoatState;
 
 void goatPrintTokens( GoatState* );
-void goatPrintASTNode( struct _Node*, int );
+void goatPrintASTNode( struct _Node*, int, int, char* );
 void goatParseArguments( GoatState*, int, char**);
 void goatFatalError( char* );
 void goatError( int, char*, ... );
