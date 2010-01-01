@@ -195,6 +195,7 @@ void testFunctionDefinitionParsing() {
   tokens = createToken( NULL, Lambda, NULL);
   lastToken = createToken( tokens, LeftParen, NULL );
   lastToken = createToken( lastToken, RightParen, NULL );
+  lastToken = createToken( lastToken, EndOfFile, NULL);
   assert( !(int)(newNode = astMatchFunctionDef( &tokens )), "Lambda-etc with no block erroneously matched as a FunctionDef");
   
   // Should return a FunctionDefinition Node for Lambda-RightParen-LeftParen-Block
@@ -250,9 +251,10 @@ void testMutableAssignmentParsing() {
 
   assert((int)(newNode = astMatchMutableAssignment( &tokens )), "Mutable assignment token stream not matched as AST-Node");
   assert(newNode->type == MutableAssignment, "Mutable assignment token stream not matched as a MutableAssignment AST-Node");
+  assert((int)newNode->token, "No token assigned to new MutableAssignemnt AST-Node");
   assert((int)(newNode->firstChild), "MutableAssignment AST-Node has no children");
-  assert(newNode->firstChild->type == Variable, "MutableAssignment AST-Node not a Variable");
-  assert((int)newNode->firstChild->nextSibling, "MutableAssignment AST-Node has no second sibling");
+  assert(newNode->firstChild->type == IntegerLiteral, "MutableAssignment AST-Node not a IntegerLiteral");
+
   
   printf("\n");
 }
@@ -269,9 +271,10 @@ void testImmutableAssignmentParsing() {
 
   assert((int)(newNode = astMatchImmutableAssignment( &tokens )), "Immutable assignment token stream not matched as AST-Node");
   assert(newNode->type == ImmutableAssignment, "Immutable assignment token stream not matched as a MutableAssignment AST-Node");
+  assert((int)newNode->token, "No token assigned to new ImutableAssignment AST-Node");
   assert((int)(newNode->firstChild), "ImmutableAssignment AST-Node has no children");
-  assert(newNode->firstChild->type == Variable, "ImmutableAssignment AST-Node not a Variable");
-  assert((int)newNode->firstChild->nextSibling, "ImmutableAssignment AST-Node has no second sibling");
+  assert(newNode->firstChild->type == IntegerLiteral, "ImmutableAssignment AST-Node not a IntegerLiteral");
+
   
   printf("\n");
 }

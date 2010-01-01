@@ -414,56 +414,58 @@ MATCHER_FOR( Assignment ) {
 }
 
 MATCHER_FOR( MutableAssignment ) {
-  Token *savedCurr = *curr;
-  Node *newChild = NULL, *variable = NULL, *thisNode = NULL;
+  Token *savedCurr = *curr, *variable;
+  Node *newChild = NULL, *thisNode = NULL;
   
   if(TOKEN_IS_NOT_A( Identifier)) { return NULL; }
-  thisNode = astCreateNode( MutableAssignment );
-  variable = astCreateNode( Variable );
-  variable->token = (*curr);
-  astAppendChild(variable, thisNode);
+  variable = (*curr);
   CONSUME_TOKEN;
   
-  if(TOKEN_IS_NOT_A( Equals )) { *curr = savedCurr; return NULL; }
+  if(TOKEN_IS_NOT_A( Equals )) {
+    *curr = savedCurr; 
+    return NULL;
+  }
   CONSUME_TOKEN;
   
   if((newChild = MATCH( Expression ))) {
+    thisNode = astCreateNode( MutableAssignment );
+    thisNode->token = variable;
     astAppendChild(newChild, thisNode);
     return thisNode;
   }
   
-  goatError((*curr)->line_no, "Unexpected token %s found after equals sign.", TOKEN_TYPES[(*curr)->type]);
+  goatError((*curr)->line_no, "Unexpected token %s found after equals sign in a mutable assignment.", TOKEN_TYPES[(*curr)->type]);
   *curr = savedCurr; 
   return NULL;
 }
 
 MATCHER_FOR( ImmutableAssignment ) {
-  Token *savedCurr = *curr, *identifier = NULL;
-  Node *newChild = NULL, *variable = NULL, *thisNode = NULL;
-    
-    if(TOKEN_IS_NOT_A( Identifier)) { return NULL; }
-    identifier = (*curr);
-    CONSUME_TOKEN;
-    
-    if(TOKEN_IS_NOT_A( Colon )) { *curr = savedCurr; return NULL; }
-    CONSUME_TOKEN;
-
-    if((newChild = MATCH( Expression ))) {
-      thisNode = astCreateNode( ImmutableAssignment );
-      variable = astCreateNode( Variable );
-      variable->token = identifier;
-      astAppendChild(variable, thisNode);
-      astAppendChild(newChild, thisNode);
-      return thisNode;
-    }
-    
-    goatError((*curr)->line_no, "Unexpected token %s found after equals sign.", TOKEN_TYPES[(*curr)->type]);
+  Token *savedCurr = *curr, *variable;
+  Node *newChild = NULL, *thisNode = NULL;
+  
+  if(TOKEN_IS_NOT_A( Identifier)) { return NULL; }
+  variable = (*curr);
+  CONSUME_TOKEN;
+  
+  if(TOKEN_IS_NOT_A( Colon )) {
     *curr = savedCurr; 
     return NULL;
+  }
+  CONSUME_TOKEN;
+  
+  if((newChild = MATCH( Expression ))) {
+    thisNode = astCreateNode( ImmutableAssignment );
+    thisNode->token = variable;
+    astAppendChild(newChild, thisNode);
+    return thisNode;
+  }
+  
+  goatError((*curr)->line_no, "Unexpected token %s found after colon sign in a immutable assignment.", TOKEN_TYPES[(*curr)->type]);
+  *curr = savedCurr; 
+  return NULL;
 }
 
 /*
-
 MATCHER_FOR( FunctionCall ) {
     Token *savedCurr = *curr;
     Node *newChild = NULL, *newNode = NULL;
