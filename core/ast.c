@@ -20,7 +20,7 @@
  *
  * (* An expression is something which evaluates to an object: In the case of
  * a function, it evaluates to a function object *)
- * expression            = identifier | integer | string | function_call | function_definition;
+ * expression            = identifier | integer | string | function_definition | function_call;
  *
  * (* Function definitions *)
  * function_definition   = one_line_func_def | block_func_def;
@@ -29,7 +29,8 @@
  * parameter_def         = identifier, [ colon, expression ];
  *
  * (* Function calls *)
- * function_call         = [expression, [ period ] ], identifier, [ left_paren ], { parameter }, [right_paren];
+ * function_call         = expression, left_paren , { parameter }, right_paren;
+ * 
  * parameter             = named_parameter | expression;
  * named_parameter       = identifier, colon, expression;
  *
@@ -106,6 +107,23 @@ void astAppendChild( Node *child, Node *parent ) {
   return;
 }
 
+void astInsertFirstChild( Node *child, Node *parent ) {
+  Node *secondChild;
+
+  child->parent = parent;
+
+  if( !(int)parent->firstChild) {
+    parent->firstChild = child;
+    return;
+  }
+
+  secondChild = parent->firstChild;
+  parent->firstChild = child;
+  secondChild->prevSibling = child;
+  child->nextSibling = secondChild;
+  return;
+}
+
 int goatBuildAST( GoatState *G ) {
   Node *astRoot = astCreateNode( SourceFile );
   Node *newChild;
@@ -114,17 +132,22 @@ int goatBuildAST( GoatState *G ) {
   Token **curr = &source;  
 
   while((newChild = MATCH(Statement))) {
-    astAppendChild( newChild, astRoot );
+    if( TOKEN_IS_A( Newline )) {
+      CONSUME_TOKEN;
+      astAppendChild( newChild, astRoot );
+    } else if( TOKEN_IS_A( EndOfFile)) {
+      G->astRoot = astRoot;
+      return 1;
+    } else {
+      // Found something on a line we couldn't match
+      goatError((*curr)->line_no, "Unexpected token %s[%s] found.", TOKEN_TYPES[(*curr)->type], (*curr)->content);
+      astFreeNode(astRoot);
+      return 0;
+    }
   }
 
-  if( TOKEN_IS_A( EndOfFile )) {
-    G->astRoot = astRoot;
-    return 1;
-  }
-
-  goatError((*curr)->line_no, "Unexpected token %s found at end of token stream.", TOKEN_TYPES[(*curr)->type]);
-  astFreeNode(astRoot);
-  return 0;
+  G->astRoot = astRoot;
+  return 1;
 }
 
 // Matches a block - a group of statements with a common indent
@@ -159,10 +182,11 @@ MATCHER_FOR( Block ) {
   return thisNode;
 }
 
-MATCHER_FOR( Statement ) {
+MATCHER_FOR( Statement ) 
+{
   Node *thisNode;
 
-  if((thisNode = MATCH( Assignment ))) {
+  if((thisNode = MATCH( Assignment ))) {   
     return thisNode;
   }
 
@@ -179,10 +203,26 @@ MATCHER_FOR( Statement ) {
 
 // Match an expression
 MATCHER_FOR( Expression ) {
+  Token *saved_curr = *curr;
   Node *thisNode = NULL;
 
   if((thisNode = MATCH( FunctionCall ))) {
     return thisNode;
+  }
+  
+  if( TOKEN_IS_A( LeftParen )) {
+    CONSUME_TOKEN;
+    if((thisNode = MATCH(Expression))) {
+      if( TOKEN_IS_A( RightParen)) {
+	CONSUME_TOKEN;
+	return thisNode;
+      } 
+      else {
+	goatError((*curr)->line_no, "Expression: expected to find a right parenthesis, found a %s instead.", TOKEN_TYPES[(*curr)->type]);
+	(*curr) = saved_curr;
+	return NULL;
+      }
+    }
   }
 
   if((thisNode = MATCH( FunctionDef ))) {
@@ -204,31 +244,106 @@ MATCHER_FOR( Expression ) {
   return NULL;
 }
 
-MATCHER_FOR( FunctionCall) {
+// Matches an object which a function call can be made to
+MATCHER_FOR( Receiver ) {
+  Token *saved_curr = *curr;
+  Node *thisNode = NULL;
+
+  if( TOKEN_IS_A( LeftParen )) {
+    CONSUME_TOKEN;
+    if((thisNode = MATCH(Expression))) {
+      if( TOKEN_IS_A( RightParen)) {
+	CONSUME_TOKEN;
+	return thisNode;
+      } 
+      else {
+	goatError((*curr)->line_no, "Receiver: expected to find a right parenthesis, found a %s instead.", TOKEN_TYPES[(*curr)->type]);
+	(*curr) = saved_curr;
+	return NULL;
+      }
+    }
+  }
+
+  if( TOKEN_IS_A( Identifier )) {
+    // Lookahead to determine if this identifier is actually
+    // a receiver or a method name
+    if(((*curr)->next->type != LeftParen) ) {
+      RETURN_TERMINAL_NODE( Variable );
+    }
+  }
+
+  /*if((thisNode = MATCH( MethodInvocation ))) {
+    return thisNode;
+    }*/
+
+  if( TOKEN_IS_A( String ) ) {
+    RETURN_TERMINAL_NODE( StringLiteral );
+  }
+
+  if( TOKEN_IS_A( Integer )) {
+    RETURN_TERMINAL_NODE( IntegerLiteral );
+  }
+
+  
+
+  return NULL;
+}
+
+MATCHER_FOR( FunctionCall ) {
+  Token *savedcurr = *curr;
+  Node *thisNode = NULL, *receiver = NULL, *newParent = NULL;
+
+  receiver = MATCH( Receiver );
+  
+  if(!(thisNode = MATCH( MethodInvocation ))) {
+    (*curr) = savedcurr;
+    if(receiver) astFreeNode(receiver);
+    return NULL;
+  }
+
+  if( receiver ) {
+    astInsertFirstChild( receiver, thisNode);
+  }
+
+  while((newParent = MATCH( MethodInvocation ))) {    
+    astInsertFirstChild( thisNode, newParent );
+    thisNode = newParent;
+  }
+
+  return thisNode;
+}
+
+MATCHER_FOR( MethodInvocation ) {
   Token *savedcurr = *curr, *functionName;
   Node *thisNode = NULL, *newChild = NULL;
-  int must_match = FALSE;
+  int must_match = FALSE, must_match_paren = FALSE;
 
-  // TODO: Add parsing logic for reciever object
+  // optional period for method calls.
+  if( TOKEN_IS_A( Period )) { CONSUME_TOKEN; }
 
-  if( TOKEN_IS_NOT_A( Identifier )) { return NULL; }
+  if( TOKEN_IS_NOT_A( Identifier )) { 
+    *curr = savedcurr;
+    return NULL; 
+  }
+  
   functionName = (*curr);
   CONSUME_TOKEN;
 
-  if( TOKEN_IS_NOT_A( LeftParen )) {
-    *curr = savedcurr;
-    return NULL;
+  if( TOKEN_IS_A( LeftParen )) {
+    CONSUME_TOKEN;
+    must_match_paren = TRUE;
   }
-  
-  CONSUME_TOKEN;
+ 
   thisNode = astCreateNode( FunctionCall );
+
+  // We don't append the receiver here - that's done in astMatchFunctionCall
   thisNode->token = functionName;
 
   while((newChild = MATCH( Parameter ))) {
     astAppendChild(newChild, thisNode);
 
     // So if we match a right Parenthesis, that's a complete function call
-    if( TOKEN_IS_A( RightParen )) {
+    if( TOKEN_IS_A( RightParen ) && must_match_paren ) {
       CONSUME_TOKEN;
       return thisNode;
     }
@@ -240,15 +355,36 @@ MATCHER_FOR( FunctionCall) {
       continue;
     }
 
+    if( ! must_match ) {
+      // We've found some other token that doesn't match as a comma or right_paren
+      return thisNode;
+    }
+
     // If execution gets to here, we've encountered some other token
-    goatError((*curr)->line_no, "Unexpected %s found when a right parenthesis '(' was expected.", TOKEN_TYPES[(*curr)->type]);
+    goatError((*curr)->line_no, "MethodInvocation: Unexpected %s found when a right parenthesis ')' was expected.", TOKEN_TYPES[(*curr)->type]);
     astFreeNode( thisNode );
     return NULL;
   }
   
-  if( TOKEN_IS_A( RightParen ) && !must_match) {
-    CONSUME_TOKEN;
-    return thisNode;
+  if( !must_match ) {
+    if (TOKEN_IS_A( RightParen )) {
+      if( must_match_paren ) {
+	CONSUME_TOKEN;
+	return thisNode;
+      } else {
+	// Don't consume the token, try to match it as part of an expression
+	return thisNode;
+      }
+    } else {
+      if( must_match_paren ) {
+	goatError((*curr)->line_no, "Could not find Right Paren to close function call parsing");
+	astFreeNode(thisNode);
+	return NULL;
+      } else {
+	// Leave the token, try to match it with the next node
+	return thisNode;
+      }
+    }
   } else {
     goatError((*curr)->line_no, "Another function parameter expected after comma; none was matched.");
     astFreeNode( thisNode );
@@ -312,7 +448,6 @@ MATCHER_FOR( Parameter ) {
   Node *thisNode, *newChild;
 
   //TODO: Add matching for named parameters
-
   if(( newChild = MATCH( Expression ))) {
     thisNode = astCreateNode( Parameter );
     astAppendChild( newChild, thisNode);
@@ -367,38 +502,6 @@ MATCHER_FOR( ClassDef ) {
   return NULL;
 }
 
-
-/*
-
-// Matches a parameter passed to a function call
-MATCHER_FOR( Parameter ){
-    Node *newChild, *newNode;
-
-    if (newChild = MATCH( Expression )) {
-        RETURN_SUBTREE(Parameter, newChild);
-    } else if (newChild = MATCH(NamedParameter)) {
-        RETURN_SUBTREE(NamedParameter, newChild);
-    }
-    return NULL;
-}
-
-// Matches a named parameter passed to a function call
-MATCHER_FOR( NamedParameter ) {
-    Token *savedCurr = *curr;
-    Node *newChild = NULL, *newNode = NULL;
-
-    if(*curr->type != Identifier) { return NULL; }
-    *curr = *curr->next;
-
-    if(*curr->type != Colon ) { *curr = savedCurr; return NULL; };
-    *curr = *curr->next;
-
-    if(newChild = MATCH( Expression )) {
-        RETURN_SUBTREE(NamedParameter, newChild);
-    }
-    *curr = savedCurr; return NULL;
-}
-*/
 
 MATCHER_FOR( Assignment ) {
   Node *thisNode;

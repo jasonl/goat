@@ -11,7 +11,7 @@
 enum NODE_TYPE {
   SourceFile,
   Block,
-  StatementGroup, Statement, ClassStatement,
+  StatementGroup, Statement, ClassStatement, My,
   MutableAssignment, ImmutableAssignment,
   Conditional,
   ClassDefinition,
@@ -24,7 +24,7 @@ enum NODE_TYPE {
 static char *NODE_TYPES[] = { 
   "SourceFile",
   "\x1b[1;33mBlock\x1b[0;37;00m",
-  "StatementGroup", "Statement", "ClassStatement",
+  "StatementGroup", "Statement", "ClassStatement", "My",
   "\x1b[0;36mMutableAssignment\x1b[0;37;00m", "\x1b[0;36mImmutableAssignment\x1b[0;37;00m",
   "\x1b[1;31mConditional\x1b[0;37;00m",
   "ClassDefinition",
@@ -79,6 +79,7 @@ struct _GoatState;
 Node *astCreateNote( enum NODE_TYPE );
 void astFreeNode( Node* );
 void astAppendChild( Node*, Node* );
+void astInsertFirstChild( Node*, Node* );
 int goatBuildAST( struct _GoatState* );
 
 MATCHER_PROTOTYPE_FOR( Expression );
@@ -92,6 +93,8 @@ MATCHER_PROTOTYPE_FOR( Assignment );
 MATCHER_PROTOTYPE_FOR( MutableAssignment );
 MATCHER_PROTOTYPE_FOR( ImmutableAssignment );
 MATCHER_PROTOTYPE_FOR( Conditional );
+MATCHER_PROTOTYPE_FOR( MethodInvocation );
+MATCHER_PROTOTYPE_FOR( Receiver );
 
 #endif	/* _AST_H */
 

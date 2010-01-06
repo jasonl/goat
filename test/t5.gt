@@ -1,0 +1,18 @@
+b = a + b / c + d 
+b = test_function
+c: my.test_function
+d: test_function
+e = test_object method_name param
+e = test_function()
+f = test_function( param )
+g = test_object.test_function()
+g' = test_object.test_function( param, param2 )
+h = test_object.member().function()
+i = an_object( param ).member( params2 )
+j = an_object( param ).subobject( param ).even_more_sub_object( param )
+k = an_object((param))
+l = (a + b)
+m = (a + b) * c
+n = a + (b * c)
+e = (m * c ^ (2, 2))
+

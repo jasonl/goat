@@ -1,3 +1,8 @@
 test = λ( test_param )
   test_param = 1
 
+fake_param = test( 24 )
+
++: λ( operand )
+  operand: 23
+

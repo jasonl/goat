@@ -91,7 +91,8 @@ int goatLexer( GoatState *G, char* sourceFileName ) {
 		}
                 prev_indent = indent; indent = 0; line_no++; lexer_state = Indent; break;
 
-            case Newline:
+	    case Newline:
+	      PUSH_EMPTY_TOKEN;
                 prev_indent = indent; indent = 0; line_no++;
 
 		if (cp.wchar == ' ') {
