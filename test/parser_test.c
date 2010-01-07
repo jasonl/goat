@@ -15,6 +15,7 @@ void ParserTest() {
   testBlockParsing();
   testStatementParsing();
   testExpressionParsing();
+  testMethodInvocationParsing();
   testFunctionCallParsing();
   testFunctionParameterParsing();
   testFunctionDefinitionParsing();
@@ -52,9 +53,10 @@ void testStatementParsing() {
   lastToken = createToken( tokens, LeftParen, NULL);
   lastToken = createToken( lastToken, Integer, "1");
   lastToken = createToken( lastToken, RightParen, NULL);
+  lastToken = createToken( lastToken, Newline, NULL);
 
   assert((int)(newNode = astMatchStatement( &tokens )), "Function call token stream not matched as a statement");
-  //assert(newNode->type == FunctionCall, "Function call token stream not matched as FunctionCall AST-Node");
+  assert(newNode->type == FunctionCall, "Function call token stream not matched as FunctionCall AST-Node");
 
   printf("\n");
 }
@@ -70,7 +72,6 @@ void testExpressionParsing() {
 
   tokens = createToken( NULL, String, "Test String");
   assert((int)(newNode = astMatchExpression( &tokens )), "String token not matched as Expression");
-  return;
   assert(newNode->type == StringLiteral, "String token not made into a StringLiteral AST-Node");
 
   tokens = createToken( NULL, Integer, "123");
@@ -92,6 +93,25 @@ void testExpressionParsing() {
   printf("\n");
 }
 
+void testMethodInvocationParsing() {
+  Token *tokens, *lastToken;
+  Node *newNode;
+  
+  printf("- testMethodInvocationParsing");
+
+  // Match a identifier-leftparen-rightparen sequence
+  tokens = createToken( NULL, Identifier, "function_name");
+  lastToken = createToken( tokens, LeftParen, NULL);
+  lastToken = createToken( lastToken, RightParen, NULL);
+  lastToken = createToken( lastToken, Newline, NULL);
+
+  assert( (int)(newNode = astMatchMethodInvocation( &tokens )), "Function-call token stream not matched as FunctionCall");
+  assert( newNode->type == FunctionCall, "Function-call token stream not transformed into a FunctionCall AST-Node");
+  assert( newNode->firstChild == NULL, "Function call AST-Node has an illegitimate child.");  
+
+  printf("\n");
+}
+
 void testFunctionCallParsing() {
   Token *tokens, *lastToken;
   Node *newNode;
@@ -101,14 +121,6 @@ void testFunctionCallParsing() {
   // Don't match a single identifier; that's a variable
   tokens = createToken( NULL, Identifier, "function_name");
   assert( !(int)(astMatchFunctionCall( &tokens )), "Matched a lone Identifier as a function call");
-
-  // Match a identifier-leftparen-rightparen sequence
-  tokens = createToken( NULL, Identifier, "function_name");
-  lastToken = createToken( tokens, LeftParen, NULL);
-  createToken( lastToken, RightParen, NULL);
-  assert( (int)(newNode = astMatchFunctionCall( &tokens )), "Function-call token stream not matched as FunctionCall");
-  assert( newNode->type == FunctionCall, "Function-call token stream not transformed into a FunctionCall AST-Node");
-  assert( newNode->firstChild == NULL, "Function call AST-Node has an illegitimate child.");  
 
   // Don't match an identifier-rightparen sequence
   tokens = createToken( NULL, Identifier, "function_name");

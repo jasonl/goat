@@ -150,6 +150,12 @@ int goatBuildAST( GoatState *G ) {
   return 1;
 }
 
+int astLookaheadFor( Token **curr, enum NODE_TYPE node_type) {
+  if((*curr)->next == NULL) return FALSE;
+
+  return ( (*curr)->next->type == node_type );
+}
+
 // Matches a block - a group of statements with a common indent
 MATCHER_FOR( Block ) {
   Node *newChild = NULL, *thisNode = NULL;
@@ -267,7 +273,7 @@ MATCHER_FOR( Receiver ) {
   if( TOKEN_IS_A( Identifier )) {
     // Lookahead to determine if this identifier is actually
     // a receiver or a method name
-    if(((*curr)->next->type != LeftParen) ) {
+    if(!astLookaheadFor( curr, LeftParen)) {
       RETURN_TERMINAL_NODE( Variable );
     }
   }

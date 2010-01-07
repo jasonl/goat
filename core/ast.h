@@ -80,7 +80,9 @@ Node *astCreateNote( enum NODE_TYPE );
 void astFreeNode( Node* );
 void astAppendChild( Node*, Node* );
 void astInsertFirstChild( Node*, Node* );
+int astLookaheadFor( Token **, enum NODE_TYPE );
 int goatBuildAST( struct _GoatState* );
+
 
 MATCHER_PROTOTYPE_FOR( Expression );
 MATCHER_PROTOTYPE_FOR( FunctionDef );

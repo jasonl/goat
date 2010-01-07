@@ -11,6 +11,7 @@ void testKeywordLexing();
 void ParserTest();
 void testExpressionParsing();
 void testFunctionCallParsing();
+void testMethodInvocationParsing();
 void testFunctionParameterParsing();
 void testFunctionDefinitionParsing();
 void testBlockParsing();
