@@ -43,8 +43,11 @@ void testFunctionLexing() {
   assert( T->type == RightParen, "Sixth token was not an LeftParen");
   T = T->next;
 
-  assert( T->type == EndOfFile, "Seventh token was not an EndOfFile");
-  assert( T->next == NULL, "Unexpected eighth token found.");
+  assert( T->type == Newline, "Seventh token was not an Newline");
+  T = T->next;
+  
+  assert( T->type == EndOfFile, "Eights token was not an EndOfFile");
+  assert( T->next == NULL, "Unexpected nineth token found.");
   
   printf("\n");
   free(G);
@@ -56,7 +59,7 @@ void testTokenLexing() {
   
   G = malloc(sizeof(GoatState));
 
-  printf("- testFunctionLexing");  
+  printf("- testTokenLexing");  
 
   goatLexer(G, "test/token_test.gt");
   T = G->tokens;
@@ -74,35 +77,47 @@ void testTokenLexing() {
   T = T->next;
 
   // The lexer should skip a comment here
-  assert( T->type == Identifier, "Fifth token was not an Identifier" );
+  assert( T->type == Newline, "Fifth token was not a Newline");
   T = T->next;
 
-  assert( T->type == Period, "Sixth token was not a Period" );
+  assert( T->type == Identifier, "Sixth token was not an Identifier" );
   T = T->next;
 
-  assert( T->type == IndentIncrease, "Seventh token was not an IndentIncrease" );
+  assert( T->type == Period, "Seventh token was not a Period" );
   T = T->next;
 
-  assert( T->type == Identifier, "Eight token was not an Identifier" );
+  assert( T->type == Newline, "Eigthk token was not a newline");
   T = T->next;
 
-  assert( T->type == Integer, "Ninth token was not an Integer" );
+  assert( T->type == IndentIncrease, "Nineth token was not an IndentIncrease" );
   T = T->next;
 
-  assert( T->type == String, "Tenth token was not a String" );
+  assert( T->type == Identifier, "Tenth token was not an Identifier" );
   T = T->next;
 
-  assert( T->type == Comma, "Eleventh token was not a Comma" );
+  assert( T->type == Newline, "Eleventh token was not a Newline");
   T = T->next;
 
-  assert( T->type == IndentDecrease, "Twelfth token was not an IndentDecrease" );
+  assert( T->type == Integer, "Twelfth token was not an Integer" );
   T = T->next;
 
-  assert( T->type == String, "Thirteenth token was not a String");
+  assert( T->type == String, "Thirteenth token was not a String" );
   T = T->next;
 
-  assert( T->type == EndOfFile, "Fourthteenth token was not an EndOfFile");
-  assert( T->next == NULL, "Unexpected fifteenth token found");
+  assert( T->type == Comma, "Fourteenth token was not a Comma" );
+  T = T->next;
+
+  assert( T->type == Newline, "Fourteenth token was not a Newline" );
+  T = T->next;
+
+  assert( T->type == IndentDecrease, "Fifteenth token was not an IndentDecrease" );
+  T = T->next;
+
+  assert( T->type == String, "Sixteenth token was not a String");
+  T = T->next;
+
+  assert( T->type == EndOfFile, "Seventeenth token was not an EndOfFile");
+  assert( T->next == NULL, "Unexpected Eighteenth token found");
 
   printf("\n");
   free(G);

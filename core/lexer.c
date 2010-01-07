@@ -89,7 +89,8 @@ int goatLexer( GoatState *G, char* sourceFileName ) {
 		  goatGetNextCodePoint( &cp, &next, &end); 
 		  if(G->verbose) printf("%s", cp.utf8); 
 		}
-                prev_indent = indent; indent = 0; line_no++; lexer_state = Indent; break;
+		lexer_state = Newline;
+		break;
 
 	    case Newline:
 	      PUSH_EMPTY_TOKEN;
