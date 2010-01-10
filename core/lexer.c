@@ -220,12 +220,12 @@ void goatTranslateKeywordTokens( GoatState *G ) {
       continue;
     }
     
-    if( strcmp("return", curr_token->content) == 0 ) {
+    /*    if( strcmp("return", curr_token->content) == 0 ) {
       curr_token->type = Return;
       free(curr_token->content);
       curr_token->content = NULL;
       continue;
-    }
+      }*/
   }
 }
 

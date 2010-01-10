@@ -215,14 +215,46 @@ void testFunctionDefinitionParsing() {
   tokens = createToken( NULL, Lambda, NULL);
   lastToken = createToken( tokens, LeftParen, NULL );
   lastToken = createToken( lastToken, RightParen, NULL );
+  lastToken = createToken( lastToken, Newline, NULL);
   lastToken = createToken( lastToken, IndentIncrease, NULL);
   lastToken = createToken( lastToken, Identifier, "var");
   lastToken = createToken( lastToken, Equals, NULL);
   lastToken = createToken( lastToken, String, "Blah");
+  lastToken = createToken( lastToken, Newline, NULL);
   lastToken = createToken( lastToken, IndentDecrease, NULL);
   assert( (int)(newNode = astMatchFunctionDef( &tokens )), "Lambda-etc expected to match as a FunctionDef AST Node" );
-  //assert( (newNode->type == FunctionDef), "Function Def token stream not matched as FunctionDef AST-Node");
+  assert( (newNode->type == FunctionDef), "Function Def token stream not matched as FunctionDef AST-Node");
   
+  // Should return a FunctionDefinition Node for a Function with a single parameter
+  tokens = createToken( NULL, Lambda, NULL);
+  lastToken = createToken( tokens, LeftParen, NULL );
+  lastToken = createToken( lastToken, Identifier, "a");
+  lastToken = createToken( lastToken, RightParen, NULL );
+  lastToken = createToken( lastToken, Newline, NULL);
+  lastToken = createToken( lastToken, IndentIncrease, NULL);
+  lastToken = createToken( lastToken, Identifier, "var");
+  lastToken = createToken( lastToken, Equals, NULL);
+  lastToken = createToken( lastToken, String, "Blah");
+  lastToken = createToken( lastToken, Newline, NULL);
+  lastToken = createToken( lastToken, IndentDecrease, NULL);
+  assert( (int)(newNode = astMatchFunctionDef( &tokens )), "Lambda-etc with single paramater expected to match as a FunctionDef AST Node" );
+
+  // Should return a FunctionDefinition Node for a Function with multiple parameters
+  tokens = createToken( NULL, Lambda, NULL);
+  lastToken = createToken( tokens, LeftParen, NULL );
+  lastToken = createToken( lastToken, Identifier, "a");
+  lastToken = createToken( lastToken, Comma, NULL);
+  lastToken = createToken( lastToken, Identifier, "b");
+  lastToken = createToken( lastToken, RightParen, NULL );
+  lastToken = createToken( lastToken, Newline, NULL);
+  lastToken = createToken( lastToken, IndentIncrease, NULL);
+  lastToken = createToken( lastToken, Identifier, "var");
+  lastToken = createToken( lastToken, Equals, NULL);
+  lastToken = createToken( lastToken, String, "Blah");
+  lastToken = createToken( lastToken, Newline, NULL);
+  lastToken = createToken( lastToken, IndentDecrease, NULL);
+  assert( (int)(newNode = astMatchFunctionDef( &tokens )), "Lambda-etc with multiple paramaters expected to match as a FunctionDef AST Node" );
+  //assert( (newNode->type == FunctionDef), "Function Def token stream not matched as FunctionDef AST-Node");
   printf("\n");
 }
 
@@ -246,6 +278,7 @@ void testBlockParsing() {
   lastToken = createToken( tokens, Identifier, "test");
   lastToken = createToken( lastToken, Equals, NULL);
   lastToken = createToken( lastToken, Integer, "123");
+  lastToken = createToken( lastToken, Newline, NULL);
   lastToken = createToken( lastToken, IndentDecrease, NULL);
   assert( (int)(newNode = astMatchBlock( &tokens )), "Token stream not matched as Block AST-Node");
   //  assert( (int)(newNode->firstChild), "No child AST-Node generated for Block");
@@ -304,10 +337,12 @@ void testConditionalParsing() {
   // Test parsing of a block with only an if clause
   tokens = createToken( NULL, If, NULL);
   lastToken = createToken( tokens, Identifier, "blah");
+  lastToken = createToken( lastToken, Newline, NULL);
   lastToken = createToken( lastToken, IndentIncrease, NULL);
   lastToken = createToken( lastToken, Identifier, "var");
   lastToken = createToken( lastToken, Equals, NULL);
   lastToken = createToken( lastToken, Integer, "23");
+  lastToken = createToken( lastToken, Newline, NULL);
   lastToken = createToken( lastToken, IndentDecrease, NULL);
 
   assert((int)(newNode = astMatchConditional( &tokens )), "Conditional token stream not matched as Conditional AST node" );
@@ -320,16 +355,19 @@ void testConditionalParsing() {
   // Test parsing of a block with only an if and an else clause
   tokens = createToken( NULL, If, NULL);
   lastToken = createToken( tokens, Identifier, "blah");
+  lastToken = createToken( lastToken, Newline, NULL);
   lastToken = createToken( lastToken, IndentIncrease, NULL);
   lastToken = createToken( lastToken, Identifier, "var");
   lastToken = createToken( lastToken, Equals, NULL);
   lastToken = createToken( lastToken, Integer, "23");
+  lastToken = createToken( lastToken, Newline, NULL);
   lastToken = createToken( lastToken, IndentDecrease, NULL);
   lastToken = createToken( lastToken, Else, NULL);
   lastToken = createToken( lastToken, IndentIncrease, NULL);
   lastToken = createToken( lastToken, Identifier, "function");
   lastToken = createToken( lastToken, LeftParen, NULL);
   lastToken = createToken( lastToken, RightParen, NULL);
+  lastToken = createToken( lastToken, Newline, NULL);
   lastToken = createToken( lastToken, IndentDecrease, NULL);
 
   assert((int)(newNode = astMatchConditional( &tokens )), "Conditional token stream not matched as Conditional AST node" );
@@ -344,15 +382,18 @@ void testConditionalParsing() {
   // Should not match a condition block with an Else token but no statement
   tokens = createToken( NULL, If, NULL);
   lastToken = createToken( tokens, Identifier, "blah");
+  lastToken = createToken( lastToken, Newline, NULL);
   lastToken = createToken( lastToken, IndentIncrease, NULL);
   lastToken = createToken( lastToken, Identifier, "var");
   lastToken = createToken( lastToken, Equals, NULL);
   lastToken = createToken( lastToken, Integer, "23");
+  lastToken = createToken( lastToken, Newline, NULL);
   lastToken = createToken( lastToken, IndentDecrease, NULL);
   lastToken = createToken( lastToken, Else, NULL);
   lastToken = createToken( lastToken, Identifier, "function");
   lastToken = createToken( lastToken, LeftParen, NULL);
   lastToken = createToken( lastToken, RightParen, NULL);
+  lastToken = createToken( lastToken, Newline, NULL);
 
   assert(!(int)astMatchConditional( &tokens ), "Conditional block with missing else clause matched as block");
   ASSERT_ERROR(astMatchConditional( &tokens ));

@@ -131,10 +131,23 @@ int goatBuildAST( GoatState *G ) {
   Token *source = G->tokens;
   Token **curr = &source;  
 
+  // Remove any leading newlines - e.g. from comments
+  // The lexer includes a newline token after a comment
+  while( TOKEN_IS_A( Newline )) {
+    CONSUME_TOKEN;
+  }
+
+
   while((newChild = MATCH(Statement))) {
     if( TOKEN_IS_A( Newline )) {
       CONSUME_TOKEN;
       astAppendChild( newChild, astRoot );
+      
+      // Ignore any blank links
+      while( TOKEN_IS_A( Newline )) {
+	CONSUME_TOKEN;
+      }
+
     } else if( TOKEN_IS_A( EndOfFile)) {
       G->astRoot = astRoot;
       return 1;
@@ -166,17 +179,45 @@ MATCHER_FOR( Block ) {
   CONSUME_TOKEN;
 
   thisNode = astCreateNode( Block );
-  
-  if((int)(newChild = MATCH( Statement ))) {
-    astAppendChild(newChild, thisNode);
-  } else {
-    goatError((*curr)->line_no, "Could not find a statement in this block.");
-    astFreeNode( thisNode );
+
+  // Match at least one statement
+  if((newChild = MATCH(Statement))) {
+    if( TOKEN_IS_A( Newline )) {
+      CONSUME_TOKEN;
+      astAppendChild( newChild, thisNode );
+      
+      // Ignore any blank links
+      while( TOKEN_IS_A( Newline )) {
+	CONSUME_TOKEN;
+      }
+    } else {
+      // Found something on a line we couldn't match
+      goatError((*curr)->line_no, "Unexpected token %s[%s] found.", TOKEN_TYPES[(*curr)->type], (*curr)->content);
+      astFreeNode(thisNode);
+      return 0;
+    }
+  }
+  else {
+    goatError((*curr)->line_no, "Could not match a statement in block");
+    astFreeNode(thisNode);
     return NULL;
   }
 
-  while((newChild = MATCH( Statement ))) {
-    astAppendChild(newChild, thisNode);
+  while((newChild = MATCH(Statement))) {
+    if( TOKEN_IS_A( Newline )) {
+      CONSUME_TOKEN;
+      astAppendChild( newChild, thisNode );
+      
+      // Ignore any blank links
+      while( TOKEN_IS_A( Newline )) {
+	CONSUME_TOKEN;
+      }
+    } else {
+      // Found something on a line we couldn't match
+      goatError((*curr)->line_no, "Unexpected token %s[%s] found.", TOKEN_TYPES[(*curr)->type], (*curr)->content);
+      astFreeNode(thisNode);
+      return 0;
+    }  
   }
 
   if( TOKEN_IS_NOT_A( IndentDecrease )) {
@@ -184,6 +225,7 @@ MATCHER_FOR( Block ) {
     astFreeNode( thisNode );
     return NULL;
   }
+    
   CONSUME_TOKEN;
   return thisNode;
 }
@@ -401,12 +443,13 @@ MATCHER_FOR( MethodInvocation ) {
 MATCHER_FOR( FunctionDef ) {
   Node *thisNode, *newChild;
   Token *savedcurr = *curr;
+  int must_match = FALSE;
 
   if( TOKEN_IS_NOT_A( Lambda )) { return NULL; }
   CONSUME_TOKEN;
 
   if( TOKEN_IS_NOT_A( LeftParen )) {
-    goatError((*curr)->line_no, "Unexpected %s found when a left parenthesis ')' was expected.", TOKEN_TYPES[(*curr)->type]);
+    goatError((*curr)->line_no, "Unexpected %s found when a left parenthesis '(' was expected.", TOKEN_TYPES[(*curr)->type]);
     (*curr) = savedcurr;
     return NULL; 
   }
@@ -415,11 +458,36 @@ MATCHER_FOR( FunctionDef ) {
   thisNode = astCreateNode( FunctionDef );
 
   while((newChild = MATCH( ParameterDef ))) {
-    astAppendChild(newChild, thisNode);    
+    astAppendChild(newChild, thisNode);
+    
+    // So if we match a right Parenthesis, that's a complete function call
+    if( TOKEN_IS_A( RightParen )) {
+      //CONSUME_TOKEN;
+      break;
+    }
+    
+    // If we match a comma, then we must match another parameter.
+    if( TOKEN_IS_A( Comma ) && ! must_match) {
+      must_match = TRUE;
+      CONSUME_TOKEN;
+      continue;
+    }
+    
+    // If execution gets to here, we've encountered some other token
+    goatError((*curr)->line_no, "FunctionDefinition: Unexpected %s found when a right parenthesis ')' was expected.", TOKEN_TYPES[(*curr)->type]);
+    astFreeNode( thisNode );
+    return NULL;
   }
 
-  if( TOKEN_IS_NOT_A( RightParen )) {
-    goatError((*curr)->line_no, "Unexpected %s found when a right parenthesis ')' was expected.", TOKEN_TYPES[(*curr)->type]);
+  if( TOKEN_IS_NOT_A( RightParen)) {
+    goatError((*curr)->line_no, "FunctionDefinition: Unexpected %s found when a right parenthesis ')' was expected.", TOKEN_TYPES[(*curr)->type]);
+    astFreeNode(thisNode);
+    return NULL;
+  }
+  CONSUME_TOKEN;
+
+  if( TOKEN_IS_NOT_A( Newline )) {
+    goatError((*curr)->line_no, "FunctionDefinition: Unexpected %s found when a Newline was expected.", TOKEN_TYPES[(*curr)->type]);
     astFreeNode(thisNode);
     (*curr) = savedcurr;
     return NULL;
@@ -479,6 +547,14 @@ MATCHER_FOR( Conditional ) {
   }
   astAppendChild(exprChild, thisNode);
 
+  if( TOKEN_IS_NOT_A( Newline )) {
+    astFreeNode(thisNode);
+    (*curr) = saved_curr;
+    goatError((*curr)->line_no, "Unexpected token %s found after if-expression; should be a new line.", TOKEN_TYPES[(*curr)->type]);
+    return NULL;
+  }
+  CONSUME_TOKEN;
+
   // Match the block to be run if the condition executes to true
   if(!(int)(ifChild = MATCH( Block ))) {
     goatError((*curr)->line_no, "Unexpected token %s found after if keyword.", TOKEN_TYPES[(*curr)->type]);
@@ -491,6 +567,14 @@ MATCHER_FOR( Conditional ) {
   if( TOKEN_IS_NOT_A( Else ) ) {
     // So no else clause
     return thisNode;
+  }
+  CONSUME_TOKEN;
+
+  if( TOKEN_IS_NOT_A( Newline )) {
+    astFreeNode(thisNode);
+    (*curr) = saved_curr;
+    goatError((*curr)->line_no, "Unexpected token %s found after else-expression; should be a new line.", TOKEN_TYPES[(*curr)->type]);
+    return NULL;
   }
   CONSUME_TOKEN;
 
