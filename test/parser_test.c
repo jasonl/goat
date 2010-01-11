@@ -363,6 +363,7 @@ void testConditionalParsing() {
   lastToken = createToken( lastToken, Newline, NULL);
   lastToken = createToken( lastToken, IndentDecrease, NULL);
   lastToken = createToken( lastToken, Else, NULL);
+  lastToken = createToken( lastToken, Newline, NULL);
   lastToken = createToken( lastToken, IndentIncrease, NULL);
   lastToken = createToken( lastToken, Identifier, "function");
   lastToken = createToken( lastToken, LeftParen, NULL);
@@ -390,6 +391,7 @@ void testConditionalParsing() {
   lastToken = createToken( lastToken, Newline, NULL);
   lastToken = createToken( lastToken, IndentDecrease, NULL);
   lastToken = createToken( lastToken, Else, NULL);
+  lastToken = createToken( lastToken, Newline, NULL);
   lastToken = createToken( lastToken, Identifier, "function");
   lastToken = createToken( lastToken, LeftParen, NULL);
   lastToken = createToken( lastToken, RightParen, NULL);

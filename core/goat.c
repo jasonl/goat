@@ -57,6 +57,8 @@ void goatPrintTokens( GoatState *G ) {
     while(curr != 0) {
         printf("%d ", curr->line_no);
         switch( curr->type ) {
+	case Indent:            printf("Indent         ");break;
+	case Comment:           printf("Comment        ");break;
 	case IndentIncrease:    printf("IndentIncrease ");break;
 	case IndentDecrease:    printf("IndentDecrease ");break;
 	case Comma:             printf("Comma          ");break;
@@ -70,7 +72,9 @@ void goatPrintTokens( GoatState *G ) {
 	case String:            printf("String         ");break;
 	case Identifier:        printf("Identifier     ");break;
 	case EndOfFile:         printf("EndOfFile      ");break;
-	default:                printf("???            ");break;
+	case Newline:           printf("Newline        ");break;
+	case Whitespace:        printf("WhiteSpace     ");break;
+	default:                printf("%d            ", curr->type);break;
         }
 
         switch(curr -> type) {

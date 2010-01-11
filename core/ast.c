@@ -7,13 +7,13 @@
  * -----------------------------------------------------------------------------
  * block                 = indent_increase,{ statement_group }, indent_decrease;
  * statement_group       = statement, { statement }
- * statement             = [ assignment | function_call | conditional | class_def];
+ * statement             = [ assignment | function_call | conditional | class_def], newline;
  *
  * assignment            = mutable_assignment | immutable_assignment;
  * mutable_assignment    = identifier, equals, expression;
  * immutable_assignment  = identifier, colon, expression;
  *
- * conditional           = if, expression, block, [ else, block ];
+ * conditional           = if, expression, newline, block, [ else, newline, block ];
  *
  * (* Class Definition *)
  * class_def             = class, identifier, indent_increase, { assignment }, indent_decrease
@@ -26,10 +26,12 @@
  * function_definition   = one_line_func_def | block_func_def;
  * one_line_func_def     = lambda, left_paren, { parameter_def, { comma, parameter_def}}, hash_rocket, statement, right_paren;
  * block_func_def        = lambda, left_paren, {parameter_def, {comma, parameter_def}}, right_paren, block;
- * parameter_def         = identifier, [ colon, expression ];
+ * parameter_def         = identifier; [Todo: Add Named Parameters]
  *
  * (* Function calls *)
- * function_call         = expression, left_paren , { parameter }, right_paren;
+ * function_call         = [receiver], method_invocation;
+ * method_invocation     = [period] identifier, [left_paren] , { parameter }, [right_paren];
+ * receiver              = method_invocation | string_literal | integer_literal | identifier ;
  * 
  * parameter             = named_parameter | expression;
  * named_parameter       = identifier, colon, expression;
