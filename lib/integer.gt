@@ -1,0 +1,75 @@
+; Integer
+; 
+; This is a built-in class to represent a 32-bit signed integer, with
+; valid values from -2,147,483,648 to +2,147,483,647
+;
+; Calling Convention
+;
+; Bottom of Stack             0000000000
+; Right-most arg type hash    0xAAAAAAAA   [DWORD]
+; Right-most arg dispatch fn  0x01314122   [DWORD]
+; Right-most arg payload      0x00001234   [DWORD]
+; ...                         ...
+; Left-most arg type hash     0A3f9873C0   [DWORD]
+; Left-most arg dispatch fn   0x13142433   [DWORD]
+; Left-most arg payload       0x00000001   [DWORD] <-- ESP POINTS HERE
+;
+; my-instance payload         EAX
+; my-instance message hash    ECX
+;
+; Function return
+; return object type hash     ECX
+; return object dispatch fn   EDX
+; return object payload       EAX       
+; 
+class Integer
+  ; Integer addition
+  ; Adds the addend to the value of this instance, and returns the sum.
+  +: λ( addend )
+    asm
+      mov ecx, [EBP+12]      ; Load type hash of first argument into ECX
+      cmp ecx, #Integer      ; test that divisor is an Integer
+      jne incorrect_type
+      add eax, [EBP+4]
+      mov edx, &Integer
+      mov ecx, #Integer
+      pop ebp
+      ret
+      incorrect_type:     
+
+  ; Integer subtraction
+  ; Subtracts the subtrahend from the value of this instance, and returns
+  ; the difference.
+  -: λ( subtrahend )
+    asm
+      mov ecx, [EBP+12]      ; Load type hash of first argument into ECX
+      cmp ecx, #Integer      ; test that divisor is an Integer
+      jne incorrect_type
+      sub eax, [EBP+4]
+      mov edx, &Integer
+      mov ecx, #Integer
+      pop ebp
+      ret
+      incorrect_type:     
+
+
+  ; Modulo operation. a % b returns the remainder when a is divided by
+  ; b using integer division.
+  ;
+  ; my - the divident (which determines the sign of the result)
+  ; divisor - the divisor, must be an Integer
+  %: λ( divisor )
+    asm  
+      mov ecx, [EBP+12]      ; Load type hash of first argument into ECX
+      cmp ecx, #Integer      ; test that divisor is an Integer
+      jne incorrect_type
+      cdq                    ; sign extend EAX into EDX:EAX
+      idiv [EBP+4]
+      mov eax, edx           ; remainder in edx, we want to return it in eax
+      mov edx, &Integer      ; dispatch function
+      mov ecx, #Integer      ; Integer type hash
+      pop ebp
+      ret                    ; and return
+      incorrect_type: 
+      ; Do something?
+end
