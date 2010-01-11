@@ -1,0 +1,51 @@
+a = 1
+b: 2
+
+c = a +(b)
+
+test:3
+cat:"rhubarb"
+
+
+rubbish\23 test\"crap"
+
+object = rubbish()
+thing("rearrange")
+object() rubbish( paramRubbish, otherRubbish )
+object rubbish
+my rubbish 
+
+rubbish test()
+thing rubbish() test()
+
+a = HttpServer\request\
+b = http_server(80).request("current").headers()
+
+d = a + b + c
+f = a + b * c
+a * b + c
+a*(b+c)
+a < b
+a < 3
+y = a < 3
+
+function_call = receiver, method_invoc, { method_invoc }
+method_invoc = identifier, lparen, { parameter }, rparen
+expr = lparen, expr, rparen | function_call | identifier | literals
+receiver = identifier | literals | method_invoc | my 
+
+(a + (b + (c + (d))))*(4)
+
+FunctionCall:*
+ FunctionCall:+
+  Variable:a
+  Paramater
+   FunctionCall:+
+    Variable:b
+    Parameter
+     FunctionCall:+
+      Variable:c
+      Parameter
+       Variable:d
+ Parameter
+  IntegerLiteral:4
