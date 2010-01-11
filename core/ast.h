@@ -4,9 +4,8 @@
  *
  * Created on 17 November 2009, 10:18 PM
  */
-
 #ifndef _AST_H
-#define	_AST_H
+#define _AST_H
 
 enum NODE_TYPE {
   SourceFile,
@@ -76,7 +75,8 @@ struct _GoatState;
 
 // Function Prototypes
 //------------------------------------------------------------------------------
-Node *astCreateNote( enum NODE_TYPE );
+
+Node* astCreateNode( enum NODE_TYPE );
 void astFreeNode( Node* );
 void astAppendChild( Node*, Node* );
 void astInsertFirstChild( Node*, Node* );
@@ -98,5 +98,4 @@ MATCHER_PROTOTYPE_FOR( Conditional );
 MATCHER_PROTOTYPE_FOR( MethodInvocation );
 MATCHER_PROTOTYPE_FOR( Receiver );
 
-#endif	/* _AST_H */
-
+#endif
