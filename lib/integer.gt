@@ -52,6 +52,20 @@ class Integer
       ret
       incorrect_type:     
 
+  ; Integer multiplication
+  ; Multiplies the two signed integers and returns the result. Any overflow
+  ; is discarded
+  *: λ( factor )
+    asm  
+      mov ecx, [EBP+12]      ; Load type hash of first argument into ECX
+      cmp ecx, #Integer      ; test that divisor is an Integer
+      jne incorrect_type
+      imul [EBP+4]           ; This instance's value is already in eax
+      mov edx, &Integer      ; dispatch function
+      mov ecx, #Integer      ; Integer type hash
+      pop ebp
+      ret                    ; and return
+      incorrect_type: 
 
   ; Modulo operation. a % b returns the remainder when a is divided by
   ; b using integer division.
@@ -72,4 +86,146 @@ class Integer
       ret                    ; and return
       incorrect_type: 
       ; Do something?
+
+  ; Greater than. Returns a boolean object
+  >: λ( term )
+    asm
+      mov ecx, [EBP+12]      ; Load type has of the first argument into ecx
+      cmp ecx, #Integer      ; Test that the term is an Integer
+      jne incorrect_type
+      cmp eax, [EBP+4]       ; Test the two number
+      jg true
+      mov eax, 0             ; False boolean value
+      mov edx, &Boolean      ; Boolean object dispatch function
+      mov ecx, #Boolean      ; Boolean object type hash
+      pop ebp
+      ret                    ; and return
+      true:
+      mov eax, 1   
+      mov edx, &Boolean      ; Boolean object dispatch function
+      mov ecx, #Boolean      ; Boolean object type hash
+      pop ebp
+      ret                    ; and return
+      incorrect_type:
+
+  ; Less than. Returns a boolean object
+  <: λ( term )
+    asm
+      mov ecx, [EBP+12]      ; Load type has of the first argument into ecx
+      cmp ecx, #Integer      ; Test that the term is an Integer
+      jne incorrect_type
+      cmp eax, [EBP+4]       ; Test the two number
+      jl true                ; Jump if less than
+      mov eax, 0             ; False boolean value
+      mov edx, &Boolean      ; Boolean object dispatch function
+      mov ecx, #Boolean      ; Boolean object type hash
+      pop ebp
+      ret                    ; and return
+      true:
+      mov eax, 1   
+      mov edx, &Boolean      ; Boolean object dispatch function
+      mov ecx, #Boolean      ; Boolean object type hash
+      pop ebp
+      ret                    ; and return
+      incorrect_type:
+
+  ; Greater than or Equal to. Returns a boolean object
+  ≥: λ( term )
+    asm
+      mov ecx, [EBP+12]      ; Load type has of the first argument into ecx
+      cmp ecx, #Integer      ; Test that the term is an Integer
+      jne incorrect_type
+      cmp eax, [EBP+4]       ; Test the two numbers
+      jge true
+      mov eax, 0             ; False boolean value
+      mov edx, &Boolean      ; Boolean object dispatch function
+      mov ecx, #Boolean      ; Boolean object type hash
+      pop ebp
+      ret                    ; and return
+      true:
+      mov eax, 1   
+      mov edx, &Boolean      ; Boolean object dispatch function
+      mov ecx, #Boolean      ; Boolean object type hash
+      pop ebp
+      ret                    ; and return
+      incorrect_type:
+
+  ; Less than or equal to. Returns a boolean object
+  ≤: λ( term )
+    asm
+      mov ecx, [EBP+12]      ; Load type has of the first argument into ecx
+      cmp ecx, #Integer      ; Test that the term is an Integer
+      jne incorrect_type
+      cmp eax, [EBP+4]       ; Test the two number
+      jle true
+      mov eax, 0             ; False boolean value
+      mov edx, &Boolean      ; Boolean object dispatch function
+      mov ecx, #Boolean      ; Boolean object type hash
+      pop ebp
+      ret                    ; and return
+      true:
+      mov eax, 1   
+      mov edx, &Boolean      ; Boolean object dispatch function
+      mov ecx, #Boolean      ; Boolean object type hash
+      pop ebp
+      ret                    ; and return
+      incorrect_type:
+
+  ≡: λ( term )
+    asm
+      mov ecx, [EBP+12]      ; Load type hash of the first argumment into ecx
+      cmp ecx, #Integer
+      jne not_equal          ; If it's not an Integer, then it cannot be equal
+      cmp eax, [EBP+4]       ; Do the comparison
+      jne not_equal
+      mov eax, 1             ; return Boolean(true)
+      mov edx, &Boolean
+      mov ecx, #Boolean    
+      pop ebp
+      ret
+      not_equal:
+      mov eax, 0             ; return Boolean(false)
+      mov edx, &Boolean
+      mov ecx, #Boolean    
+      pop ebp
+      ret
+
+  ≢: λ( term )
+    asm
+      mov ecx, [EBP+12]      ; Load type hash of the first argumment into ecx
+      cmp ecx, #Integer
+      jne not_equal          ; If it's not an Integer, then it cannot be equal
+      cmp eax, [EBP+4]       ; Do the comparison
+      jne not_equal
+      mov eax, 0             ; return Boolean(true)
+      mov edx, &Boolean
+      mov ecx, #Boolean    
+      pop ebp
+      ret
+      not_equal:
+      mov eax, 1             ; return Boolean(false)
+      mov edx, &Boolean
+      mov ecx, #Boolean    
+      pop ebp
+      ret
+
+  ; Increment: Add 1 to the value of the integer
+  ++: λ()
+    asm
+      inc eax                ; Value is already in eax
+      mov edx, &Integer      ; return the Integer object
+      mov ecx, #Integer
+      pop ebp
+      ret
+
+  ; Decrement: Subtract 1 from the value of the integer
+  --: λ()
+    asm
+      dec eax                ; Value is already in eax
+      mov edx, &Integer      ; return the Integer object
+      mov ecx, #Integer
+      pop ebp
+      ret
+
+
 end
