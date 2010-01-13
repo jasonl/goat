@@ -22,6 +22,7 @@ void ParserTest() {
   testMutableAssignmentParsing();
   testImmutableAssignmentParsing();
   testConditionalParsing();
+  testReturnParsing();
 
   printf("\n");
 }
@@ -401,4 +402,39 @@ void testConditionalParsing() {
   ASSERT_ERROR(astMatchConditional( &tokens ));
   printf("\n");
   
+}
+
+void testReturnParsing() {
+  Token *tokens, *lastToken;  
+  Node *newNode;
+
+  printf("- testReturnParsing");
+
+  // Should not match a statement which doesn't start with a return
+  tokens = createToken( NULL, If, NULL);
+  createToken( tokens, Integer, "123");
+
+  assert(!(int)astMatchReturnStatement( &tokens ), "If-token erroneously matched as a ReturnStatement AST-Node");
+
+  // Should match return token, followed by an expression
+  tokens = createToken( NULL, Return, NULL);
+  lastToken = createToken( tokens, Identifier, "a");
+  lastToken = createToken( tokens, Identifier, "+");
+  lastToken = createToken( tokens, Identifier, "b");
+
+  assert((int)(newNode = astMatchReturnStatement( &tokens )), "ReturnStatement token stream not matched as ReturnStatement AST-Node");
+  assert(newNode->type == ReturnStatement, "ReturnStatement token stream Node not of ReturnStatement type.");
+  assert((int)newNode->firstChild, "ReturnStatement AST-Node has no child AST-Node");
+  assert(newNode->firstChild->type == FunctionCall, "ReturnStatement child AST-Node not matched as a function call");
+
+  // Should match a return token, with no return expression (but replace that with a NullLiteral)
+  tokens = createToken( NULL, Return, NULL);
+  lastToken = createToken( tokens, Newline, NULL);
+
+  assert((int)(newNode = astMatchReturnStatement( &tokens )), "ReturnStatement token stream not matched as ReturnStatement AST-Node");
+  assert(newNode->type == ReturnStatement, "ReturnStatement token stream Node not of ReturnStatement type.");
+  assert((int)newNode->firstChild, "ReturnStatement AST-Node has no child AST-Node");
+  assert(newNode->firstChild->type == NullLiteral, "ReturnStatement child AST-Node not generated with a NullLiteral child");
+
+  printf("\n");
 }

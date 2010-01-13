@@ -17,7 +17,8 @@ enum NODE_TYPE {
   FunctionDef, OneLineFunctionDef, BlockFunctionDef,
   ParameterDef,
   FunctionCall, Parameter, NamedParameter,
-  IntegerLiteral, Variable, StringLiteral
+  IntegerLiteral, Variable, StringLiteral, NullLiteral,
+  ReturnStatement
 };
 
 static char *NODE_TYPES[] = { 
@@ -25,12 +26,13 @@ static char *NODE_TYPES[] = {
   "\x1b[1;33mBlock\x1b[0;37;00m",
   "StatementGroup", "Statement", "ClassStatement", "My",
   "\x1b[0;36mMutableAssignment\x1b[0;37;00m", "\x1b[0;36mImmutableAssignment\x1b[0;37;00m",
-  "\x1b[1;31mConditional\x1b[0;37;00m",
+  "\x1b[1;35mConditional\x1b[0;37;00m",
   "ClassDefinition",
-  "FunctionDef", "OneLineFunctionDef", "BlockFunctionDef",
+  "\x1b[1;31mFunctionDef\x1b[0;37;00m", "OneLineFunctionDef", "BlockFunctionDef",
   "ParameterDef",
   "\x1b[1;34mFunctionCall\x1b[0;37;00m", "Parameter", "NamedParameter",
-  "IntegerLiteral", "Variable", "StringLiteral"
+  "IntegerLiteral", "Variable", "StringLiteral", "NullLiteral",
+  "\x1b[1;32mReturnStatement\x1b[0;37;00m"
 };
 
 // AST node
@@ -97,5 +99,5 @@ MATCHER_PROTOTYPE_FOR( ImmutableAssignment );
 MATCHER_PROTOTYPE_FOR( Conditional );
 MATCHER_PROTOTYPE_FOR( MethodInvocation );
 MATCHER_PROTOTYPE_FOR( Receiver );
-
+MATCHER_PROTOTYPE_FOR( ReturnStatement );
 #endif

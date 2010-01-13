@@ -7,13 +7,15 @@
  * -----------------------------------------------------------------------------
  * block                 = indent_increase,{ statement_group }, indent_decrease;
  * statement_group       = statement, { statement }
- * statement             = [ assignment | function_call | conditional | class_def], newline;
+ * statement             = [ assignment | function_call | conditional | class_def | return_statement], newline;
  *
  * assignment            = mutable_assignment | immutable_assignment;
  * mutable_assignment    = identifier, equals, expression;
  * immutable_assignment  = identifier, colon, expression;
  *
  * conditional           = if, expression, newline, block, [ else, newline, block ];
+ *
+ * return_statement      = return, [expression];
  *
  * (* Class Definition *)
  * class_def             = class, identifier, indent_increase, { assignment }, indent_decrease
@@ -166,7 +168,10 @@ MATCHER_FOR( Statement )
 {
   Node *thisNode;
 
-  if((thisNode = MATCH( Assignment )) || (thisNode = MATCH( FunctionCall )) || (thisNode = MATCH( Conditional ))) {   
+  if((thisNode = MATCH( Assignment )) || 
+     (thisNode = MATCH( FunctionCall )) || 
+     (thisNode = MATCH( Conditional )) ||
+     (thisNode = MATCH( ReturnStatement))) {   
     return thisNode;
   }
 
@@ -576,40 +581,20 @@ MATCHER_FOR( ImmutableAssignment ) {
   return NULL;
 }
 
-/*
-MATCHER_FOR( FunctionCall ) {
-    Token *savedCurr = *curr;
-    Node *newChild = NULL, *newNode = NULL;
+MATCHER_FOR( ReturnStatement ) {
+  Node *thisNode, *returnExpr;
 
-    if(newChild = MATCH( Expression )) {
-        *curr = *curr->next;
+  if( TOKEN_IS_NOT_A( Return )) {
+    return NULL;
+  }
+  CONSUME_TOKEN;
 
-        if(*curr->type == Period) { *curr = *curr->next; }
+  thisNode = astCreateNode( ReturnStatement );
 
-        if(*curr->type == Identifier) {
-            *curr = *curr->next;
-        }
-        else {
-            goatError("Unexpected %s found; expecting an Identifier denoting a function to call", *NODE_TYPES[*curr->type]);
-            *curr = savedCurr; return NULL;
-        }
-    }
-    else if (*curr->type == Identifier) {
-        // Add implied AST nodes for the "my" object
-    }
-    else { *curr = savedCurr; return NULL; }
+  if(!(returnExpr = MATCH( Expression ))){
+    returnExpr = astCreateNode( NullLiteral );
+  }
+
+  astAppendChild(returnExpr, thisNode);
+  return thisNode;
 }
-
-MATCHER_FOR( FunctionDefinition ) {
-  Token *savedCurr = *curr;
-  Node *newChild = NULL, *newNode = NULL;
-
-  if(newChild = MATCH( OneLineFunctionDef )) {
-    // Return the actual function definition node itself, this rule is for convenience only
-    return newChild;
-  }
-  else if(newChild = MATCH( BlockFunctionDef )) {
-    return newChild;
-  }
-  return NULL;
-} */
