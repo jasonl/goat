@@ -419,12 +419,13 @@ void testReturnParsing() {
   // Should match return token, followed by an expression
   tokens = createToken( NULL, Return, NULL);
   lastToken = createToken( tokens, Identifier, "a");
-  lastToken = createToken( tokens, Identifier, "+");
-  lastToken = createToken( tokens, Identifier, "b");
+  lastToken = createToken( lastToken, Identifier, "+");
+  lastToken = createToken( lastToken, Identifier, "b");
 
   assert((int)(newNode = astMatchReturnStatement( &tokens )), "ReturnStatement token stream not matched as ReturnStatement AST-Node");
   assert(newNode->type == ReturnStatement, "ReturnStatement token stream Node not of ReturnStatement type.");
   assert((int)newNode->firstChild, "ReturnStatement AST-Node has no child AST-Node");
+
   assert(newNode->firstChild->type == FunctionCall, "ReturnStatement child AST-Node not matched as a function call");
 
   // Should match a return token, with no return expression (but replace that with a NullLiteral)
