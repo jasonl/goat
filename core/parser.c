@@ -598,3 +598,57 @@ MATCHER_FOR( ReturnStatement ) {
   astAppendChild(returnExpr, thisNode);
   return thisNode;
 }
+
+MATCHER_FOR( ClassDefinition ) {
+  Token *saved_curr = *curr;
+  Node *thisNode, *newNode;
+
+  if( TOKEN_IS_NOT_A( Class )) {
+    return NULL;
+  }
+  CONSUME_TOKEN;
+
+  if( TOKEN_IS_A( Identifier )) {
+    thisNode = astCreateNode( ClassDefinition );
+    thisNode->token = *curr;
+  } else {
+    goatError((*curr)->line_no, "Unexpected token %s found after class keyword. Identifier expected", TOKEN_TYPES[(*curr)->type]);
+    (*curr) = saved_curr;
+    return NULL;
+  }
+  CONSUME_TOKEN;
+  
+  if( TOKEN_IS_NOT_A( Newline )) {
+    goatError((*curr)->line_no, "Unexpected token %s found after class name. Newline expected", TOKEN_TYPES[(*curr)->type]);
+    (*curr) = saved_curr;
+    return NULL;
+  }
+  CONSUME_TOKEN;
+
+
+  if( TOKEN_IS_NOT_A( IndentIncrease )) {
+    // Empty class
+    return thisNode;
+  }
+  CONSUME_TOKEN;
+
+  while((newNode = MATCH(Assignment))) {
+    astAppendChild(newNode, thisNode);
+    if( TOKEN_IS_A( Newline )) {
+      CONSUME_TOKEN;
+    } else {
+      goatError((*curr)->line_no, "Unexpected token %s found in class definition block. Could not match assignment", TOKEN_TYPES[(*curr)->type]);
+      return NULL;
+    }
+  }
+
+  if( TOKEN_IS_A( IndentDecrease )) {
+    CONSUME_TOKEN;
+    return thisNode;
+  } else {
+    goatError((*curr)->line_no, "Unexpected token %s found when indent decrease to close class definition block expected.", TOKEN_TYPES[(*curr)->type]);
+    astFreeNode(thisNode);
+    (*curr) = saved_curr;
+    return NULL;
+  }
+}

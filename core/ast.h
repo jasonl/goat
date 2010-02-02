@@ -100,4 +100,5 @@ MATCHER_PROTOTYPE_FOR( Conditional );
 MATCHER_PROTOTYPE_FOR( MethodInvocation );
 MATCHER_PROTOTYPE_FOR( Receiver );
 MATCHER_PROTOTYPE_FOR( ReturnStatement );
+MATCHER_PROTOTYPE_FOR( ClassDefinition );
 #endif

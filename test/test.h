@@ -20,6 +20,7 @@ void testMutableAssignmentParsing();
 void testImmutableAssignmentParsing();
 void testConditionalParsing();
 void testReturnParsing();
+void testClassDefinitionParsing();
 
 extern int error_count;
 extern int assert_count;

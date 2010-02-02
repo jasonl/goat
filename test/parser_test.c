@@ -23,7 +23,7 @@ void ParserTest() {
   testImmutableAssignmentParsing();
   testConditionalParsing();
   testReturnParsing();
-
+  testClassDefinitionParsing();
   printf("\n");
 }
 
@@ -437,5 +437,45 @@ void testReturnParsing() {
   assert((int)newNode->firstChild, "ReturnStatement AST-Node has no child AST-Node");
   assert(newNode->firstChild->type == NullLiteral, "ReturnStatement child AST-Node not generated with a NullLiteral child");
 
+  printf("\n");
+}
+
+void testClassDefinitionParsing() {
+  Token *tokens, *lastToken;
+  Node *newNode;
+
+  printf("- testClassDefinitionParsing");
+
+  // Should not match anything that doesn't start with the class keyword
+  tokens = createToken( NULL, Identifier, NULL);
+  createToken( tokens, Newline, NULL);
+  assert(!astMatchClassDefinition( &tokens ), "Identifier erroneously matched as a Class Definition");
+
+  // Should not match a class name without an identifier naming it.
+  tokens = createToken( NULL, Class, NULL);
+  createToken( tokens, RightParen, NULL);
+  ASSERT_ERROR((newNode = astMatchClassDefinition( &tokens )));
+  assert(!newNode, "Class-RightParen erroneously matched as a Class Definition");
+
+  // Should match an empty class
+  tokens = createToken( NULL, Class, NULL);
+  lastToken = createToken( tokens, Identifier, "Integer");
+  createToken( lastToken, Newline, NULL);
+  assert((int)(newNode = astMatchClassDefinition( &tokens )), "Class-Identifier not matched as a ClassDefinition AST-Node");
+  assert(newNode->type == ClassDefinition, "Class-Identifier not matched as a ClassDefinition AST-Node");
+  assert((int)newNode->token, "ClassDefinition AST-Node has not linked Token");
+
+  // Should match a class with an assignment
+  tokens = createToken( NULL, Class, NULL);
+  lastToken = createToken( tokens, Identifier, "Integer");
+  lastToken = createToken( lastToken, Newline, NULL);
+  lastToken = createToken( lastToken, IndentIncrease, NULL);
+  lastToken = createToken( lastToken, Identifier, "value");
+  lastToken = createToken( lastToken, Colon, NULL);
+  lastToken = createToken( lastToken, Integer, "123");
+  lastToken = createToken( lastToken, Newline, NULL);
+  lastToken = createToken( lastToken, IndentDecrease, NULL);
+  assert((int)(newNode = astMatchClassDefinition( &tokens )), "Class with assignment in block not matched as a ClassDefinition AST-Node");
+  
   printf("\n");
 }
