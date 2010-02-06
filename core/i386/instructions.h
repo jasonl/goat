@@ -1,15 +1,13 @@
 /* 
- * File:   asm.h
+ * File:   instructions.h
  * Author: Jason Langenauer
  *
  * Created on 30 November 2009, 8:31 PM
  */
 
-#ifndef _ASM_H
-#define	_ASM_H
+#ifndef _INSTRUCTIONS_H
+#define	_INSTRUCTIONS_H
 
-typedef unsigned char byte;  // 8 bits
-typedef unsigned int  word;  // 16 bits
 typedef unsigned long dword; // 32 bits
 
 typedef dword opcode; // Encoding of actual opcodes to be generated
@@ -160,9 +158,9 @@ typedef struct {
     operand operands[3];
     opcode prefix;
     opcode opcodes[4];
-} Instruction;
+} InstructionPrototype;
 
-Instruction x86_instructions[] = {
+InstructionPrototype x86_instructions[] = {
 {"AAA",     {NOT_USED,NOT_USED,NOT_USED}, 0,   {CON(0x37), 0, 0, 0}},                   // ASCII Adjust After Addition
 {"AAD",     {NOT_USED,NOT_USED,NOT_USED}, 0,   {CON(0xD5), CON(0x0A), 0, 0}},           // ASCII Adjust AX Before Division
 {"AAM",     {NOT_USED,NOT_USED,NOT_USED}, 0,   {CON(0xD4), CON(0x0A), 0, 0}},           // ASCII Adjust AX After Multiply
@@ -852,7 +850,7 @@ the three operand form if required - e.g. IMUL EAX, $8 becomes IMUL EAX, EAX, $8
 {"XOR",     {R16,      RM16,    NOT_USED}, O16,  {CON(0x33), MOD_RM, 0, 0}},              // Bitwise XOR R16 with RM16, result in R16  
 {"XOR",     {R32,      RM32,    NOT_USED}, O32,  {CON(0x33), MOD_RM, 0, 0}}               // Bitwise XOR R32 with RM32, result in R32
 };
-#endif	/* _ASM_H */
+#endif	/* _INSTRUCTIONS_H */
 
     
 
