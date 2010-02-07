@@ -183,7 +183,7 @@ InstructionPrototype x86_instructions[] = {
 {"ADD",     {RM32,    IMM32,   NOT_USED}, O32, {CON(0x81), OPCODE_EX(0), ID, 0}},       // Add IMM32 to RM32
 {"ADD",     {RM16,    IMM8,    NOT_USED}, O16, {CON(0x83), OPCODE_EX(0), IB, 0}},       // Add sign-extended IMM8 to RM16
 {"ADD",     {RM32,    IMM8,    NOT_USED}, O32, {CON(0x83), OPCODE_EX(0), IB, 0}},       // Add sign-extended IMM8 to RM32
-{"ADD",     {RM8,     R8 ,     NOT_USED}, 0,   {CON(0x00), MOD_RM, 0, 0}},              // Add R8 to RM8
+{"ADD",     {RM8,     R8,      NOT_USED}, 0,   {CON(0x00), MOD_RM, 0, 0}},              // Add R8 to RM8
 {"ADD",     {RM16,    R16,     NOT_USED}, O16, {CON(0x01), MOD_RM, 0, 0}},              // Add R16 to RM16
 {"ADD",     {RM32,    R32,     NOT_USED}, O32, {CON(0x01), MOD_RM, 0, 0}},              // Add R32 to RM32
 {"ADD",     {R8,      RM8,     NOT_USED}, 0,   {CON(0x02), MOD_RM, 0, 0}},              // Add RM8 to R8
@@ -241,8 +241,8 @@ InstructionPrototype x86_instructions[] = {
 {"CALL",    {RM32,    NOT_USED,NOT_USED}, O32, {CON(0xFF), OPCODE_EX(2), 0, 0}},        // Near call, absolute address in RM32
 {"CALL",    {PTR1616, NOT_USED,NOT_USED}, O16, {CON(0x9A), CD, 0}},                     // Far call, absolute address PTR16:16
 {"CALL",    {PTR1632, NOT_USED,NOT_USED}, O32, {CON(0x9A), CP, 0}},                     // Far call, absolute address PTR16:32
-{"CALL FAR",{M1616, NOT_USED,NOT_USED}, O16, {CON(0xFF), OPCODE_EX(3), 0, 0}},        // Far call, absolute address in M1616
-{"CALL FAR",{M1632, NOT_USED,NOT_USED}, O32, {CON(0xFF), OPCODE_EX(3), 0, 0}},        // Far call, absolute address in M1632
+{"CALL_FAR",{M1616, NOT_USED,NOT_USED}, O16, {CON(0xFF), OPCODE_EX(3), 0, 0}},        // Far call, absolute address in M1616
+{"CALL_FAR",{M1632, NOT_USED,NOT_USED}, O32, {CON(0xFF), OPCODE_EX(3), 0, 0}},        // Far call, absolute address in M1632
 
 {"CBW",     NO_OPERANDS,                  O16, {CON(0x98), 0, 0, 0}},                   // Extend AL into AX by repeating sign bit
 {"CWD",     NO_OPERANDS,                  O16, {CON(0x99), 0, 0, 0}},                   // Extend AX into DX:AX by repeating sign bit
@@ -466,10 +466,10 @@ the three operand form if required - e.g. IMUL EAX, $8 becomes IMUL EAX, EAX, $8
 {"JMP",     {REL32,  NOT_USED, NOT_USED}, O32, {CON(0xE9), CD, 0, 0}},                 // Jump near
 {"JMP",     {RM16,   NOT_USED, NOT_USED}, O16, {CON(0xFF), OPCODE_EX(4), 0, 0}},       // Jump near
 {"JMP",     {RM32,   NOT_USED, NOT_USED}, O32, {CON(0xFF), OPCODE_EX(4), 0, 0}},       // Jump near
-{"JMP FAR", {PTR1616,NOT_USED, NOT_USED}, O16, {CON(0xEA), CD, 0, 0}},                 // Jump far, absolute address
-{"JMP FAR", {PTR1632,NOT_USED, NOT_USED}, O32, {CON(0xEA), CP, 0, 0}},                 // Jump far, absolute address
-{"JMP FAR", {M1616,  NOT_USED, NOT_USED}, O16, {CON(0xFF), OPCODE_EX(5), 0, 0}},       // Jump far, indirect address
-{"JMP FAR", {M1632,  NOT_USED, NOT_USED}, O32, {CON(0xFF), OPCODE_EX(5), 0, 0}},       // Jump far, indirect address
+{"JMP_FAR", {PTR1616,NOT_USED, NOT_USED}, O16, {CON(0xEA), CD, 0, 0}},                 // Jump far, absolute address
+{"JMP_FAR", {PTR1632,NOT_USED, NOT_USED}, O32, {CON(0xEA), CP, 0, 0}},                 // Jump far, absolute address
+{"JMP_FAR", {M1616,  NOT_USED, NOT_USED}, O16, {CON(0xFF), OPCODE_EX(5), 0, 0}},       // Jump far, indirect address
+{"JMP_FAR", {M1632,  NOT_USED, NOT_USED}, O32, {CON(0xFF), OPCODE_EX(5), 0, 0}},       // Jump far, indirect address
 
 {"LAHF",    NO_OPERANDS,                  0,   {CON(0x9F), 0, 0, 0}},                  // Load Flags into AH
 
