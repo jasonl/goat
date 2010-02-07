@@ -176,3 +176,7 @@ Operand& Operand::operator*(const uint8_t scale_b) {
   }
 
 }
+
+bool Operand::isPrototype() {
+  return prototype;
+}

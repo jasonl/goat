@@ -1,6 +1,8 @@
 #ifndef OPERAND_H
 #define OPERAND_H
 
+#include <stdint.h>
+
 typedef enum _operand_type {
   Null,
   Register,
@@ -19,6 +21,7 @@ public:
   Operand& operator+(const int32_t);
   Operand& operator-(const int32_t);
   Operand& operator*(const uint8_t);
+  bool isPrototype();
   //private:
   operand_type type;
   register_t base;
