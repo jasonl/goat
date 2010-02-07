@@ -27,10 +27,10 @@ class Integer
   ; Adds the addend to the value of this instance, and returns the sum.
   +: λ( addend )
     asm
-      mov ecx, [EBP+12]      ; Load type hash of first argument into ECX
+      mov ecx, [ebp+12]      ; Load type hash of first argument into ECX
       cmp ecx, #Integer      ; test that divisor is an Integer
       jne incorrect_type
-      add eax, [EBP+4]
+      add eax, [ebp+4]
       mov edx, &Integer
       mov ecx, #Integer
       pop ebp
@@ -42,10 +42,10 @@ class Integer
   ; the difference.
   -: λ( subtrahend )
     asm
-      mov ecx, [EBP+12]      ; Load type hash of first argument into ECX
+      mov ecx, [ebp+12]      ; Load type hash of first argument into ECX
       cmp ecx, #Integer      ; test that divisor is an Integer
       jne incorrect_type
-      sub eax, [EBP+4]
+      sub eax, [ebp+4]
       mov edx, &Integer
       mov ecx, #Integer
       pop ebp
@@ -57,10 +57,10 @@ class Integer
   ; is discarded
   *: λ( factor )
     asm  
-      mov ecx, [EBP+12]      ; Load type hash of first argument into ECX
+      mov ecx, [ebp+12]      ; Load type hash of first argument into ECX
       cmp ecx, #Integer      ; test that divisor is an Integer
       jne incorrect_type
-      imul [EBP+4]           ; This instance's value is already in eax
+      imul [ebp+4]           ; This instance's value is already in eax
       mov edx, &Integer      ; dispatch function
       mov ecx, #Integer      ; Integer type hash
       pop ebp
@@ -74,11 +74,11 @@ class Integer
   ; divisor - the divisor, must be an Integer
   %: λ( divisor )
     asm  
-      mov ecx, [EBP+12]      ; Load type hash of first argument into ECX
+      mov ecx, [ebp+12]      ; Load type hash of first argument into ECX
       cmp ecx, #Integer      ; test that divisor is an Integer
       jne incorrect_type
       cdq                    ; sign extend EAX into EDX:EAX
-      idiv [EBP+4]
+      idiv [ebp+4]
       mov eax, edx           ; remainder in edx, we want to return it in eax
       mov edx, &Integer      ; dispatch function
       mov ecx, #Integer      ; Integer type hash
