@@ -7,21 +7,10 @@
 #ifndef _AST_H
 #define _AST_H
 
-enum NODE_TYPE {
-  SourceFile,
-  Block,
-  StatementGroup, Statement, ClassStatement, My,
-  MutableAssignment, ImmutableAssignment,
-  Conditional,
-  ClassDefinition,
-  FunctionDef, OneLineFunctionDef, BlockFunctionDef,
-  ParameterDef,
-  FunctionCall, Parameter, NamedParameter,
-  IntegerLiteral, Variable, StringLiteral, NullLiteral,
-  ReturnStatement
-};
+#include <string>
+#include "ast_node.h"
 
-static char *NODE_TYPES[] = { 
+const std::string NODE_TYPES[] = { 
   "SourceFile",
   "\x1b[1;33mBlock\x1b[0;37;00m",
   "StatementGroup", "Statement", "ClassStatement", "My",
@@ -35,23 +24,14 @@ static char *NODE_TYPES[] = {
   "\x1b[1;32mReturnStatement\x1b[0;37;00m"
 };
 
-// AST node
-typedef struct _Node {
-    enum NODE_TYPE type;
-    Token *token;
-    struct _Node *parent;
-    struct _Node *firstChild;
-    struct _Node *nextSibling;
-    struct _Node *prevSibling;
-} Node;
-
+struct _Token;
 struct _GoatState;
 
 // Macros
 //------------------------------------------------------------------------------
 
-#define MATCHER_FOR(name) Node *astMatch##name( Token **curr )
-#define MATCHER_PROTOTYPE_FOR(name) Node *astMatch##name( Token** )
+#define MATCHER_FOR(name) ASTNode *astMatch##name( struct _Token **curr )
+#define MATCHER_PROTOTYPE_FOR(name) ASTNode *astMatch##name( struct _Token** )
 #define MATCH(name) astMatch##name(curr)
 
 #define TOKEN_IS_A( token_type ) ((*curr) && (*curr)->type == token_type)
@@ -78,11 +58,11 @@ struct _GoatState;
 // Function Prototypes
 //------------------------------------------------------------------------------
 
-Node* astCreateNode( enum NODE_TYPE );
-void astFreeNode( Node* );
-void astAppendChild( Node*, Node* );
-void astInsertFirstChild( Node*, Node* );
-int astLookaheadFor( Token **, enum NODE_TYPE );
+ASTNode *astCreateNode( ASTNode::NODE_TYPE );
+void astFreeNode( ASTNode* );
+void astAppendChild( ASTNode*, ASTNode* );
+void astInsertFirstChild( ASTNode*, ASTNode* );
+int astLookaheadFor( struct _Token **, enum TOKEN_TYPE );
 int goatBuildAST( struct _GoatState* );
 
 

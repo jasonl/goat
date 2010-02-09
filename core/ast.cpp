@@ -9,22 +9,22 @@
 #include <string.h>
 #include "lexer.h"
 #include "ast.h"
+#include "ast_node.h"
 #include "goat.h"
 
 // Creates an AST-Node
-Node *astCreateNode( enum NODE_TYPE type ) {
-  Node *newNode = malloc( sizeof(Node) );
+ASTNode *astCreateNode( ASTNode::NODE_TYPE type ) {
+  ASTNode *newNode = new ASTNode( type );
   if (newNode == NULL) {
       goatFatalError("Unable to allocate sufficient memory during parsing.");
   }
-  memset(newNode, 0, sizeof(Node));
   newNode->type = type; 
   return newNode;
 }
 
 // Recursively frees memory allocated to a node sub-tree
-void astFreeNode( Node *node ) {
-  Node *childNode = NULL, *tempNode = NULL;
+void astFreeNode( ASTNode *node ) {
+  ASTNode *childNode = NULL, *tempNode = NULL;
 
   childNode = node->firstChild;
 
@@ -34,13 +34,13 @@ void astFreeNode( Node *node ) {
     childNode = tempNode;
   }
 
-  free(node);
+  delete node;
 }
 
 // Append a new AST-Node as the last child to parent,
 // setting all child pointers to match.
-void astAppendChild( Node *child, Node *parent ) {
-  Node *lastSibling = parent->firstChild;
+void astAppendChild( ASTNode *child, ASTNode *parent ) {
+  ASTNode *lastSibling = parent->firstChild;
 
   child->parent = parent;
 
@@ -65,8 +65,8 @@ void astAppendChild( Node *child, Node *parent ) {
 
 // Insert a new AST-Node as the first child, rather than
 // the last one.
-void astInsertFirstChild( Node *child, Node *parent ) {
-  Node *secondChild;
+void astInsertFirstChild( ASTNode *child, ASTNode *parent ) {
+  ASTNode *secondChild;
 
   child->parent = parent;
 
@@ -84,8 +84,8 @@ void astInsertFirstChild( Node *child, Node *parent ) {
 
 // Helper function to perform look-aheads in the token stream
 // where we need to resolve ambiguities.
-int astLookaheadFor( Token **curr, enum NODE_TYPE node_type) {
+int astLookaheadFor( Token **curr, enum TOKEN_TYPE token_type) {
   if((*curr)->next == NULL) return FALSE;
 
-  return ( (*curr)->next->type == node_type );
+  return ( (*curr)->next->type == token_type );
 }

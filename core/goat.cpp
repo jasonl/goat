@@ -9,10 +9,14 @@
 #include <malloc.h>
 #include <stdarg.h>
 #include <string.h>
+#include <iostream>
+#include <string>
 
 #include "lexer.h"
 #include "ast.h"
 #include "goat.h"
+
+using namespace std;
 
 #ifndef TEST
 int main(int argc, char** argv) {
@@ -93,11 +97,11 @@ void goatPrintTokens( GoatState *G ) {
     }
 }
 
-void goatPrintASTNode( Node *node, int depth, int skip, char *prev_cols ) {
-  Node *lastChild;
+void goatPrintASTNode( ASTNode *node, int depth, int skip, char *prev_cols ) {
+  ASTNode *lastChild;
   int i;
   
-  printf("%s", NODE_TYPES[node->type]);
+  cout << NODE_TYPES[node->type];
   if( node->token ) {
     printf(":%s", node->token->content);
   }
@@ -131,19 +135,19 @@ void goatPrintASTNode( Node *node, int depth, int skip, char *prev_cols ) {
   }
 }
 
-void goatFatalError( char *msg ) {
-    printf("FATAL ERROR: %s\n", msg);
+void goatFatalError( const std::string msg ) {
+  cout << "FATAL ERROR: %s\n" << msg;
 }
 
 #ifndef TEST
 // We don't use this during tests so we can replace this function with
 // an mocked goatError() to allow us to test that errors are raised. It's
 // in test/test_helper.c
-void goatError( int lineNo, char *fmt, ... ) {
+void goatError( int lineNo, const std::string fmt, ... ) {
   va_list arg;
   va_start( arg, fmt );
   printf( "\x1b[1;31mError\x1b[0;37;00m[%d]", lineNo );
-  vprintf( fmt, arg );
+  vprintf( fmt.c_str(), arg );
   printf("\n");
   va_end(arg);
 }

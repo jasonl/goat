@@ -54,6 +54,7 @@
 #include <malloc.h>
 #include <string.h>
 #include "lexer.h"
+#include "ast_node.h"
 #include "ast.h"
 #include "goat.h"
 
@@ -63,8 +64,8 @@ const char *TOKEN_TYPES[]={"Whitespace", "Indent", "Comment", "NewLine", "Identi
 			   "IndentIncrease", "IndentDecrease", "End of File"};
 
 int goatBuildAST( GoatState *G ) {
-  Node *astRoot = astCreateNode( SourceFile );
-  Node *newChild;
+  ASTNode *astRoot = astCreateNode( ASTNode::SourceFile );
+  ASTNode *newChild;
 
   Token *source = G->tokens;
   Token **curr = &source;  
@@ -105,14 +106,14 @@ int goatBuildAST( GoatState *G ) {
 
 // Matches a block - a group of statements with a common indent
 MATCHER_FOR( Block ) {
-  Node *newChild = NULL, *thisNode = NULL;
+  ASTNode *newChild = NULL, *thisNode = NULL;
     
   if(!(*curr)) { return NULL; }
 
   if(TOKEN_IS_NOT_A( IndentIncrease )) { return NULL; }
   CONSUME_TOKEN;
 
-  thisNode = astCreateNode( Block );
+  thisNode = astCreateNode( ASTNode::Block );
 
   // Match at least one statement
   if((newChild = MATCH(Statement))) {
@@ -166,7 +167,7 @@ MATCHER_FOR( Block ) {
 
 MATCHER_FOR( Statement ) 
 {
-  Node *thisNode;
+  ASTNode *thisNode;
 
   if((thisNode = MATCH( Assignment )) || 
      (thisNode = MATCH( FunctionCall )) || 
@@ -181,7 +182,7 @@ MATCHER_FOR( Statement )
 // Match an expression
 MATCHER_FOR( Expression ) {
   Token *saved_curr = *curr;
-  Node *thisNode = NULL;
+  ASTNode *thisNode = NULL;
 
   if((thisNode = MATCH( FunctionCall ))) {
     return thisNode;
@@ -207,15 +208,15 @@ MATCHER_FOR( Expression ) {
   }
   
   if( TOKEN_IS_A( String ) ) {
-    RETURN_TERMINAL_NODE( StringLiteral );
+    RETURN_TERMINAL_NODE( ASTNode::StringLiteral );
   }
 
   if( TOKEN_IS_A( Integer )) {
-    RETURN_TERMINAL_NODE( IntegerLiteral );
+    RETURN_TERMINAL_NODE( ASTNode::IntegerLiteral );
   }
 
   if( TOKEN_IS_A( Identifier )) {
-    RETURN_TERMINAL_NODE( Variable );
+    RETURN_TERMINAL_NODE( ASTNode::Variable );
   }
 
   return NULL;
@@ -224,7 +225,7 @@ MATCHER_FOR( Expression ) {
 // Matches an object which a function call can be made to
 MATCHER_FOR( Receiver ) {
   Token *saved_curr = *curr;
-  Node *thisNode = NULL;
+  ASTNode *thisNode = NULL;
 
   if( TOKEN_IS_A( LeftParen )) {
     CONSUME_TOKEN;
@@ -245,16 +246,16 @@ MATCHER_FOR( Receiver ) {
     // Lookahead to determine if this identifier is actually
     // a receiver or a method name
     if(!astLookaheadFor( curr, LeftParen)) {
-      RETURN_TERMINAL_NODE( Variable );
+      RETURN_TERMINAL_NODE( ASTNode::Variable );
     }
   }
 
   if( TOKEN_IS_A( String ) ) {
-    RETURN_TERMINAL_NODE( StringLiteral );
+    RETURN_TERMINAL_NODE( ASTNode::StringLiteral );
   }
 
   if( TOKEN_IS_A( Integer )) {
-    RETURN_TERMINAL_NODE( IntegerLiteral );
+    RETURN_TERMINAL_NODE( ASTNode::IntegerLiteral );
   }
 
   return NULL;
@@ -262,7 +263,7 @@ MATCHER_FOR( Receiver ) {
 
 MATCHER_FOR( FunctionCall ) {
   Token *savedcurr = *curr;
-  Node *thisNode = NULL, *receiver = NULL, *newParent = NULL;
+  ASTNode *thisNode = NULL, *receiver = NULL, *newParent = NULL;
 
   receiver = MATCH( Receiver );
   
@@ -286,7 +287,7 @@ MATCHER_FOR( FunctionCall ) {
 
 MATCHER_FOR( MethodInvocation ) {
   Token *savedcurr = *curr, *functionName;
-  Node *thisNode = NULL, *newChild = NULL;
+  ASTNode *thisNode = NULL, *newChild = NULL;
   int must_match = FALSE, must_match_paren = FALSE;
 
   // optional period for method calls.
@@ -305,7 +306,7 @@ MATCHER_FOR( MethodInvocation ) {
     must_match_paren = TRUE;
   }
  
-  thisNode = astCreateNode( FunctionCall );
+  thisNode = astCreateNode( ASTNode::FunctionCall );
 
   // We don't append the receiver here - that's done in astMatchFunctionCall
   thisNode->token = functionName;
@@ -364,7 +365,7 @@ MATCHER_FOR( MethodInvocation ) {
 }
 
 MATCHER_FOR( FunctionDef ) {
-  Node *thisNode, *newChild;
+  ASTNode *thisNode, *newChild;
   Token *savedcurr = *curr;
   int must_match = FALSE;
 
@@ -378,7 +379,7 @@ MATCHER_FOR( FunctionDef ) {
   }
   CONSUME_TOKEN;
   
-  thisNode = astCreateNode( FunctionDef );
+  thisNode = astCreateNode( ASTNode::FunctionDef );
 
   while((newChild = MATCH( ParameterDef ))) {
     astAppendChild(newChild, thisNode);
@@ -429,10 +430,10 @@ MATCHER_FOR( FunctionDef ) {
 }
 
 MATCHER_FOR( ParameterDef ) {
-  Node *thisNode;
+  ASTNode *thisNode;
 
   if(TOKEN_IS_A(Identifier)) {
-    thisNode = astCreateNode( ParameterDef );
+    thisNode = astCreateNode( ASTNode::ParameterDef );
     thisNode->token = (*curr);
     CONSUME_TOKEN;
     return thisNode;
@@ -442,11 +443,11 @@ MATCHER_FOR( ParameterDef ) {
 }
 
 MATCHER_FOR( Parameter ) {
-  Node *thisNode, *newChild;
+  ASTNode *thisNode, *newChild;
 
   //TODO: Add matching for named parameters
   if(( newChild = MATCH( Expression ))) {
-    thisNode = astCreateNode( Parameter );
+    thisNode = astCreateNode( ASTNode::Parameter );
     astAppendChild( newChild, thisNode);
     return thisNode;
   }
@@ -455,11 +456,11 @@ MATCHER_FOR( Parameter ) {
 }
 
 MATCHER_FOR( Conditional ) {
-  Node *thisNode, *exprChild, *ifChild, *elseChild;
+  ASTNode *thisNode, *exprChild, *ifChild, *elseChild;
   Token *saved_curr = *curr;
 
   if( TOKEN_IS_NOT_A( If )) { return NULL; }
-  thisNode = astCreateNode( Conditional );
+  thisNode = astCreateNode( ASTNode::Conditional );
   CONSUME_TOKEN;
 
   if(!(int)(exprChild = MATCH( Expression))) {
@@ -517,7 +518,7 @@ MATCHER_FOR( ClassDef ) {
 
 
 MATCHER_FOR( Assignment ) {
-  Node *thisNode;
+  ASTNode *thisNode;
   if((thisNode = MATCH( ImmutableAssignment ))) {
     return thisNode;
   }
@@ -531,7 +532,7 @@ MATCHER_FOR( Assignment ) {
 
 MATCHER_FOR( MutableAssignment ) {
   Token *savedCurr = *curr, *variable;
-  Node *newChild = NULL, *thisNode = NULL;
+  ASTNode *newChild = NULL, *thisNode = NULL;
   
   if(TOKEN_IS_NOT_A( Identifier)) { return NULL; }
   variable = (*curr);
@@ -544,7 +545,7 @@ MATCHER_FOR( MutableAssignment ) {
   CONSUME_TOKEN;
   
   if((newChild = MATCH( Expression ))) {
-    thisNode = astCreateNode( MutableAssignment );
+    thisNode = astCreateNode( ASTNode::MutableAssignment );
     thisNode->token = variable;
     astAppendChild(newChild, thisNode);
     return thisNode;
@@ -557,7 +558,7 @@ MATCHER_FOR( MutableAssignment ) {
 
 MATCHER_FOR( ImmutableAssignment ) {
   Token *savedCurr = *curr, *variable;
-  Node *newChild = NULL, *thisNode = NULL;
+  ASTNode *newChild = NULL, *thisNode = NULL;
   
   if(TOKEN_IS_NOT_A( Identifier)) { return NULL; }
   variable = (*curr);
@@ -570,7 +571,7 @@ MATCHER_FOR( ImmutableAssignment ) {
   CONSUME_TOKEN;
   
   if((newChild = MATCH( Expression ))) {
-    thisNode = astCreateNode( ImmutableAssignment );
+    thisNode = astCreateNode( ASTNode::ImmutableAssignment );
     thisNode->token = variable;
     astAppendChild(newChild, thisNode);
     return thisNode;
@@ -582,17 +583,17 @@ MATCHER_FOR( ImmutableAssignment ) {
 }
 
 MATCHER_FOR( ReturnStatement ) {
-  Node *thisNode, *returnExpr;
+  ASTNode *thisNode, *returnExpr;
 
   if( TOKEN_IS_NOT_A( Return )) {
     return NULL;
   }
   CONSUME_TOKEN;
 
-  thisNode = astCreateNode( ReturnStatement );
+  thisNode = astCreateNode( ASTNode::ReturnStatement );
 
   if(!(returnExpr = MATCH( Expression ))){
-    returnExpr = astCreateNode( NullLiteral );
+    returnExpr = astCreateNode( ASTNode::NullLiteral );
   }
 
   astAppendChild(returnExpr, thisNode);
@@ -601,7 +602,7 @@ MATCHER_FOR( ReturnStatement ) {
 
 MATCHER_FOR( ClassDefinition ) {
   Token *saved_curr = *curr;
-  Node *thisNode, *newNode;
+  ASTNode *thisNode, *newNode;
 
   if( TOKEN_IS_NOT_A( Class )) {
     return NULL;
@@ -609,7 +610,7 @@ MATCHER_FOR( ClassDefinition ) {
   CONSUME_TOKEN;
 
   if( TOKEN_IS_A( Identifier )) {
-    thisNode = astCreateNode( ClassDefinition );
+    thisNode = astCreateNode( ASTNode::ClassDefinition );
     thisNode->token = *curr;
   } else {
     goatError((*curr)->line_no, "Unexpected token %s found after class keyword. Identifier expected", TOKEN_TYPES[(*curr)->type]);

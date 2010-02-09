@@ -8,23 +8,25 @@
 #ifndef _GOAT_H
 #define	_GOAT_H
 
+#include <string>
+
 #define TRUE 1
 #define FALSE 0
 
 struct _Token;
-struct _Node;
+class ASTNode;
 
 typedef struct _GoatState {
   struct _Token *tokens;          // Head node of the linked list of lexical tokens
-  struct _Node *astRoot;          // Root node of the AST tree
+  ASTNode *astRoot;          // Root node of the AST tree
   int verbose;                    // Print more information than usual
   char *sourceFile;               // Input filename
 } GoatState;
 
 void goatPrintTokens( GoatState* );
-void goatPrintASTNode( struct _Node*, int, int, char* );
+void goatPrintASTNode( ASTNode*, int, int, char* );
 void goatParseArguments( GoatState*, int, char**);
-void goatFatalError( char* );
-void goatError( int, char*, ... );
+void goatFatalError( std::string );
+void goatError( int, std::string, ... );
 #endif	/* _GOAT_H */
 
