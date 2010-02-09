@@ -80,7 +80,7 @@ int goatBuildAST( GoatState *G ) {
   while((newChild = MATCH(Statement))) {
     if( TOKEN_IS_A( Newline )) {
       CONSUME_TOKEN;
-      astAppendChild( newChild, astRoot );
+      astRoot->append(newChild);
       
       // Ignore any blank links
       while( TOKEN_IS_A( Newline )) {
@@ -119,7 +119,7 @@ MATCHER_FOR( Block ) {
   if((newChild = MATCH(Statement))) {
     if( TOKEN_IS_A( Newline )) {
       CONSUME_TOKEN;
-      astAppendChild( newChild, thisNode );
+      thisNode->append(newChild);
       
       // Ignore any blank links
       while( TOKEN_IS_A( Newline )) {
@@ -141,7 +141,7 @@ MATCHER_FOR( Block ) {
   while((newChild = MATCH(Statement))) {
     if( TOKEN_IS_A( Newline )) {
       CONSUME_TOKEN;
-      astAppendChild( newChild, thisNode );
+      thisNode->append( newChild );
       
       // Ignore any blank links
       while( TOKEN_IS_A( Newline )) {
@@ -312,7 +312,7 @@ MATCHER_FOR( MethodInvocation ) {
   thisNode->token = functionName;
 
   while((newChild = MATCH( Parameter ))) {
-    astAppendChild(newChild, thisNode);
+    thisNode->append(newChild);
 
     // So if we match a right Parenthesis, that's a complete function call
     if( TOKEN_IS_A( RightParen ) && must_match_paren ) {
@@ -382,7 +382,7 @@ MATCHER_FOR( FunctionDef ) {
   thisNode = astCreateNode( ASTNode::FunctionDef );
 
   while((newChild = MATCH( ParameterDef ))) {
-    astAppendChild(newChild, thisNode);
+    thisNode->append(newChild);
     
     // So if we match a right Parenthesis, that's a complete function call
     if( TOKEN_IS_A( RightParen )) {
@@ -419,7 +419,7 @@ MATCHER_FOR( FunctionDef ) {
   CONSUME_TOKEN;
   
   if((int)(newChild = MATCH( Block ))) {
-    astAppendChild(newChild, thisNode);
+    thisNode->append(newChild);
     return thisNode;  
   } else {
     goatError((*curr)->line_no, "No Block found for function definition");
@@ -448,7 +448,7 @@ MATCHER_FOR( Parameter ) {
   //TODO: Add matching for named parameters
   if(( newChild = MATCH( Expression ))) {
     thisNode = astCreateNode( ASTNode::Parameter );
-    astAppendChild( newChild, thisNode);
+    thisNode->append(newChild);
     return thisNode;
   }
   
@@ -469,7 +469,7 @@ MATCHER_FOR( Conditional ) {
     goatError((*curr)->line_no, "Unexpected token %s found after if keyword.", TOKEN_TYPES[(*curr)->type]);
     return NULL;
   }
-  astAppendChild(exprChild, thisNode);
+  thisNode->append(exprChild);
 
   if( TOKEN_IS_NOT_A( Newline )) {
     astFreeNode(thisNode);
@@ -486,7 +486,7 @@ MATCHER_FOR( Conditional ) {
     (*curr) = saved_curr;
     return NULL;
   }
-  astAppendChild(ifChild, thisNode);
+  thisNode->append(ifChild);
 
   if( TOKEN_IS_NOT_A( Else ) ) {
     // So no else clause
@@ -508,7 +508,7 @@ MATCHER_FOR( Conditional ) {
     (*curr) = saved_curr;
     return NULL;
   }
-  astAppendChild(elseChild, thisNode);
+  thisNode->append(elseChild);
   return thisNode;
 }
 
@@ -547,7 +547,7 @@ MATCHER_FOR( MutableAssignment ) {
   if((newChild = MATCH( Expression ))) {
     thisNode = astCreateNode( ASTNode::MutableAssignment );
     thisNode->token = variable;
-    astAppendChild(newChild, thisNode);
+    thisNode->append(newChild);
     return thisNode;
   }
   
@@ -573,7 +573,7 @@ MATCHER_FOR( ImmutableAssignment ) {
   if((newChild = MATCH( Expression ))) {
     thisNode = astCreateNode( ASTNode::ImmutableAssignment );
     thisNode->token = variable;
-    astAppendChild(newChild, thisNode);
+    thisNode->append(newChild);
     return thisNode;
   }
   
@@ -595,8 +595,8 @@ MATCHER_FOR( ReturnStatement ) {
   if(!(returnExpr = MATCH( Expression ))){
     returnExpr = astCreateNode( ASTNode::NullLiteral );
   }
-
-  astAppendChild(returnExpr, thisNode);
+  
+  thisNode->append(returnExpr);
   return thisNode;
 }
 
@@ -634,7 +634,7 @@ MATCHER_FOR( ClassDefinition ) {
   CONSUME_TOKEN;
 
   while((newNode = MATCH(Assignment))) {
-    astAppendChild(newNode, thisNode);
+    thisNode->append(newNode);
     if( TOKEN_IS_A( Newline )) {
       CONSUME_TOKEN;
     } else {
