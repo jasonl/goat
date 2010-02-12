@@ -18,11 +18,11 @@ void testFunctionLexing() {
   GoatState *G;
   Token *T;
   
-  G = malloc(sizeof(GoatState));
+  G = (GoatState *)malloc(sizeof(GoatState));
 
   printf("- testFunctionLexing");  
 
-  goatLexer(G, "test/function_test.gt");
+  goatLexer(G, (char *)"test/function_test.gt");
   T = G->tokens;
 
   assert( T->type == Identifier, "First token was not an Identifier");
@@ -57,11 +57,11 @@ void testTokenLexing() {
   GoatState *G;
   Token *T;
   
-  G = malloc(sizeof(GoatState));
+  G = (GoatState *)malloc(sizeof(GoatState));
 
   printf("- testTokenLexing");  
 
-  goatLexer(G, "test/token_test.gt");
+  goatLexer(G, (char *)"test/token_test.gt");
   T = G->tokens;
 
   assert( T->type == LeftParen, "First token was not a LeftParen" );
@@ -127,11 +127,11 @@ void testKeywordLexing() {
   GoatState *G;
   Token *T;
   
-  G = malloc(sizeof(GoatState));
+  G = (GoatState *)malloc(sizeof(GoatState));
 
   printf("- testKeywordLexing");  
 
-  goatLexer(G, "test/keywords.gt");
+  goatLexer(G, (char *)"test/keywords.gt");
   T = G->tokens;  
 
   assert( T->type == If, "First token was not an If" );
