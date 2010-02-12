@@ -14,6 +14,7 @@
 
 #include "lexer.h"
 #include "ast.h"
+#include "parser.h"
 #include "goat.h"
 
 using namespace std;
@@ -38,7 +39,9 @@ int main(int argc, char** argv) {
   goatLexer( G, G->sourceFile );
   if(G->verbose) goatPrintTokens( G );
 
-  goatBuildAST( G );
+  Parser *parser = new Parser( G->tokens );
+  G->astRoot = parser->parse();
+
   if( G->astRoot == NULL ) return( EXIT_FAILURE );
 
   if(G->verbose) {

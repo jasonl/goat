@@ -82,10 +82,4 @@ void astInsertFirstChild( ASTNode *child, ASTNode *parent ) {
   return;
 }
 
-// Helper function to perform look-aheads in the token stream
-// where we need to resolve ambiguities.
-int astLookaheadFor( Token **curr, enum TOKEN_TYPE token_type) {
-  if((*curr)->next == NULL) return FALSE;
 
-  return ( (*curr)->next->type == token_type );
-}

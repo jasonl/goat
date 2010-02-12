@@ -3,10 +3,14 @@
 
 ASTNode::ASTNode( enum NODE_TYPE _type) {
   type = _type;
+  firstChild = NULL;
+  parent = NULL;
+  nextSibling = NULL;
+  prevSibling = NULL;
 }
 
 void ASTNode::append( ASTNode *child ) {
-  ASTNode *lastSibling = parent->firstChild;
+  ASTNode *lastSibling = this->firstChild;
 
   child->parent = this;
 

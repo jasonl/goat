@@ -56,6 +56,7 @@
 #include "lexer.h"
 #include "ast_node.h"
 #include "ast.h"
+#include "parser.h"
 #include "goat.h"
 
 const char *TOKEN_TYPES[]={"Whitespace", "Indent", "Comment", "NewLine", "Identifier",
@@ -63,105 +64,106 @@ const char *TOKEN_TYPES[]={"Whitespace", "Indent", "Comment", "NewLine", "Identi
 			   "Equals", "End", "Integer", "String", "If", "Else", "Class", "Return", "HashRocket",
 			   "IndentIncrease", "IndentDecrease", "End of File"};
 
-int goatBuildAST( GoatState *G ) {
+ASTNode * Parser::parse() {
   ASTNode *astRoot = astCreateNode( ASTNode::SourceFile );
   ASTNode *newChild;
 
-  Token *source = G->tokens;
-  Token **curr = &source;  
-
   // Remove any leading newlines - e.g. from comments
   // The lexer includes a newline token after a comment
-  while( TOKEN_IS_A( Newline )) {
-    CONSUME_TOKEN;
+  while( TokenIs( Newline )) {
+    ConsumeToken();
   }
 
 
   while((newChild = MATCH(Statement))) {
-    if( TOKEN_IS_A( Newline )) {
-      CONSUME_TOKEN;
+    if( TokenIs( Newline )) {
+      ConsumeToken();
       astRoot->append(newChild);
       
       // Ignore any blank links
-      while( TOKEN_IS_A( Newline )) {
-	CONSUME_TOKEN;
+      while( TokenIs( Newline )) {
+	ConsumeToken();
       }
 
-    } else if( TOKEN_IS_A( EndOfFile)) {
-      G->astRoot = astRoot;
-      return 1;
+    } else if( TokenIs( EndOfFile)) {
+      return astRoot;
     } else {
       // Found something on a line we couldn't match
-      goatError((*curr)->line_no, "Unexpected token %s[%s] found.", TOKEN_TYPES[(*curr)->type], (*curr)->content);
+      goatError(CurrentSourcePosition(), "Unexpected token %s[%s] found.", TOKEN_TYPES[currentToken->type], currentToken->content);
       astFreeNode(astRoot);
-      return 0;
+      return NULL;
     }
   }
 
-  G->astRoot = astRoot;
-  return 1;
+  return astRoot;
 }
 
+// Helper function to perform look-aheads in the token stream
+// where we need to resolve ambiguities.
+bool Parser::LookAheadFor( enum TOKEN_TYPE token_type) {
+  if(currentToken->next == NULL) return FALSE;
 
+  return currentToken->next->type == token_type;
+}
 
 // Matches a block - a group of statements with a common indent
 MATCHER_FOR( Block ) {
   ASTNode *newChild = NULL, *thisNode = NULL;
     
-  if(!(*curr)) { return NULL; }
+  if(!currentToken) { return NULL; }
 
-  if(TOKEN_IS_NOT_A( IndentIncrease )) { return NULL; }
-  CONSUME_TOKEN;
+  if(TokenIsNot( IndentIncrease )) { return NULL; }
+  ConsumeToken();
 
   thisNode = astCreateNode( ASTNode::Block );
 
   // Match at least one statement
   if((newChild = MATCH(Statement))) {
-    if( TOKEN_IS_A( Newline )) {
-      CONSUME_TOKEN;
+    if( TokenIs( Newline )) {
+      ConsumeToken();
       thisNode->append(newChild);
       
       // Ignore any blank links
-      while( TOKEN_IS_A( Newline )) {
-	CONSUME_TOKEN;
+      while( TokenIs( Newline )) {
+	ConsumeToken();
       }
     } else {
       // Found something on a line we couldn't match
-      goatError((*curr)->line_no, "Unexpected token %s[%s] found.", TOKEN_TYPES[(*curr)->type], (*curr)->content);
+      goatError(CurrentSourcePosition(), "Unexpected token %s[%s] found.", TOKEN_TYPES[currentToken->type], currentToken->content);
       astFreeNode(thisNode);
       return 0;
     }
   }
   else {
-    goatError((*curr)->line_no, "Could not match a statement in block");
+    goatError(CurrentSourcePosition(), "Could not match a statement in block");
     astFreeNode(thisNode);
     return NULL;
   }
 
   while((newChild = MATCH(Statement))) {
-    if( TOKEN_IS_A( Newline )) {
-      CONSUME_TOKEN;
+    if( TokenIs( Newline )) {
+      ConsumeToken();
       thisNode->append( newChild );
       
       // Ignore any blank links
-      while( TOKEN_IS_A( Newline )) {
-	CONSUME_TOKEN;
+      while( TokenIs( Newline )) {
+	ConsumeToken();
       }
     } else {
       // Found something on a line we couldn't match
-      goatError((*curr)->line_no, "Unexpected token %s[%s] found.", TOKEN_TYPES[(*curr)->type], (*curr)->content);
+      goatError(CurrentSourcePosition(), "Unexpected token %s[%s] found.", TOKEN_TYPES[currentToken->type], currentToken->content);
       astFreeNode(thisNode);
       return 0;
     }  
   }
 
-  if( TOKEN_IS_NOT_A( IndentDecrease )) {
-    goatError((*curr)->line_no, "Invalid token %s found in block.", TOKEN_TYPES[(*curr)->type]);
+  if( TokenIsNot( IndentDecrease )) {
+    goatError(CurrentSourcePosition(), "Invalid token %s found in block.", TOKEN_TYPES[currentToken->type]);
     astFreeNode( thisNode );
     return NULL;
   }
     
-  CONSUME_TOKEN;
+  ConsumeToken();
   return thisNode;
 }
 
@@ -181,23 +183,23 @@ MATCHER_FOR( Statement )
 
 // Match an expression
 MATCHER_FOR( Expression ) {
-  Token *saved_curr = *curr;
+  Token *savedCurr = currentToken;
   ASTNode *thisNode = NULL;
 
   if((thisNode = MATCH( FunctionCall ))) {
     return thisNode;
   }
   
-  if( TOKEN_IS_A( LeftParen )) {
-    CONSUME_TOKEN;
+  if( TokenIs( LeftParen )) {
+    ConsumeToken();
     if((thisNode = MATCH(Expression))) {
-      if( TOKEN_IS_A( RightParen)) {
-	CONSUME_TOKEN;
+      if( TokenIs( RightParen)) {
+	ConsumeToken();
 	return thisNode;
       } 
       else {
-	goatError((*curr)->line_no, "Expression: expected to find a right parenthesis, found a %s instead.", TOKEN_TYPES[(*curr)->type]);
-	(*curr) = saved_curr;
+	goatError(CurrentSourcePosition(), "Expression: expected to find a right parenthesis, found a %s instead.", TOKEN_TYPES[currentToken->type]);
+	ResetTokenPosition( savedCurr );
 	return NULL;
       }
     }
@@ -207,15 +209,15 @@ MATCHER_FOR( Expression ) {
     return thisNode;
   }
   
-  if( TOKEN_IS_A( String ) ) {
+  if( TokenIs( String ) ) {
     RETURN_TERMINAL_NODE( ASTNode::StringLiteral );
   }
 
-  if( TOKEN_IS_A( Integer )) {
+  if( TokenIs( Integer )) {
     RETURN_TERMINAL_NODE( ASTNode::IntegerLiteral );
   }
 
-  if( TOKEN_IS_A( Identifier )) {
+  if( TokenIs( Identifier )) {
     RETURN_TERMINAL_NODE( ASTNode::Variable );
   }
 
@@ -224,37 +226,39 @@ MATCHER_FOR( Expression ) {
 
 // Matches an object which a function call can be made to
 MATCHER_FOR( Receiver ) {
-  Token *saved_curr = *curr;
+  Token *savedCurr = currentToken;
   ASTNode *thisNode = NULL;
 
-  if( TOKEN_IS_A( LeftParen )) {
-    CONSUME_TOKEN;
-    if((thisNode = MATCH(Expression))) {
-      if( TOKEN_IS_A( RightParen)) {
-	CONSUME_TOKEN;
+  if (TokenIs( LeftParen )) {
+    ConsumeToken();
+    if ((thisNode = MATCH(Expression))) {
+      if (TokenIs( RightParen)) {
+	ConsumeToken();
 	return thisNode;
       } 
       else {
-	goatError((*curr)->line_no, "Receiver: expected to find a right parenthesis, found a %s instead.", TOKEN_TYPES[(*curr)->type]);
-	(*curr) = saved_curr;
+	goatError(CurrentSourcePosition(), "Receiver: expected to find a right parenthesis, found a %s instead.", TOKEN_TYPES[currentToken->type]);
+	ResetTokenPosition( savedCurr );
 	return NULL;
       }
     }
+    ResetTokenPosition( savedCurr );
+    return NULL;
   }
 
-  if( TOKEN_IS_A( Identifier )) {
+  if( TokenIs( Identifier )) {
     // Lookahead to determine if this identifier is actually
     // a receiver or a method name
-    if(!astLookaheadFor( curr, LeftParen)) {
+    if (!LookAheadFor( LeftParen )) {
       RETURN_TERMINAL_NODE( ASTNode::Variable );
     }
   }
 
-  if( TOKEN_IS_A( String ) ) {
+  if (TokenIs( String ) ) {
     RETURN_TERMINAL_NODE( ASTNode::StringLiteral );
   }
 
-  if( TOKEN_IS_A( Integer )) {
+  if (TokenIs( Integer )) {
     RETURN_TERMINAL_NODE( ASTNode::IntegerLiteral );
   }
 
@@ -262,13 +266,13 @@ MATCHER_FOR( Receiver ) {
 }
 
 MATCHER_FOR( FunctionCall ) {
-  Token *savedcurr = *curr;
   ASTNode *thisNode = NULL, *receiver = NULL, *newParent = NULL;
+  Token *savedCurr = currentToken;
 
   receiver = MATCH( Receiver );
   
   if(!(thisNode = MATCH( MethodInvocation ))) {
-    (*curr) = savedcurr;
+    ResetTokenPosition( savedCurr );
     if(receiver) astFreeNode(receiver);
     return NULL;
   }
@@ -286,23 +290,25 @@ MATCHER_FOR( FunctionCall ) {
 }
 
 MATCHER_FOR( MethodInvocation ) {
-  Token *savedcurr = *curr, *functionName;
+  Token *functionName, *savedCurr = currentToken;
   ASTNode *thisNode = NULL, *newChild = NULL;
   int must_match = FALSE, must_match_paren = FALSE;
 
   // optional period for method calls.
-  if( TOKEN_IS_A( Period )) { CONSUME_TOKEN; }
+  if (TokenIs( Period )) {
+    ConsumeToken();
+  }
 
-  if( TOKEN_IS_NOT_A( Identifier )) { 
-    *curr = savedcurr;
+  if (TokenIsNot( Identifier )) { 
+    ResetTokenPosition( savedCurr );
     return NULL; 
   }
   
-  functionName = (*curr);
-  CONSUME_TOKEN;
+  functionName = currentToken;
+  ConsumeToken();
 
-  if( TOKEN_IS_A( LeftParen )) {
-    CONSUME_TOKEN;
+  if (TokenIs( LeftParen )) {
+    ConsumeToken();
     must_match_paren = TRUE;
   }
  
@@ -315,33 +321,33 @@ MATCHER_FOR( MethodInvocation ) {
     thisNode->append(newChild);
 
     // So if we match a right Parenthesis, that's a complete function call
-    if( TOKEN_IS_A( RightParen ) && must_match_paren ) {
-      CONSUME_TOKEN;
+    if (TokenIs( RightParen ) && must_match_paren ) {
+      ConsumeToken();
       return thisNode;
     }
 
     // If we match a comma, then we must match another parameter.
-    if( TOKEN_IS_A( Comma )) {
+    if (TokenIs( Comma )) {
       must_match = TRUE;
-      CONSUME_TOKEN;
+      ConsumeToken();
       continue;
     }
 
-    if( ! must_match ) {
+    if ( !must_match ) {
       // We've found some other token that doesn't match as a comma or right_paren
       return thisNode;
     }
 
     // If execution gets to here, we've encountered some other token
-    goatError((*curr)->line_no, "MethodInvocation: Unexpected %s found when a right parenthesis ')' was expected.", TOKEN_TYPES[(*curr)->type]);
+    goatError(CurrentSourcePosition(), "MethodInvocation: Unexpected %s found when a right parenthesis ')' was expected.", TOKEN_TYPES[currentToken->type]);
     astFreeNode( thisNode );
     return NULL;
   }
   
   if( !must_match ) {
-    if (TOKEN_IS_A( RightParen )) {
+    if (TokenIs( RightParen )) {
       if( must_match_paren ) {
-	CONSUME_TOKEN;
+	ConsumeToken();
 	return thisNode;
       } else {
 	// Don't consume the token, try to match it as part of an expression
@@ -349,7 +355,7 @@ MATCHER_FOR( MethodInvocation ) {
       }
     } else {
       if( must_match_paren ) {
-	goatError((*curr)->line_no, "Could not find Right Paren to close function call parsing");
+	goatError(CurrentSourcePosition(), "Could not find Right Paren to close function call parsing");
 	astFreeNode(thisNode);
 	return NULL;
       } else {
@@ -358,7 +364,7 @@ MATCHER_FOR( MethodInvocation ) {
       }
     }
   } else {
-    goatError((*curr)->line_no, "Another function parameter expected after comma; none was matched.");
+    goatError(CurrentSourcePosition(), "Another function parameter expected after comma; none was matched.");
     astFreeNode( thisNode );
     return NULL;
   }
@@ -366,18 +372,19 @@ MATCHER_FOR( MethodInvocation ) {
 
 MATCHER_FOR( FunctionDef ) {
   ASTNode *thisNode, *newChild;
-  Token *savedcurr = *curr;
+  Token *savedCurr = currentToken;
   int must_match = FALSE;
 
-  if( TOKEN_IS_NOT_A( Lambda )) { return NULL; }
-  CONSUME_TOKEN;
 
-  if( TOKEN_IS_NOT_A( LeftParen )) {
-    goatError((*curr)->line_no, "Unexpected %s found when a left parenthesis '(' was expected.", TOKEN_TYPES[(*curr)->type]);
-    (*curr) = savedcurr;
+  if( TokenIsNot( Lambda )) { return NULL; }
+  ConsumeToken();
+
+  if( TokenIsNot( LeftParen )) {
+    goatError(CurrentSourcePosition(), "Unexpected %s found when a left parenthesis '(' was expected.", TOKEN_TYPES[currentToken->type]);
+    ResetTokenPosition( savedCurr );
     return NULL; 
   }
-  CONSUME_TOKEN;
+  ConsumeToken();
   
   thisNode = astCreateNode( ASTNode::FunctionDef );
 
@@ -385,46 +392,45 @@ MATCHER_FOR( FunctionDef ) {
     thisNode->append(newChild);
     
     // So if we match a right Parenthesis, that's a complete function call
-    if( TOKEN_IS_A( RightParen )) {
-      //CONSUME_TOKEN;
+    if( TokenIs( RightParen )) {
       break;
     }
     
     // If we match a comma, then we must match another parameter.
-    if( TOKEN_IS_A( Comma ) && ! must_match) {
+    if( TokenIs( Comma ) && ! must_match) {
       must_match = TRUE;
-      CONSUME_TOKEN;
+      ConsumeToken();
       continue;
     }
     
     // If execution gets to here, we've encountered some other token
-    goatError((*curr)->line_no, "FunctionDefinition: Unexpected %s found when a right parenthesis ')' was expected.", TOKEN_TYPES[(*curr)->type]);
+    goatError(CurrentSourcePosition(), "FunctionDefinition: Unexpected %s found when a right parenthesis ')' was expected.", TOKEN_TYPES[currentToken->type]);
     astFreeNode( thisNode );
     return NULL;
   }
 
-  if( TOKEN_IS_NOT_A( RightParen)) {
-    goatError((*curr)->line_no, "FunctionDefinition: Unexpected %s found when a right parenthesis ')' was expected.", TOKEN_TYPES[(*curr)->type]);
+  if( TokenIsNot( RightParen)) {
+    goatError(CurrentSourcePosition(), "FunctionDefinition: Unexpected %s found when a right parenthesis ')' was expected.", TOKEN_TYPES[currentToken->type]);
     astFreeNode(thisNode);
     return NULL;
   }
-  CONSUME_TOKEN;
+  ConsumeToken();
 
-  if( TOKEN_IS_NOT_A( Newline )) {
-    goatError((*curr)->line_no, "FunctionDefinition: Unexpected %s found when a Newline was expected.", TOKEN_TYPES[(*curr)->type]);
+  if (TokenIsNot( Newline )) {
+    goatError(CurrentSourcePosition(), "FunctionDefinition: Unexpected %s found when a Newline was expected.", TOKEN_TYPES[currentToken->type]);
     astFreeNode(thisNode);
-    (*curr) = savedcurr;
+    ResetTokenPosition( savedCurr );
     return NULL;
   }
-  CONSUME_TOKEN;
+  ConsumeToken();
   
-  if((int)(newChild = MATCH( Block ))) {
+  if ((int)(newChild = MATCH( Block ))) {
     thisNode->append(newChild);
     return thisNode;  
   } else {
-    goatError((*curr)->line_no, "No Block found for function definition");
+    goatError(CurrentSourcePosition(), "No Block found for function definition");
     astFreeNode(thisNode);
-    (*curr) = savedcurr;
+    ResetTokenPosition( savedCurr );
     return NULL;
   }
 }
@@ -432,10 +438,10 @@ MATCHER_FOR( FunctionDef ) {
 MATCHER_FOR( ParameterDef ) {
   ASTNode *thisNode;
 
-  if(TOKEN_IS_A(Identifier)) {
+  if (TokenIs( Identifier )) {
     thisNode = astCreateNode( ASTNode::ParameterDef );
-    thisNode->token = (*curr);
-    CONSUME_TOKEN;
+    thisNode->token = currentToken;
+    ConsumeToken();
     return thisNode;
   } else {
     return NULL;
@@ -457,63 +463,59 @@ MATCHER_FOR( Parameter ) {
 
 MATCHER_FOR( Conditional ) {
   ASTNode *thisNode, *exprChild, *ifChild, *elseChild;
-  Token *saved_curr = *curr;
+  Token *savedCurr = currentToken;
 
-  if( TOKEN_IS_NOT_A( If )) { return NULL; }
+  if (TokenIsNot( If )) { return NULL; }
   thisNode = astCreateNode( ASTNode::Conditional );
-  CONSUME_TOKEN;
+  ConsumeToken();
 
-  if(!(int)(exprChild = MATCH( Expression))) {
+  if (!(int)(exprChild = MATCH( Expression))) {
     astFreeNode(thisNode);
-    (*curr) = saved_curr;
-    goatError((*curr)->line_no, "Unexpected token %s found after if keyword.", TOKEN_TYPES[(*curr)->type]);
+    ResetTokenPosition( savedCurr );
+    goatError(CurrentSourcePosition(), "Unexpected token %s found after if keyword.", TOKEN_TYPES[currentToken->type]);
     return NULL;
   }
   thisNode->append(exprChild);
 
-  if( TOKEN_IS_NOT_A( Newline )) {
+  if (TokenIsNot( Newline )) {
     astFreeNode(thisNode);
-    (*curr) = saved_curr;
-    goatError((*curr)->line_no, "Unexpected token %s found after if-expression; should be a new line.", TOKEN_TYPES[(*curr)->type]);
+    ResetTokenPosition( savedCurr );
+    goatError(CurrentSourcePosition(), "Unexpected token %s found after if-expression; should be a new line.", TOKEN_TYPES[currentToken->type]);
     return NULL;
   }
-  CONSUME_TOKEN;
+  ConsumeToken();
 
   // Match the block to be run if the condition executes to true
   if(!(int)(ifChild = MATCH( Block ))) {
-    goatError((*curr)->line_no, "Unexpected token %s found after if keyword.", TOKEN_TYPES[(*curr)->type]);
+    goatError(CurrentSourcePosition(), "Unexpected token %s found after if keyword.", TOKEN_TYPES[currentToken->type]);
     astFreeNode(thisNode);
-    (*curr) = saved_curr;
+    ResetTokenPosition( savedCurr );
     return NULL;
   }
   thisNode->append(ifChild);
 
-  if( TOKEN_IS_NOT_A( Else ) ) {
+  if (TokenIsNot( Else ) ) {
     // So no else clause
     return thisNode;
   }
-  CONSUME_TOKEN;
+  ConsumeToken();
 
-  if( TOKEN_IS_NOT_A( Newline )) {
+  if (TokenIsNot( Newline )) {
     astFreeNode(thisNode);
-    (*curr) = saved_curr;
-    goatError((*curr)->line_no, "Unexpected token %s found after else-expression; should be a new line.", TOKEN_TYPES[(*curr)->type]);
+    ResetTokenPosition( savedCurr );
+    goatError(CurrentSourcePosition(), "Unexpected token %s found after else-expression; should be a new line.", TOKEN_TYPES[currentToken->type]);
     return NULL;
   }
-  CONSUME_TOKEN;
+  ConsumeToken();
 
-  if(!(int)(elseChild = MATCH( Block ))) {
-    goatError((*curr)->line_no, "Unexpected token %s found after else keyword.", TOKEN_TYPES[(*curr)->type]);
+  if (!(elseChild = MATCH( Block ))) {
+    goatError(CurrentSourcePosition(), "Unexpected token %s found after else keyword.", TOKEN_TYPES[currentToken->type]);
     astFreeNode(thisNode);
-    (*curr) = saved_curr;
+    ResetTokenPosition( savedCurr );
     return NULL;
   }
   thisNode->append(elseChild);
   return thisNode;
-}
-
-MATCHER_FOR( ClassDef ) {
-  return NULL;
 }
 
 
@@ -531,18 +533,18 @@ MATCHER_FOR( Assignment ) {
 }
 
 MATCHER_FOR( MutableAssignment ) {
-  Token *savedCurr = *curr, *variable;
+  Token *variable, *savedCurr = currentToken;
   ASTNode *newChild = NULL, *thisNode = NULL;
   
-  if(TOKEN_IS_NOT_A( Identifier)) { return NULL; }
-  variable = (*curr);
-  CONSUME_TOKEN;
+  if(TokenIsNot( Identifier)) { return NULL; }
+  variable = currentToken;
+  ConsumeToken();
   
-  if(TOKEN_IS_NOT_A( Equals )) {
-    *curr = savedCurr; 
+  if(TokenIsNot( Equals )) {
+    ResetTokenPosition( savedCurr );
     return NULL;
   }
-  CONSUME_TOKEN;
+  ConsumeToken();
   
   if((newChild = MATCH( Expression ))) {
     thisNode = astCreateNode( ASTNode::MutableAssignment );
@@ -551,24 +553,24 @@ MATCHER_FOR( MutableAssignment ) {
     return thisNode;
   }
   
-  goatError((*curr)->line_no, "Unexpected token %s found after equals sign in a mutable assignment.", TOKEN_TYPES[(*curr)->type]);
-  *curr = savedCurr; 
+  goatError(CurrentSourcePosition(), "Unexpected token %s found after equals sign in a mutable assignment.", TOKEN_TYPES[currentToken->type]);
+  ResetTokenPosition( savedCurr );
   return NULL;
 }
 
 MATCHER_FOR( ImmutableAssignment ) {
-  Token *savedCurr = *curr, *variable;
+  Token *variable, *savedCurr = currentToken;
   ASTNode *newChild = NULL, *thisNode = NULL;
   
-  if(TOKEN_IS_NOT_A( Identifier)) { return NULL; }
-  variable = (*curr);
-  CONSUME_TOKEN;
+  if(TokenIsNot( Identifier)) { return NULL; }
+  variable = currentToken;
+  ConsumeToken();
   
-  if(TOKEN_IS_NOT_A( Colon )) {
-    *curr = savedCurr; 
+  if(TokenIsNot( Colon )) {
+    ResetTokenPosition( savedCurr );
     return NULL;
   }
-  CONSUME_TOKEN;
+  ConsumeToken();
   
   if((newChild = MATCH( Expression ))) {
     thisNode = astCreateNode( ASTNode::ImmutableAssignment );
@@ -577,18 +579,18 @@ MATCHER_FOR( ImmutableAssignment ) {
     return thisNode;
   }
   
-  goatError((*curr)->line_no, "Unexpected token %s found after colon sign in a immutable assignment.", TOKEN_TYPES[(*curr)->type]);
-  *curr = savedCurr; 
+  goatError(CurrentSourcePosition(), "Unexpected token %s found after colon sign in a immutable assignment.", TOKEN_TYPES[currentToken->type]);
+  ResetTokenPosition( savedCurr );
   return NULL;
 }
 
 MATCHER_FOR( ReturnStatement ) {
   ASTNode *thisNode, *returnExpr;
 
-  if( TOKEN_IS_NOT_A( Return )) {
+  if( TokenIsNot( Return )) {
     return NULL;
   }
-  CONSUME_TOKEN;
+  ConsumeToken();
 
   thisNode = astCreateNode( ASTNode::ReturnStatement );
 
@@ -601,55 +603,56 @@ MATCHER_FOR( ReturnStatement ) {
 }
 
 MATCHER_FOR( ClassDefinition ) {
-  Token *saved_curr = *curr;
   ASTNode *thisNode, *newNode;
+  Token *savedCurr = currentToken;
 
-  if( TOKEN_IS_NOT_A( Class )) {
+  if( TokenIsNot( Class )) {
     return NULL;
   }
-  CONSUME_TOKEN;
+  ConsumeToken();
 
-  if( TOKEN_IS_A( Identifier )) {
+  if( TokenIs( Identifier )) {
     thisNode = astCreateNode( ASTNode::ClassDefinition );
-    thisNode->token = *curr;
+    thisNode->token = currentToken;
   } else {
-    goatError((*curr)->line_no, "Unexpected token %s found after class keyword. Identifier expected", TOKEN_TYPES[(*curr)->type]);
-    (*curr) = saved_curr;
+    goatError(CurrentSourcePosition(), "Unexpected token %s found after class keyword. Identifier expected", TOKEN_TYPES[currentToken->type]);
+    ResetTokenPosition( savedCurr );
     return NULL;
   }
-  CONSUME_TOKEN;
+  ConsumeToken();
   
-  if( TOKEN_IS_NOT_A( Newline )) {
-    goatError((*curr)->line_no, "Unexpected token %s found after class name. Newline expected", TOKEN_TYPES[(*curr)->type]);
-    (*curr) = saved_curr;
+  if( TokenIsNot( Newline )) {
+    goatError(CurrentSourcePosition(), "Unexpected token %s found after class name. Newline expected", TOKEN_TYPES[currentToken->type]);
+    ResetTokenPosition( savedCurr );
     return NULL;
   }
-  CONSUME_TOKEN;
+  ConsumeToken();
 
 
-  if( TOKEN_IS_NOT_A( IndentIncrease )) {
+  if( TokenIsNot( IndentIncrease )) {
     // Empty class
     return thisNode;
   }
-  CONSUME_TOKEN;
+  ConsumeToken();
 
   while((newNode = MATCH(Assignment))) {
     thisNode->append(newNode);
-    if( TOKEN_IS_A( Newline )) {
-      CONSUME_TOKEN;
+    if( TokenIs( Newline )) {
+      ConsumeToken();
     } else {
-      goatError((*curr)->line_no, "Unexpected token %s found in class definition block. Could not match assignment", TOKEN_TYPES[(*curr)->type]);
+      goatError(CurrentSourcePosition(), "Unexpected token %s found in class definition block. Could not match assignment", TOKEN_TYPES[currentToken->type]);
+      ResetTokenPosition( savedCurr );
       return NULL;
     }
   }
 
-  if( TOKEN_IS_A( IndentDecrease )) {
-    CONSUME_TOKEN;
+  if( TokenIs( IndentDecrease )) {
+    ConsumeToken();
     return thisNode;
   } else {
-    goatError((*curr)->line_no, "Unexpected token %s found when indent decrease to close class definition block expected.", TOKEN_TYPES[(*curr)->type]);
+    goatError(CurrentSourcePosition(), "Unexpected token %s found when indent decrease to close class definition block expected.", TOKEN_TYPES[currentToken->type]);
     astFreeNode(thisNode);
-    (*curr) = saved_curr;
+    ResetTokenPosition( savedCurr );
     return NULL;
   }
 }
