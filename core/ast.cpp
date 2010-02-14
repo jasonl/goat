@@ -12,16 +12,6 @@
 #include "ast_node.h"
 #include "goat.h"
 
-// Creates an AST-Node
-ASTNode *astCreateNode( ASTNode::NODE_TYPE type ) {
-  ASTNode *newNode = new ASTNode( type );
-  if (newNode == NULL) {
-      goatFatalError("Unable to allocate sufficient memory during parsing.");
-  }
-  newNode->type = type; 
-  return newNode;
-}
-
 // Recursively frees memory allocated to a node sub-tree
 void astFreeNode( ASTNode *node ) {
   ASTNode *childNode = NULL, *tempNode = NULL;

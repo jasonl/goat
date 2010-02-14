@@ -40,18 +40,9 @@ struct _GoatState;
   childSubTree->parent = thisNode; \
   return thisNode;
 
-// Creates a new terminal node (i.e. without any children) from the current
-// token, and returns it
-#define RETURN_TERMINAL_NODE( nodeType ) \
-  thisNode = astCreateNode( nodeType); \
-  thisNode->token = currentToken; \
-  ConsumeToken();		  \
-  return thisNode;
-
 // Function Prototypes
 //------------------------------------------------------------------------------
 
-ASTNode *astCreateNode( ASTNode::NODE_TYPE );
 void astFreeNode( ASTNode* );
 void astAppendChild( ASTNode*, ASTNode* );
 void astInsertFirstChild( ASTNode*, ASTNode* );
