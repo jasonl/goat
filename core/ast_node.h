@@ -3,6 +3,20 @@
 
 struct _Token;
 
+const std::string NODE_TYPES[] = { 
+  "SourceFile",
+  "\x1b[1;33mBlock\x1b[0;37;00m",
+  "StatementGroup", "Statement", "ClassStatement", "My",
+  "\x1b[0;36mMutableAssignment\x1b[0;37;00m", "\x1b[0;36mImmutableAssignment\x1b[0;37;00m",
+  "\x1b[1;35mConditional\x1b[0;37;00m",
+  "ClassDefinition",
+  "\x1b[1;31mFunctionDef\x1b[0;37;00m", "OneLineFunctionDef", "BlockFunctionDef",
+  "ParameterDef",
+  "\x1b[1;34mFunctionCall\x1b[0;37;00m", "Parameter", "NamedParameter",
+  "IntegerLiteral", "Variable", "StringLiteral", "NullLiteral",
+  "\x1b[1;32mReturnStatement\x1b[0;37;00m"
+};
+
 class ASTNode {
  public:
   enum NODE_TYPE {
@@ -22,6 +36,7 @@ class ASTNode {
   ASTNode( enum NODE_TYPE );
   ~ASTNode();
   void append( ASTNode* );
+  void InsertFirstChild( ASTNode* );
   enum NODE_TYPE type;
   struct _Token *token;
   ASTNode *parent;
@@ -29,5 +44,7 @@ class ASTNode {
   ASTNode *nextSibling;
   ASTNode *prevSibling;
 };
+
+#define MATCHER_FOR(name) ASTNode *Parser::Match##name()
 
 #endif

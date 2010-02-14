@@ -13,7 +13,7 @@
 #include <string>
 
 #include "lexer.h"
-#include "ast.h"
+#include "ast_node.h"
 #include "parser.h"
 #include "goat.h"
 

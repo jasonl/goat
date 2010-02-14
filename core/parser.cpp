@@ -51,11 +51,10 @@
  * digit                 = "0" - "9"
  *
  */
-#include <malloc.h>
 #include <string.h>
+#include <string>
 #include "lexer.h"
 #include "ast_node.h"
-#include "ast.h"
 #include "parser.h"
 #include "goat.h"
 
@@ -296,11 +295,11 @@ MATCHER_FOR( FunctionCall ) {
   }
 
   if( receiver ) {
-    astInsertFirstChild( receiver, thisNode);
+    thisNode->InsertFirstChild(receiver);
   }
 
   while((newParent = MATCH( MethodInvocation ))) {    
-    astInsertFirstChild( thisNode, newParent );
+    newParent->InsertFirstChild( thisNode );
     thisNode = newParent;
   }
 

@@ -1,5 +1,6 @@
+#include <string>
 #include "lexer.h"
-#include "ast.h"
+#include "ast_node.h"
 
 ASTNode::ASTNode( enum NODE_TYPE _type) {
   type = _type;
@@ -26,7 +27,7 @@ void ASTNode::append( ASTNode *child ) {
 
   child->parent = this;
 
-  if( !(int)firstChild ) {
+  if( !(int)this->firstChild ) {
     firstChild = child;
     return;
   }
@@ -42,5 +43,24 @@ void ASTNode::append( ASTNode *child ) {
 
   lastSibling->nextSibling = child;
   child->prevSibling = lastSibling;
+  return;
+}
+
+// Insert a new AST-Node as the first child, rather than
+// the last one.
+void ASTNode::InsertFirstChild( ASTNode *child ) {
+  ASTNode *secondChild;
+
+  child->parent = this;
+
+  if( !(int)this->firstChild) {
+    this->firstChild = child;
+    return;
+  }
+
+  secondChild = this->firstChild;
+  this->firstChild = child;
+  secondChild->prevSibling = child;
+  child->nextSibling = secondChild;
   return;
 }
