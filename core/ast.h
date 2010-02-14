@@ -43,8 +43,6 @@ struct _GoatState;
 // Function Prototypes
 //------------------------------------------------------------------------------
 
-void astFreeNode( ASTNode* );
-void astAppendChild( ASTNode*, ASTNode* );
 void astInsertFirstChild( ASTNode*, ASTNode* );
 int astLookaheadFor( struct _Token **, enum TOKEN_TYPE );
 int goatBuildAST( struct _GoatState* );

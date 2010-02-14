@@ -90,7 +90,7 @@ ASTNode * Parser::parse() {
     } else {
       // Found something on a line we couldn't match
       goatError(CurrentSourcePosition(), "Unexpected token %s[%s] found.", TOKEN_TYPES[currentToken->type], currentToken->content);
-      astFreeNode(astRoot);
+      delete astRoot;
       return NULL;
     }
   }
@@ -130,13 +130,13 @@ MATCHER_FOR( Block ) {
     } else {
       // Found something on a line we couldn't match
       goatError(CurrentSourcePosition(), "Unexpected token %s[%s] found.", TOKEN_TYPES[currentToken->type], currentToken->content);
-      astFreeNode(thisNode);
+      delete thisNode;
       return 0;
     }
   }
   else {
     goatError(CurrentSourcePosition(), "Could not match a statement in block");
-    astFreeNode(thisNode);
+    delete thisNode;
     return NULL;
   }
 
@@ -152,14 +152,14 @@ MATCHER_FOR( Block ) {
     } else {
       // Found something on a line we couldn't match
       goatError(CurrentSourcePosition(), "Unexpected token %s[%s] found.", TOKEN_TYPES[currentToken->type], currentToken->content);
-      astFreeNode(thisNode);
+      delete thisNode;
       return 0;
     }  
   }
 
   if( TokenIsNot( IndentDecrease )) {
     goatError(CurrentSourcePosition(), "Invalid token %s found in block.", TOKEN_TYPES[currentToken->type]);
-    astFreeNode( thisNode );
+    delete thisNode;
     return NULL;
   }
     
@@ -291,7 +291,7 @@ MATCHER_FOR( FunctionCall ) {
   
   if(!(thisNode = MATCH( MethodInvocation ))) {
     ResetTokenPosition( savedCurr );
-    if(receiver) astFreeNode(receiver);
+    if(receiver) delete receiver;
     return NULL;
   }
 
@@ -358,7 +358,7 @@ MATCHER_FOR( MethodInvocation ) {
 
     // If execution gets to here, we've encountered some other token
     goatError(CurrentSourcePosition(), "MethodInvocation: Unexpected %s found when a right parenthesis ')' was expected.", TOKEN_TYPES[currentToken->type]);
-    astFreeNode( thisNode );
+    delete thisNode;
     return NULL;
   }
   
@@ -374,7 +374,7 @@ MATCHER_FOR( MethodInvocation ) {
     } else {
       if( must_match_paren ) {
 	goatError(CurrentSourcePosition(), "Could not find Right Paren to close function call parsing");
-	astFreeNode(thisNode);
+	delete thisNode;
 	return NULL;
       } else {
 	// Leave the token, try to match it with the next node
@@ -383,7 +383,7 @@ MATCHER_FOR( MethodInvocation ) {
     }
   } else {
     goatError(CurrentSourcePosition(), "Another function parameter expected after comma; none was matched.");
-    astFreeNode( thisNode );
+    delete thisNode;
     return NULL;
   }
 }
@@ -423,20 +423,20 @@ MATCHER_FOR( FunctionDef ) {
     
     // If execution gets to here, we've encountered some other token
     goatError(CurrentSourcePosition(), "FunctionDefinition: Unexpected %s found when a right parenthesis ')' was expected.", TOKEN_TYPES[currentToken->type]);
-    astFreeNode( thisNode );
+    delete thisNode;
     return NULL;
   }
 
   if( TokenIsNot( RightParen)) {
     goatError(CurrentSourcePosition(), "FunctionDefinition: Unexpected %s found when a right parenthesis ')' was expected.", TOKEN_TYPES[currentToken->type]);
-    astFreeNode(thisNode);
+    delete thisNode;
     return NULL;
   }
   ConsumeToken();
 
   if (TokenIsNot( Newline )) {
     goatError(CurrentSourcePosition(), "FunctionDefinition: Unexpected %s found when a Newline was expected.", TOKEN_TYPES[currentToken->type]);
-    astFreeNode(thisNode);
+    delete thisNode;
     ResetTokenPosition( savedCurr );
     return NULL;
   }
@@ -447,7 +447,7 @@ MATCHER_FOR( FunctionDef ) {
     return thisNode;  
   } else {
     goatError(CurrentSourcePosition(), "No Block found for function definition");
-    astFreeNode(thisNode);
+    delete thisNode;
     ResetTokenPosition( savedCurr );
     return NULL;
   }
@@ -488,7 +488,7 @@ MATCHER_FOR( Conditional ) {
   ConsumeToken();
 
   if (!(int)(exprChild = MATCH( Expression))) {
-    astFreeNode(thisNode);
+    delete thisNode;
     ResetTokenPosition( savedCurr );
     goatError(CurrentSourcePosition(), "Unexpected token %s found after if keyword.", TOKEN_TYPES[currentToken->type]);
     return NULL;
@@ -496,7 +496,7 @@ MATCHER_FOR( Conditional ) {
   thisNode->append(exprChild);
 
   if (TokenIsNot( Newline )) {
-    astFreeNode(thisNode);
+    delete thisNode;
     ResetTokenPosition( savedCurr );
     goatError(CurrentSourcePosition(), "Unexpected token %s found after if-expression; should be a new line.", TOKEN_TYPES[currentToken->type]);
     return NULL;
@@ -506,7 +506,7 @@ MATCHER_FOR( Conditional ) {
   // Match the block to be run if the condition executes to true
   if(!(int)(ifChild = MATCH( Block ))) {
     goatError(CurrentSourcePosition(), "Unexpected token %s found after if keyword.", TOKEN_TYPES[currentToken->type]);
-    astFreeNode(thisNode);
+    delete thisNode;
     ResetTokenPosition( savedCurr );
     return NULL;
   }
@@ -519,7 +519,7 @@ MATCHER_FOR( Conditional ) {
   ConsumeToken();
 
   if (TokenIsNot( Newline )) {
-    astFreeNode(thisNode);
+    delete thisNode;
     ResetTokenPosition( savedCurr );
     goatError(CurrentSourcePosition(), "Unexpected token %s found after else-expression; should be a new line.", TOKEN_TYPES[currentToken->type]);
     return NULL;
@@ -528,7 +528,7 @@ MATCHER_FOR( Conditional ) {
 
   if (!(elseChild = MATCH( Block ))) {
     goatError(CurrentSourcePosition(), "Unexpected token %s found after else keyword.", TOKEN_TYPES[currentToken->type]);
-    astFreeNode(thisNode);
+    delete thisNode;
     ResetTokenPosition( savedCurr );
     return NULL;
   }
@@ -669,7 +669,7 @@ MATCHER_FOR( ClassDefinition ) {
     return thisNode;
   } else {
     goatError(CurrentSourcePosition(), "Unexpected token %s found when indent decrease to close class definition block expected.", TOKEN_TYPES[currentToken->type]);
-    astFreeNode(thisNode);
+    delete thisNode;
     ResetTokenPosition( savedCurr );
     return NULL;
   }

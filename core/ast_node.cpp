@@ -9,6 +9,18 @@ ASTNode::ASTNode( enum NODE_TYPE _type) {
   prevSibling = NULL;
 }
 
+ASTNode::~ASTNode() {
+  ASTNode *childNode = NULL, *tempNode = NULL;
+
+  childNode = firstChild;
+
+  while (childNode != NULL) {
+    tempNode = childNode->nextSibling;
+    delete childNode;
+    childNode = tempNode;
+  }
+}
+
 void ASTNode::append( ASTNode *child ) {
   ASTNode *lastSibling = this->firstChild;
 

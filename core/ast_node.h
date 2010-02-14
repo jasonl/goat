@@ -20,6 +20,7 @@ class ASTNode {
   };
 
   ASTNode( enum NODE_TYPE );
+  ~ASTNode();
   void append( ASTNode* );
   enum NODE_TYPE type;
   struct _Token *token;
