@@ -22,6 +22,9 @@ ASTNode::~ASTNode() {
   }
 }
 
+void ASTNode::Analyse( Scope* ) {
+}
+
 void ASTNode::append( ASTNode *child ) {
   ASTNode *lastSibling = this->firstChild;
 

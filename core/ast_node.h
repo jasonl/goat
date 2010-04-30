@@ -2,6 +2,8 @@
 #define AST_NODE_H
 
 struct _Token;
+class Scope;
+class AssemblyBlock;
 
 const std::string NODE_TYPES[] = { 
   "SourceFile",
@@ -35,10 +37,16 @@ class ASTNode {
 
   ASTNode( enum NODE_TYPE );
   ~ASTNode();
+
   void append( ASTNode* );
   void InsertFirstChild( ASTNode* );
+
+  virtual void Analyse( Scope* );
+  AssemblyBlock* GenerateCode();
+
   enum NODE_TYPE type;
   struct _Token *token;
+  Scope *scope;
   ASTNode *parent;
   ASTNode *firstChild;
   ASTNode *nextSibling;
@@ -46,5 +54,8 @@ class ASTNode {
 };
 
 #define MATCHER_FOR(name) ASTNode *Parser::Match##name()
+
+// Include the derived classes here for convenience
+#include "ast_block_node.h"
 
 #endif

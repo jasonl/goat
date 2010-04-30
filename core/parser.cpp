@@ -114,7 +114,7 @@ MATCHER_FOR( Block ) {
   if(TokenIsNot( IndentIncrease )) { return NULL; }
   ConsumeToken();
 
-  thisNode = new ASTNode( ASTNode::Block );
+  thisNode = new ASTBlockNode();
 
   // Match at least one statement
   if((newChild = MATCH(Statement))) {
