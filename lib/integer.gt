@@ -10,10 +10,12 @@
 ; Right-most arg dispatch fn  0x01314122   [DWORD]
 ; Right-most arg payload      0x00001234   [DWORD]
 ; ...                         ...
-; Left-most arg type hash     0A3f9873C0   [DWORD]
-; Left-most arg dispatch fn   0x13142433   [DWORD]
-; Left-most arg payload       0x00000001   [DWORD] <-- ESP POINTS HERE
-;
+; Left-most arg type hash     0A3f9873C0   [DWORD] +16
+; Left-most arg dispatch fn   0x13142433   [DWORD] +12
+; Left-most arg payload       0x00000001   [DWORD] +8
+; Old EIP (return address)    0x12345677   [DWORD] +4
+; Old EBP                     0x123456789  [DWORD] <- EBP,ESP points here
+;                                                     At function entry
 ; my-instance payload         EAX
 ; my-instance message hash    ECX
 ;
@@ -26,11 +28,14 @@ class Integer
   ; Integer addition
   ; Adds the addend to the value of this instance, and returns the sum.
   +: λ( addend )
+    ; Function prolog automatically generated
+    ; push ebp
+    ; mov ebp, esp
     asm
-      mov ecx, [ebp+12]      ; Load type hash of first argument into ECX
+      mov ecx, #addend      ; Load type hash of first argument into ECX
       cmp ecx, #Integer      ; test that divisor is an Integer
       jne incorrect_type
-      add eax, [ebp+4]
+      add eax, *addend
       mov edx, &Integer
       mov ecx, #Integer
       pop ebp
@@ -42,10 +47,10 @@ class Integer
   ; the difference.
   -: λ( subtrahend )
     asm
-      mov ecx, [ebp+12]      ; Load type hash of first argument into ECX
+      mov ecx, #subtrahend    ; Load type hash of first argument into ECX
       cmp ecx, #Integer      ; test that divisor is an Integer
       jne incorrect_type
-      sub eax, [ebp+4]
+      sub eax, *subtrahend
       mov edx, &Integer
       mov ecx, #Integer
       pop ebp
@@ -57,10 +62,10 @@ class Integer
   ; is discarded
   *: λ( factor )
     asm  
-      mov ecx, [ebp+12]      ; Load type hash of first argument into ECX
+      mov ecx, #factor      ; Load type hash of first argument into ECX
       cmp ecx, #Integer      ; test that divisor is an Integer
       jne incorrect_type
-      imul [ebp+4]           ; This instance's value is already in eax
+      imul *factor           ; This instance's value is already in eax
       mov edx, &Integer      ; dispatch function
       mov ecx, #Integer      ; Integer type hash
       pop ebp
@@ -74,11 +79,11 @@ class Integer
   ; divisor - the divisor, must be an Integer
   %: λ( divisor )
     asm  
-      mov ecx, [ebp+12]      ; Load type hash of first argument into ECX
+      mov ecx, #divisor      ; Load type hash of first argument into ECX
       cmp ecx, #Integer      ; test that divisor is an Integer
       jne incorrect_type
       cdq                    ; sign extend EAX into EDX:EAX
-      idiv [ebp+4]
+      idiv *divisor
       mov eax, edx           ; remainder in edx, we want to return it in eax
       mov edx, &Integer      ; dispatch function
       mov ecx, #Integer      ; Integer type hash
@@ -90,10 +95,10 @@ class Integer
   ; Greater than. Returns a boolean object
   >: λ( term )
     asm
-      mov ecx, [EBP+12]      ; Load type has of the first argument into ecx
+      mov ecx, #term         ; Load type has of the first argument into ecx
       cmp ecx, #Integer      ; Test that the term is an Integer
       jne incorrect_type
-      cmp eax, [EBP+4]       ; Test the two number
+      cmp eax, *term         ; Test the two number
       jg true
       mov eax, 0             ; False boolean value
       mov edx, &Boolean      ; Boolean object dispatch function
@@ -111,10 +116,10 @@ class Integer
   ; Less than. Returns a boolean object
   <: λ( term )
     asm
-      mov ecx, [EBP+12]      ; Load type has of the first argument into ecx
+      mov ecx, #term         ; Load type has of the first argument into ecx
       cmp ecx, #Integer      ; Test that the term is an Integer
       jne incorrect_type
-      cmp eax, [EBP+4]       ; Test the two number
+      cmp eax, *term         ; Test the two number
       jl true                ; Jump if less than
       mov eax, 0             ; False boolean value
       mov edx, &Boolean      ; Boolean object dispatch function
@@ -132,10 +137,10 @@ class Integer
   ; Greater than or Equal to. Returns a boolean object
   ≥: λ( term )
     asm
-      mov ecx, [EBP+12]      ; Load type has of the first argument into ecx
+      mov ecx, #term         ; Load type has of the first argument into ecx
       cmp ecx, #Integer      ; Test that the term is an Integer
       jne incorrect_type
-      cmp eax, [EBP+4]       ; Test the two numbers
+      cmp eax, *term         ; Test the two numbers
       jge true
       mov eax, 0             ; False boolean value
       mov edx, &Boolean      ; Boolean object dispatch function
@@ -153,10 +158,10 @@ class Integer
   ; Less than or equal to. Returns a boolean object
   ≤: λ( term )
     asm
-      mov ecx, [EBP+12]      ; Load type has of the first argument into ecx
+      mov ecx, #term         ; Load type has of the first argument into ecx
       cmp ecx, #Integer      ; Test that the term is an Integer
       jne incorrect_type
-      cmp eax, [EBP+4]       ; Test the two number
+      cmp eax, *term         ; Test the two number
       jle true
       mov eax, 0             ; False boolean value
       mov edx, &Boolean      ; Boolean object dispatch function
@@ -173,10 +178,10 @@ class Integer
 
   ≡: λ( term )
     asm
-      mov ecx, [EBP+12]      ; Load type hash of the first argumment into ecx
+      mov ecx, #term         ; Load type hash of the first argumment into ecx
       cmp ecx, #Integer
       jne not_equal          ; If it's not an Integer, then it cannot be equal
-      cmp eax, [EBP+4]       ; Do the comparison
+      cmp eax, *term         ; Do the comparison
       jne not_equal
       mov eax, 1             ; return Boolean(true)
       mov edx, &Boolean
@@ -192,10 +197,10 @@ class Integer
 
   ≢: λ( term )
     asm
-      mov ecx, [EBP+12]      ; Load type hash of the first argumment into ecx
+      mov ecx, #term         ; Load type hash of the first argumment into ecx
       cmp ecx, #Integer
       jne not_equal          ; If it's not an Integer, then it cannot be equal
-      cmp eax, [EBP+4]       ; Do the comparison
+      cmp eax, *term         ; Do the comparison
       jne not_equal
       mov eax, 0             ; return Boolean(true)
       mov edx, &Boolean
@@ -208,24 +213,5 @@ class Integer
       mov ecx, #Boolean    
       pop ebp
       ret
-
-  ; Increment: Add 1 to the value of the integer
-  ++: λ()
-    asm
-      inc eax                ; Value is already in eax
-      mov edx, &Integer      ; return the Integer object
-      mov ecx, #Integer
-      pop ebp
-      ret
-
-  ; Decrement: Subtract 1 from the value of the integer
-  --: λ()
-    asm
-      dec eax                ; Value is already in eax
-      mov edx, &Integer      ; return the Integer object
-      mov ecx, #Integer
-      pop ebp
-      ret
-
 
 end
