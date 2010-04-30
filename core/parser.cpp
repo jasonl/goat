@@ -479,7 +479,7 @@ MATCHER_FOR( Conditional ) {
   Token *savedCurr = currentToken;
 
   if (TokenIsNot( If )) { return NULL; }
-  thisNode = new ASTNode( ASTNode::Conditional );
+  thisNode = new ASTConditionalNode;
   ConsumeToken();
 
   if (!(int)(exprChild = MATCH( Expression))) {
