@@ -209,21 +209,21 @@ MATCHER_FOR( Expression ) {
   }
   
   if( TokenIs( String ) ) {
-    thisNode = new ASTStringLiteralNode();
+    thisNode = new ASTStringLiteralNode;
     thisNode->token = currentToken;
     ConsumeToken();
     return thisNode;
   }
 
   if( TokenIs( Integer )) {
-    thisNode = new ASTIntegerLiteralNode();
+    thisNode = new ASTIntegerLiteralNode;
     thisNode->token = currentToken;
     ConsumeToken();
     return thisNode;
   }
 
   if( TokenIs( Identifier )) {
-    thisNode = new ASTNode( ASTNode::Variable );
+    thisNode = new ASTVariableNode;
     thisNode->token = currentToken;
     ConsumeToken();
     return thisNode;
@@ -258,7 +258,7 @@ MATCHER_FOR( Receiver ) {
     // Lookahead to determine if this identifier is actually
     // a receiver or a method name
     if (!LookAheadFor( LeftParen )) {
-      thisNode = new ASTNode( ASTNode::Variable );
+      thisNode = new ASTVariableNode;
       thisNode->token = currentToken;
       ConsumeToken();
       return thisNode;
@@ -266,14 +266,14 @@ MATCHER_FOR( Receiver ) {
   }
 
   if (TokenIs( String ) ) {
-    thisNode = new ASTNode( ASTNode::StringLiteral );
+    thisNode = new ASTStringLiteralNode;
     thisNode->token = currentToken;
     ConsumeToken();
     return thisNode;
   }
 
   if (TokenIs( Integer )) {
-    thisNode = new ASTNode( ASTNode::IntegerLiteral );
+    thisNode = new ASTIntegerLiteralNode;
     thisNode->token = currentToken;
     ConsumeToken();
     return thisNode;
