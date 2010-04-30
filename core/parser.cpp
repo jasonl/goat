@@ -560,8 +560,7 @@ MATCHER_FOR( MutableAssignment ) {
   ConsumeToken();
   
   if((newChild = MATCH( Expression ))) {
-    thisNode = new ASTNode( ASTNode::MutableAssignment );
-    thisNode->token = variable;
+    thisNode = new ASTMutableAssignmentNode( variable );
     thisNode->append(newChild);
     return thisNode;
   }
@@ -586,8 +585,7 @@ MATCHER_FOR( ImmutableAssignment ) {
   ConsumeToken();
   
   if((newChild = MATCH( Expression ))) {
-    thisNode = new ASTNode( ASTNode::ImmutableAssignment );
-    thisNode->token = variable;
+    thisNode = new ASTImmutableAssignmentNode( variable );
     thisNode->append(newChild);
     return thisNode;
   }
