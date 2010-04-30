@@ -1,0 +1,8 @@
+; Null class
+class NullClass
+  as_boolean: λ()
+    return false
+
+  as_string: λ()
+    return "Null"
+end
