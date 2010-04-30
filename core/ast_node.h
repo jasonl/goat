@@ -56,7 +56,7 @@ class ASTNode {
 #define MATCHER_FOR(name) ASTNode *Parser::Match##name()
 
 // Include the derived classes here for convenience
-#include "ast_block_node.h"
+#include "ast_block_node.hpp"
 #include "ast_string_literal_node.hpp"
 #include "ast_integer_literal_node.hpp"
 #include "ast_variable_node.hpp"
