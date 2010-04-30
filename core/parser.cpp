@@ -64,7 +64,7 @@ const char *TOKEN_TYPES[]={"Whitespace", "Indent", "Comment", "NewLine", "Identi
 			   "IndentIncrease", "IndentDecrease", "End of File"};
 
 ASTNode * Parser::parse() {
-  ASTNode *astRoot = new ASTNode( ASTNode::SourceFile );
+  ASTNode *astRoot = new ASTSourceFileNode;
   ASTNode *newChild;
 
   // Remove any leading newlines - e.g. from comments
@@ -623,8 +623,7 @@ MATCHER_FOR( ClassDefinition ) {
   ConsumeToken();
 
   if( TokenIs( Identifier )) {
-    thisNode = new ASTNode( ASTNode::ClassDefinition );
-    thisNode->token = currentToken;
+    thisNode = new ASTClassDefinitionNode( currentToken );
   } else {
     goatError(CurrentSourcePosition(), "Unexpected token %s found after class keyword. Identifier expected", TOKEN_TYPES[currentToken->type]);
     ResetTokenPosition( savedCurr );

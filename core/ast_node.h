@@ -57,6 +57,7 @@ class ASTNode {
 
 // Include the derived classes here for convenience
 #include "ast_block_node.hpp"
+#include "ast_class_definition_node.hpp"
 #include "ast_conditional_node.hpp"
 #include "ast_function_call_node.hpp"
 #include "ast_function_def_node.hpp"
@@ -66,6 +67,7 @@ class ASTNode {
 #include "ast_null_literal_node.hpp"
 #include "ast_parameter_node.hpp"
 #include "ast_return_statement_node.hpp"
+#include "ast_source_file_node.hpp"
 #include "ast_string_literal_node.hpp"
 #include "ast_variable_node.hpp"
 
