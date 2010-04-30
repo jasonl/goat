@@ -603,10 +603,10 @@ MATCHER_FOR( ReturnStatement ) {
   }
   ConsumeToken();
 
-  thisNode = new ASTNode( ASTNode::ReturnStatement );
+  thisNode = new ASTReturnStatementNode;
 
   if(!(returnExpr = MATCH( Expression ))){
-    returnExpr = new ASTNode( ASTNode::NullLiteral );
+    returnExpr = new ASTNullLiteralNode;
   }
   
   thisNode->append(returnExpr);

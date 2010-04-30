@@ -63,7 +63,9 @@ class ASTNode {
 #include "ast_immutable_assignment_node.hpp"
 #include "ast_integer_literal_node.hpp"
 #include "ast_mutable_assignment_node.hpp"
+#include "ast_null_literal_node.hpp"
 #include "ast_parameter_node.hpp"
+#include "ast_return_statement_node.hpp"
 #include "ast_string_literal_node.hpp"
 #include "ast_variable_node.hpp"
 
