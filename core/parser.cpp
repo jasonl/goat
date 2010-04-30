@@ -466,7 +466,7 @@ MATCHER_FOR( Parameter ) {
 
   //TODO: Add matching for named parameters
   if(( newChild = MATCH( Expression ))) {
-    thisNode = new ASTNode( ASTNode::Parameter );
+    thisNode = new ASTParameterNode;
     thisNode->append(newChild);
     return thisNode;
   }
