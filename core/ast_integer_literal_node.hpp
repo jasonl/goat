@@ -1,5 +1,5 @@
 class ASTIntegerLiteralNode : public ASTNode {
 public:
-  ASTIntegerLiteralNode();
+  ASTIntegerLiteralNode( struct _Token *);
   void Analyse( Scope * );
 };

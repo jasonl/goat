@@ -209,15 +209,13 @@ MATCHER_FOR( Expression ) {
   }
   
   if( TokenIs( String ) ) {
-    thisNode = new ASTStringLiteralNode;
-    thisNode->token = currentToken;
+    thisNode = new ASTStringLiteralNode( currentToken );
     ConsumeToken();
     return thisNode;
   }
 
   if( TokenIs( Integer )) {
-    thisNode = new ASTIntegerLiteralNode;
-    thisNode->token = currentToken;
+    thisNode = new ASTIntegerLiteralNode( currentToken );
     ConsumeToken();
     return thisNode;
   }
@@ -266,15 +264,13 @@ MATCHER_FOR( Receiver ) {
   }
 
   if (TokenIs( String ) ) {
-    thisNode = new ASTStringLiteralNode;
-    thisNode->token = currentToken;
+    thisNode = new ASTStringLiteralNode( currentToken );
     ConsumeToken();
     return thisNode;
   }
 
   if (TokenIs( Integer )) {
-    thisNode = new ASTIntegerLiteralNode;
-    thisNode->token = currentToken;
+    thisNode = new ASTIntegerLiteralNode( currentToken );
     ConsumeToken();
     return thisNode;
   }

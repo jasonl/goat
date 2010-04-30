@@ -1,5 +1,5 @@
 class ASTStringLiteralNode : public ASTNode {
 public:
-  ASTStringLiteralNode();
+  ASTStringLiteralNode( struct _Token * );
   void Analyse( Scope * );
 };
