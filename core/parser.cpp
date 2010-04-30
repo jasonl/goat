@@ -399,7 +399,7 @@ MATCHER_FOR( FunctionDef ) {
   }
   ConsumeToken();
   
-  thisNode = new ASTNode( ASTNode::FunctionDef );
+  thisNode = new ASTFunctionDefNode;
 
   while((newChild = MATCH( ParameterDef ))) {
     thisNode->append(newChild);
