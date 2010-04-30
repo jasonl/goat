@@ -216,7 +216,7 @@ MATCHER_FOR( Expression ) {
   }
 
   if( TokenIs( Integer )) {
-    thisNode = new ASTNode( ASTNode::IntegerLiteral );
+    thisNode = new ASTIntegerLiteralNode();
     thisNode->token = currentToken;
     ConsumeToken();
     return thisNode;
