@@ -325,7 +325,7 @@ MATCHER_FOR( MethodInvocation ) {
     must_match_paren = TRUE;
   }
  
-  thisNode = new ASTNode( ASTNode::FunctionCall );
+  thisNode = new ASTFunctionCallNode;
 
   // We don't append the receiver here - that's done in astMatchFunctionCall
   thisNode->token = functionName;
