@@ -209,7 +209,7 @@ MATCHER_FOR( Expression ) {
   }
   
   if( TokenIs( String ) ) {
-    thisNode = new ASTNode( ASTNode::StringLiteral );
+    thisNode = new ASTStringLiteralNode();
     thisNode->token = currentToken;
     ConsumeToken();
     return thisNode;
