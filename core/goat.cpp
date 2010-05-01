@@ -16,6 +16,7 @@
 #include "ast_node.h"
 #include "parser.h"
 #include "goat.h"
+#include "scope.h"
 
 using namespace std;
 
@@ -48,6 +49,9 @@ int main(int argc, char** argv) {
     memset(prev_cols, 0, 100);
     G->astRoot->print(0, 0, prev_cols );
   }
+
+  Scope *lobby = new Scope( NULL );
+  G->astRoot->Analyse( lobby );
 
   free(G);
   return ( EXIT_SUCCESS );
