@@ -575,7 +575,7 @@ MATCHER_FOR( ImmutableAssignment ) {
   ASTImmutableAssignmentNode *thisNode = NULL;
   ASTNode *rValue;
   
-  if(TokenIsNot( Identifier)) { return NULL; }
+  if(TokenIsNot( Identifier )) { return NULL; }
   variable = currentToken;
   ConsumeToken();
   
