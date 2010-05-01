@@ -24,7 +24,6 @@ typedef struct _GoatState {
 } GoatState;
 
 void goatPrintTokens( GoatState* );
-void goatPrintASTNode( ASTNode*, int, int, char* );
 void goatParseArguments( GoatState*, int, char**);
 void goatFatalError( std::string );
 void goatError( int, std::string, ... );

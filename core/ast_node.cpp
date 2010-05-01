@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream>
 #include "lexer.h"
 #include "ast_node.h"
 
@@ -72,3 +73,31 @@ ASTIterator ASTNode::ChildNodes() {
   return ASTIterator(firstChild);
 }
 
+// Recursive function to print a tree of the AST
+void ASTNode::print(int depth, int skip, char *prev_cols) {
+  ASTIterator end(NULL);
+  
+  std::cout << NODE_TYPES[type];
+
+  if( token ) {
+    std::cout << ":" << token->content;
+  }
+  std::cout << "\n";
+
+  for( ASTIterator i = ChildNodes(); i != end; i++) {
+
+    for(int j=0; j < (depth); j++) {
+      std::cout << ( prev_cols[j] ? "\u2502" : " ");
+    }
+
+    if (i->nextSibling == NULL) {
+      std::cout << "\u2514";
+      prev_cols[depth] = 0;
+      i->print(depth+1, skip+1, prev_cols);
+    } else {
+      std::cout << "\u251c";
+      prev_cols[depth] = 1;
+      i->print(depth+1, skip, prev_cols);
+    }
+  }
+}

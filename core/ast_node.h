@@ -48,6 +48,8 @@ class ASTNode {
   virtual void Analyse( Scope* );
   AssemblyBlock* GenerateCode();
 
+  void print(int, int, char*);
+
   enum NODE_TYPE type;
   struct _Token *token;
   Scope *scope;

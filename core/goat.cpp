@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
 
   if(G->verbose) {
     memset(prev_cols, 0, 100);
-    goatPrintASTNode( G->astRoot, 0, 0, prev_cols );
+    G->astRoot->print(0, 0, prev_cols );
   }
 
   free(G);
@@ -98,44 +98,6 @@ void goatPrintTokens( GoatState *G ) {
         printf("\n");
         curr = curr->next;
     }
-}
-
-void goatPrintASTNode( ASTNode *node, int depth, int skip, char *prev_cols ) {
-  ASTNode *lastChild;
-  int i;
-  
-  cout << NODE_TYPES[node->type];
-  if( node->token ) {
-    printf(":%s", node->token->content);
-  }
-  printf("\n");
-
-  if( node->firstChild == NULL ) {
-    return;
-  }
-  
-  lastChild = node->firstChild;
-  while( (int)lastChild ) {
-    i = 0;
-    while(i < (depth)) {
-      if( prev_cols[i] == 1) printf("\u2502");
-      if( prev_cols[i] == 0) printf(" ");
-      i++;
-    }
-
-    if (lastChild->nextSibling == NULL) {
-      printf("\u2514");
-      prev_cols[depth] = 0;
-      goatPrintASTNode(lastChild, depth+1, skip+1, prev_cols);
-    } else {
-      printf("\u251c");
-      prev_cols[depth] = 1;
-	goatPrintASTNode(lastChild, depth+1, skip, prev_cols);
-    }
-    
-    
-    lastChild = lastChild->nextSibling;
-  }
 }
 
 void goatFatalError( const std::string msg ) {
