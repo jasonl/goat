@@ -1,9 +1,12 @@
 #ifndef AST_NODE_H
 #define AST_NODE_H
 
+#include <iterator>
+
 struct _Token;
 class Scope;
 class AssemblyBlock;
+class ASTIterator;
 
 const std::string NODE_TYPES[] = { 
   "SourceFile",
@@ -40,6 +43,7 @@ class ASTNode {
 
   void append( ASTNode* );
   void InsertFirstChild( ASTNode* );
+  ASTIterator ChildNodes();
 
   virtual void Analyse( Scope* );
   AssemblyBlock* GenerateCode();
@@ -51,6 +55,19 @@ class ASTNode {
   ASTNode *firstChild;
   ASTNode *nextSibling;
   ASTNode *prevSibling;
+};
+
+class ASTIterator {
+  ASTNode *p;
+public:
+  ASTIterator( ASTNode* start) : p(start) {}
+  ASTIterator( const ASTIterator& asti ) : p(asti.p) {}
+  ASTIterator operator++() {p = p->nextSibling; return *this;}
+  ASTIterator operator++(int) { p = p->nextSibling; return *this;}
+  bool operator==( const ASTIterator& asti ) { return asti.p == p; }
+  bool operator!=( const ASTIterator& asti ) { return asti.p != p; }
+  ASTNode& operator*() { return *p; }
+  ASTNode* operator->() { return p; }
 };
 
 #define MATCHER_FOR(name) ASTNode *Parser::Match##name()
@@ -70,5 +87,7 @@ class ASTNode {
 #include "ast_source_file_node.hpp"
 #include "ast_string_literal_node.hpp"
 #include "ast_variable_node.hpp"
+
+
 
 #endif

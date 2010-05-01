@@ -67,3 +67,8 @@ void ASTNode::InsertFirstChild( ASTNode *child ) {
   child->nextSibling = secondChild;
   return;
 }
+
+ASTIterator ASTNode::ChildNodes() {
+  return ASTIterator(firstChild);
+}
+
