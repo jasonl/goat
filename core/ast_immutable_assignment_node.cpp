@@ -7,3 +7,11 @@ ASTImmutableAssignmentNode::ASTImmutableAssignmentNode( struct _Token *_token) :
 
 void ASTImmutableAssignmentNode::Analyse( Scope *scope ) {
 }
+
+void ASTImmutableAssignmentNode::SetRValue( ASTNode* _rValue ) {
+  rValue = _rValue;
+}
+
+ASTIterator ASTImmutableAssignmentNode::ChildNodes() {
+  return ASTIterator(rValue);
+}

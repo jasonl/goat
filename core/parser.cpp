@@ -572,7 +572,8 @@ MATCHER_FOR( MutableAssignment ) {
 
 MATCHER_FOR( ImmutableAssignment ) {
   Token *variable, *savedCurr = currentToken;
-  ASTNode *newChild = NULL, *thisNode = NULL;
+  ASTImmutableAssignmentNode *thisNode = NULL;
+  ASTNode *rValue;
   
   if(TokenIsNot( Identifier)) { return NULL; }
   variable = currentToken;
@@ -584,9 +585,9 @@ MATCHER_FOR( ImmutableAssignment ) {
   }
   ConsumeToken();
   
-  if((newChild = MATCH( Expression ))) {
+  if((rValue = MATCH( Expression ))) {
     thisNode = new ASTImmutableAssignmentNode( variable );
-    thisNode->append(newChild);
+    thisNode->SetRValue( rValue );
     return thisNode;
   }
   

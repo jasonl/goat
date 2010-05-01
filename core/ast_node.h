@@ -43,7 +43,7 @@ class ASTNode {
 
   void append( ASTNode* );
   void InsertFirstChild( ASTNode* );
-  ASTIterator ChildNodes();
+  virtual ASTIterator ChildNodes();
 
   virtual void Analyse( Scope* );
   AssemblyBlock* GenerateCode();
