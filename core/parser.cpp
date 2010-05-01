@@ -547,9 +547,10 @@ MATCHER_FOR( Assignment ) {
 
 MATCHER_FOR( MutableAssignment ) {
   Token *variable, *savedCurr = currentToken;
-  ASTNode *newChild = NULL, *thisNode = NULL;
+  ASTMutableAssignmentNode *thisNode;
+  ASTNode *rValue;
   
-  if(TokenIsNot( Identifier)) { return NULL; }
+  if(TokenIsNot( Identifier )) { return NULL; }
   variable = currentToken;
   ConsumeToken();
   
@@ -559,9 +560,9 @@ MATCHER_FOR( MutableAssignment ) {
   }
   ConsumeToken();
   
-  if((newChild = MATCH( Expression ))) {
+  if((rValue = MATCH( Expression ))) {
     thisNode = new ASTMutableAssignmentNode( variable );
-    thisNode->append(newChild);
+    thisNode->SetRValue( rValue );
     return thisNode;
   }
   

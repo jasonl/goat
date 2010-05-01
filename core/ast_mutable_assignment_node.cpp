@@ -7,3 +7,7 @@ ASTMutableAssignmentNode::ASTMutableAssignmentNode( struct _Token *_token) : AST
 
 void ASTMutableAssignmentNode::Analyse( Scope *scope ) {
 }
+
+void ASTMutableAssignmentNode::SetRValue( ASTNode *_rValue ) {
+  rValue = _rValue;
+}
