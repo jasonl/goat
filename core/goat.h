@@ -23,6 +23,10 @@ typedef struct _GoatState {
   char *sourceFile;               // Input filename
 } GoatState;
 
+#define VERBOSE_TOKENS 0x01
+#define VERBOSE_AST 0x02
+#define VERBOSE_SCOPES 0x04
+
 void goatPrintTokens( GoatState* );
 void goatParseArguments( GoatState*, int, char**);
 void goatFatalError( std::string );

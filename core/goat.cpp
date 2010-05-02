@@ -38,14 +38,14 @@ int main(int argc, char** argv) {
     }
   
   goatLexer( G, G->sourceFile );
-  if(G->verbose) goatPrintTokens( G );
+  if(G->verbose & VERBOSE_TOKENS) goatPrintTokens( G );
 
   Parser *parser = new Parser( G->tokens );
   G->astRoot = parser->parse();
 
   if( G->astRoot == NULL ) return( EXIT_FAILURE );
 
-  if(G->verbose) {
+  if(G->verbose & VERBOSE_AST) {
     memset(prev_cols, 0, 100);
     G->astRoot->print(0, 0, prev_cols );
   }
@@ -139,8 +139,25 @@ void goatParseArguments( GoatState *G, int argc, char *argv[]) {
     if(argv[i][0] == '-') {
       // Option switch
       switch( argv[i][1] ){
+      case 'V':
       case 'v':
-	G->verbose = 1;
+	switch( argv[i][2] ){
+	  // -vAST - print the AST
+	  case 'a':
+	  case 'A':
+	    G->verbose = G->verbose | VERBOSE_AST;
+	    break;
+	  // -vLex - print lexical token stream
+	  case 'l':
+	  case 'L':
+	    G->verbose = G->verbose | VERBOSE_TOKENS;
+	    break;
+	  // -vScope - print scopes
+	  case 'S':
+	  case 's':
+	    G->verbose = G->verbose | VERBOSE_SCOPES;
+	    break;
+	  }
 	break;
       default:
 	printf("Invalid option: %s\n", argv[i] );
