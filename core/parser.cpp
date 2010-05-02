@@ -598,7 +598,8 @@ MATCHER_FOR( ImmutableAssignment ) {
 }
 
 MATCHER_FOR( ReturnStatement ) {
-  ASTNode *thisNode, *returnExpr;
+  ASTReturnStatementNode *thisNode;
+  ASTNode *returnExpr;
 
   if( TokenIsNot( Return )) {
     return NULL;
@@ -611,7 +612,10 @@ MATCHER_FOR( ReturnStatement ) {
     returnExpr = new ASTNullLiteralNode;
   }
   
-  thisNode->append(returnExpr);
+  // TODO: This is too permissive - it should only return a null literal when
+  // the return statement is followed by a newline.
+
+  thisNode->SetReturnValue( returnExpr );
   return thisNode;
 }
 

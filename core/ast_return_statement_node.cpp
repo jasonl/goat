@@ -4,5 +4,17 @@
 ASTReturnStatementNode::ASTReturnStatementNode() : ASTNode( ASTNode::ReturnStatement ) {
 }
 
-void ASTReturnStatementNode::Analyse( Scope *scope ) {
+void ASTReturnStatementNode::SetReturnValue( ASTNode *_returnValue ) {
+  returnValue = _returnValue;
 }
+
+ASTIterator ASTReturnStatementNode::ChildNodes() {
+  return ASTIterator( returnValue );
+}
+
+void ASTReturnStatementNode::Analyse( Scope *_scope ) {
+  scope = _scope;
+  if(returnValue) returnValue->Analyse( scope );
+}
+
+
