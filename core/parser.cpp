@@ -384,7 +384,8 @@ MATCHER_FOR( MethodInvocation ) {
 }
 
 MATCHER_FOR( FunctionDef ) {
-  ASTNode *thisNode, *newChild;
+  ASTFunctionDefNode *thisNode;
+  ASTNode *parameter, *functionBody;
   Token *savedCurr = currentToken;
   int must_match = FALSE;
 
@@ -401,8 +402,8 @@ MATCHER_FOR( FunctionDef ) {
   
   thisNode = new ASTFunctionDefNode;
 
-  while((newChild = MATCH( ParameterDef ))) {
-    thisNode->append(newChild);
+  while((parameter = MATCH( ParameterDef ))) {
+    thisNode->AddParameterDef( parameter );
     
     // So if we match a right Parenthesis, that's a complete function call
     if( TokenIs( RightParen )) {
@@ -437,8 +438,8 @@ MATCHER_FOR( FunctionDef ) {
   }
   ConsumeToken();
   
-  if ((int)(newChild = MATCH( Block ))) {
-    thisNode->append(newChild);
+  if ((int)(functionBody = MATCH( Block ))) {
+    thisNode->AddBody(functionBody);
     return thisNode;  
   } else {
     goatError(CurrentSourcePosition(), "No Block found for function definition");

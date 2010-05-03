@@ -2,9 +2,8 @@
 #define AST_NODE_H
 
 #include <iterator>
-
+#include "scope.h"
 struct _Token;
-class Scope;
 class AssemblyBlock;
 class ASTIterator;
 

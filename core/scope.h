@@ -7,6 +7,10 @@
 // An offset is relative to EBP, so in any given function
 // is positive for parameters passed to a function, and 
 // negative for local variables allocated on the stack.
+
+#ifndef __SCOPE_H
+#define __SCOPE_H
+
 typedef signed long offset;
 
 // A variable allocated in any given scope.
@@ -34,6 +38,7 @@ class Scope {
   Scope( Scope* );
   ~Scope();
   void AddStackVariable( char* );
+  void AddParameterVariable( char* );
   bool HasVariable( char* );
   offset GetVariableOffset( char* ); 
   offset GetTypeHashOffset( char* );
@@ -43,3 +48,5 @@ class Scope {
   Scope *enclosingScope;
   Variable *firstVariable;
 };
+
+#endif

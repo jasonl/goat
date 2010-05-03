@@ -2,6 +2,19 @@
 #include "scope.h"
 #include "variable.h"
 
+/*
+  
+  A scope object represents a lexical scope.
+  
+  The four different types of variables are:
+
+  - Global Variables ( at a fixed address )
+  - Parameter Variables ( relative to EBP with a positive offset )
+  - Stack Variables ( relative to EBP with a negative offset )
+  - Instance Variables ( relative to ECX with a positive offset )
+
+*/
+
 Scope::Scope( Scope* parent ) {
   // Set the parent scope, for example the enclosing
   // function around an anonymous lambda, or the class
@@ -20,9 +33,9 @@ Scope::~Scope() {
   }
 }
 
-/*void Scope::AddParameterVariable( char *name ) {
-  
-  }*/
+void Scope::AddParameterVariable( char *name ) {
+  // TODO
+}
 
 void Scope::AddStackVariable( char *name ) {
   Variable *lastVar = NULL, *newVar = new Variable( std::string(name) ), *cursorVar;
