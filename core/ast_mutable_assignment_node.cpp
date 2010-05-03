@@ -10,4 +10,5 @@ void ASTMutableAssignmentNode::Analyse( Scope *scope ) {
 
 void ASTMutableAssignmentNode::SetRValue( ASTNode *_rValue ) {
   rValue = _rValue;
+  firstChild = _rValue;
 }

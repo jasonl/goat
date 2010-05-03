@@ -6,6 +6,7 @@ ASTReturnStatementNode::ASTReturnStatementNode() : ASTNode( ASTNode::ReturnState
 
 void ASTReturnStatementNode::SetReturnValue( ASTNode *_returnValue ) {
   returnValue = _returnValue;
+  firstChild = _returnValue; // Required for tests
 }
 
 ASTIterator ASTReturnStatementNode::ChildNodes() {

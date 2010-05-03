@@ -3,7 +3,6 @@
 #include <string>
 #include "goat.h"
 #include "lexer.h"
-#include "ast.h"
 #include "ast_node.h"
 #include "parser.h"
 #include "test.h"

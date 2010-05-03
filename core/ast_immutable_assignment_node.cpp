@@ -21,6 +21,7 @@ void ASTImmutableAssignmentNode::Analyse( Scope *_scope ) {
 
 void ASTImmutableAssignmentNode::SetRValue( ASTNode* _rValue ) {
   rValue = _rValue;
+  firstChild = _rValue; // Required for tests
 }
 
 ASTIterator ASTImmutableAssignmentNode::ChildNodes() {
