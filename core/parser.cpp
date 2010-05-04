@@ -107,7 +107,8 @@ bool Parser::LookAheadFor( enum TOKEN_TYPE token_type) {
 
 // Matches a block - a group of statements with a common indent
 MATCHER_FOR( Block ) {
-  ASTNode *newChild = NULL, *thisNode = NULL;
+  ASTBlockNode *thisNode = NULL;
+  ASTNode *newChild = NULL;
     
   if(!currentToken) { return NULL; }
 
@@ -166,7 +167,7 @@ MATCHER_FOR( Block ) {
   return thisNode;
 }
 
-MATCHER_FOR( Statement ) 
+INT_MATCHER_FOR( Statement ) 
 {
   ASTNode *thisNode;
 
@@ -181,7 +182,7 @@ MATCHER_FOR( Statement )
 }
 
 // Match an expression
-MATCHER_FOR( Expression ) {
+INT_MATCHER_FOR( Expression ) {
   Token *savedCurr = currentToken;
   ASTNode *thisNode = NULL;
 
@@ -231,7 +232,7 @@ MATCHER_FOR( Expression ) {
 }
 
 // Matches an object which a function call can be made to
-MATCHER_FOR( Receiver ) {
+INT_MATCHER_FOR( Receiver ) {
   Token *savedCurr = currentToken;
   ASTNode *thisNode = NULL;
 
@@ -279,7 +280,9 @@ MATCHER_FOR( Receiver ) {
 }
 
 MATCHER_FOR( FunctionCall ) {
-  ASTNode *thisNode = NULL, *receiver = NULL, *newParent = NULL;
+  ASTFunctionCallNode *thisNode = NULL;
+  ASTFunctionCallNode *newParent = NULL;
+  ASTNode *receiver = NULL;
   Token *savedCurr = currentToken;
 
   receiver = MATCH( Receiver );
@@ -302,9 +305,13 @@ MATCHER_FOR( FunctionCall ) {
   return thisNode;
 }
 
-MATCHER_FOR( MethodInvocation ) {
+// This is different from the usual, because we break this out
+// to resolve an potential recursion in the grammar.
+
+ASTFunctionCallNode *Parser::MatchMethodInvocation() {
   Token *functionName, *savedCurr = currentToken;
-  ASTNode *thisNode = NULL, *newChild = NULL;
+  ASTFunctionCallNode *thisNode = NULL;
+  ASTNode *newChild = NULL;
   int must_match = FALSE, must_match_paren = FALSE;
 
   // optional period for method calls.
@@ -385,7 +392,8 @@ MATCHER_FOR( MethodInvocation ) {
 
 MATCHER_FOR( FunctionDef ) {
   ASTFunctionDefNode *thisNode;
-  ASTNode *parameter, *functionBody;
+  ASTParameterDefNode *parameter;
+  ASTNode *functionBody;
   Token *savedCurr = currentToken;
   int must_match = FALSE;
 
@@ -450,10 +458,10 @@ MATCHER_FOR( FunctionDef ) {
 }
 
 MATCHER_FOR( ParameterDef ) {
-  ASTNode *thisNode;
+  ASTParameterDefNode *thisNode;
 
   if (TokenIs( Identifier )) {
-    thisNode = new ASTNode( ASTNode::ParameterDef );
+    thisNode = new ASTParameterDefNode;
     thisNode->token = currentToken;
     ConsumeToken();
     return thisNode;
@@ -463,7 +471,8 @@ MATCHER_FOR( ParameterDef ) {
 }
 
 MATCHER_FOR( Parameter ) {
-  ASTNode *thisNode, *newChild;
+  ASTParameterNode *thisNode;
+  ASTNode *newChild;
 
   //TODO: Add matching for named parameters
   if(( newChild = MATCH( Expression ))) {
@@ -476,7 +485,9 @@ MATCHER_FOR( Parameter ) {
 }
 
 MATCHER_FOR( Conditional ) {
-  ASTNode *thisNode, *exprChild, *ifChild, *elseChild;
+  ASTConditionalNode *thisNode; 
+  ASTNode *exprChild;
+  ASTBlockNode *ifChild, *elseChild;
   Token *savedCurr = currentToken;
 
   if (TokenIsNot( If )) { return NULL; }
@@ -533,7 +544,7 @@ MATCHER_FOR( Conditional ) {
 }
 
 
-MATCHER_FOR( Assignment ) {
+INT_MATCHER_FOR( Assignment ) {
   ASTNode *thisNode;
   if((thisNode = MATCH( ImmutableAssignment ))) {
     return thisNode;
@@ -621,7 +632,8 @@ MATCHER_FOR( ReturnStatement ) {
 }
 
 MATCHER_FOR( ClassDefinition ) {
-  ASTNode *thisNode, *newNode;
+  ASTClassDefinitionNode *thisNode;
+  ASTNode *newNode;
   Token *savedCurr = currentToken;
 
   if( TokenIsNot( Class )) {

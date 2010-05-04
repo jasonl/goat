@@ -71,7 +71,8 @@ public:
   ASTNode* operator->() { return p; }
 };
 
-#define MATCHER_FOR(name) ASTNode *Parser::Match##name()
+#define MATCHER_FOR(name) AST##name##Node *Parser::Match##name()
+#define INT_MATCHER_FOR(name) ASTNode *Parser::Match##name() // For interim parser functions that don't produce a specific derived ASTNode
 
 // Include the derived classes here for convenience
 #include "ast_block_node.hpp"
@@ -84,6 +85,7 @@ public:
 #include "ast_mutable_assignment_node.hpp"
 #include "ast_null_literal_node.hpp"
 #include "ast_parameter_node.hpp"
+#include "ast_parameter_def_node.hpp"
 #include "ast_return_statement_node.hpp"
 #include "ast_source_file_node.hpp"
 #include "ast_string_literal_node.hpp"

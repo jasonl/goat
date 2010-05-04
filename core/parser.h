@@ -3,7 +3,12 @@
 
 class ASTNode;
 
-#define MATCHER_PROTOTYPE_FOR(name) ASTNode *Match##name()
+// For these macros, INT denotes "intermediate", for matcher functions which 
+// don't return a final ASTNode for inclusion in the AST. These functions return
+// a base ASTNode, rather than a specific ASTBlockNode etc
+
+#define MATCHER_PROTOTYPE_FOR(name) AST##name##Node *Match##name()
+#define INT_MATCHER_PROTOTYPE_FOR(name) ASTNode *Match##name();
 #define MATCH(name) Match##name()
 
 class Parser {
@@ -11,19 +16,19 @@ class Parser {
  public:
   Parser( struct _Token *tokenStream ) { currentToken = tokenStream; }
   ASTNode *parse();
-  MATCHER_PROTOTYPE_FOR( Expression );
+  INT_MATCHER_PROTOTYPE_FOR( Expression );
   MATCHER_PROTOTYPE_FOR( FunctionDef );
   MATCHER_PROTOTYPE_FOR( FunctionCall );
   MATCHER_PROTOTYPE_FOR( Parameter );
   MATCHER_PROTOTYPE_FOR( ParameterDef );
-  MATCHER_PROTOTYPE_FOR( Statement );
+  INT_MATCHER_PROTOTYPE_FOR( Statement );
   MATCHER_PROTOTYPE_FOR( Block );
-  MATCHER_PROTOTYPE_FOR( Assignment );
+  INT_MATCHER_PROTOTYPE_FOR( Assignment );
   MATCHER_PROTOTYPE_FOR( MutableAssignment );
   MATCHER_PROTOTYPE_FOR( ImmutableAssignment );
   MATCHER_PROTOTYPE_FOR( Conditional );
-  MATCHER_PROTOTYPE_FOR( MethodInvocation );
-  MATCHER_PROTOTYPE_FOR( Receiver );
+  ASTFunctionCallNode *MatchMethodInvocation();
+  INT_MATCHER_PROTOTYPE_FOR( Receiver );
   MATCHER_PROTOTYPE_FOR( ReturnStatement );
   MATCHER_PROTOTYPE_FOR( ClassDefinition );
   void ConsumeToken() { currentToken = currentToken->next; }
