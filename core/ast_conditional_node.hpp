@@ -1,3 +1,6 @@
+#ifndef __AST_CONDITIONAL_NODE_H
+#define __AST_CONDITIONAL_NODE_H
+
 class ASTConditionalNode : public ASTNode {
 public:
   ASTConditionalNode();
@@ -12,3 +15,5 @@ private:
   ASTNode *expression;
   ASTBlockNode *elseBlock, *ifBlock;
 };
+
+#endif

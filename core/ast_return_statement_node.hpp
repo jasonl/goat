@@ -1,3 +1,6 @@
+#ifndef __AST_RETURN_STATEMENT_NODE_H
+#define __AST_RETURN_STATEMENT_NODE_H
+
 class ASTReturnStatementNode : public ASTNode {
 public:
   ASTReturnStatementNode();
@@ -7,3 +10,5 @@ public:
 private:
   ASTNode *returnValue;
 };
+
+#endif

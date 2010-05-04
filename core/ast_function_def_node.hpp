@@ -1,3 +1,6 @@
+#ifndef __AST_FUNCTION_DEF_NODE_H
+#define __AST_FUNCTION_DEF_NODE_H
+
 class ASTFunctionDefNode : public ASTNode {
 public:
   ASTFunctionDefNode();
@@ -9,3 +12,5 @@ public:
 private:
   ASTNode *body;
 };
+
+#endif
