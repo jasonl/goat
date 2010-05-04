@@ -9,6 +9,10 @@ class ASTNode;
 
 #define MATCHER_PROTOTYPE_FOR(name) AST##name##Node *Match##name()
 #define INT_MATCHER_PROTOTYPE_FOR(name) ASTNode *Match##name();
+
+#define MATCHER_FOR(name) AST##name##Node *Parser::Match##name()
+#define INT_MATCHER_FOR(name) ASTNode *Parser::Match##name() // For interim parser functions that don't produce a specific derived ASTNode
+
 #define MATCH(name) Match##name()
 
 class Parser {
