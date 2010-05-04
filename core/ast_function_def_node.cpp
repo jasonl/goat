@@ -9,6 +9,11 @@
 */
 
 ASTFunctionDefNode::ASTFunctionDefNode() : ASTNode( ASTNode::FunctionDef ) {
+  scope = NULL;
+}
+
+ASTFunctionDefNode::~ASTFunctionDefNode() {
+  if( scope ) delete scope;
 }
 
 ASTIterator ASTFunctionDefNode::ParameterDefs() {

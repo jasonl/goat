@@ -1,6 +1,7 @@
 class ASTFunctionDefNode : public ASTNode {
 public:
   ASTFunctionDefNode();
+  ~ASTFunctionDefNode();
   void Analyse( Scope * );
   ASTIterator ParameterDefs();
   void AddBody( ASTNode* );

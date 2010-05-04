@@ -4,6 +4,7 @@
 #include "ast_node.h"
 
 ASTNode::ASTNode( enum NODE_TYPE _type) {
+  token = NULL;
   type = _type;
   firstChild = NULL;
   parent = NULL;

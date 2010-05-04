@@ -52,7 +52,9 @@ int main(int argc, char** argv) {
 
   Scope *lobby = new Scope( NULL );
   G->astRoot->Analyse( lobby );
-
+  
+  delete G->astRoot;
+  delete parser;
   free(G);
   return ( EXIT_SUCCESS );
 }
