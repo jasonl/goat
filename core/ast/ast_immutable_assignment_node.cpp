@@ -1,7 +1,6 @@
-#include <string>
-#include "ast_node.h"
-#include "scope.h"
-#include "lexer.h"
+#include "../ast_node.h"
+#include "../scope.h"
+#include "../lexer.h"
 
 ASTImmutableAssignmentNode::ASTImmutableAssignmentNode( struct _Token *_token) : ASTNode( ASTNode::ImmutableAssignment ) {
   token = _token;

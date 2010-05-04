@@ -72,22 +72,20 @@ public:
 };
 
 // Include the derived classes here for convenience
-#include "ast_block_node.hpp"
-#include "ast_class_definition_node.hpp"
-#include "ast_conditional_node.hpp"
-#include "ast_function_call_node.hpp"
-#include "ast_function_def_node.hpp"
-#include "ast_immutable_assignment_node.hpp"
-#include "ast_integer_literal_node.hpp"
-#include "ast_mutable_assignment_node.hpp"
-#include "ast_null_literal_node.hpp"
-#include "ast_parameter_node.hpp"
-#include "ast_parameter_def_node.hpp"
-#include "ast_return_statement_node.hpp"
-#include "ast_source_file_node.hpp"
-#include "ast_string_literal_node.hpp"
-#include "ast_variable_node.hpp"
-
-
+#include "ast/ast_block_node.hpp"
+#include "ast/ast_class_definition_node.hpp"
+#include "ast/ast_conditional_node.hpp"
+#include "ast/ast_function_call_node.hpp"
+#include "ast/ast_function_def_node.hpp"
+#include "ast/ast_immutable_assignment_node.hpp"
+#include "ast/ast_integer_literal_node.hpp"
+#include "ast/ast_mutable_assignment_node.hpp"
+#include "ast/ast_null_literal_node.hpp"
+#include "ast/ast_parameter_node.hpp"
+#include "ast/ast_parameter_def_node.hpp"
+#include "ast/ast_return_statement_node.hpp"
+#include "ast/ast_source_file_node.hpp"
+#include "ast/ast_string_literal_node.hpp"
+#include "ast/ast_variable_node.hpp"
 
 #endif

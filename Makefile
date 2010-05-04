@@ -1,9 +1,9 @@
 CC = g++
 CFLAGS = -Wall
-SRC = core/*.cpp
+SRC = core/*.cpp core/ast/*.cpp
 TEST_SRC = test/*.cpp
 
-debug: core/*.cpp core/*.h
+debug: core/*.cpp core/ast/*.cpp core/ast/*.hpp core/*.h
 	@${CC} ${CFLAGS} -ggdb ${SRC} -o goat
 
 release: core/*.cpp core/*.h

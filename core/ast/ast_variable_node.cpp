@@ -1,5 +1,4 @@
-#include <string>
-#include "ast_node.h"
+#include "../ast_node.h"
 
 ASTVariableNode::ASTVariableNode() : ASTNode( ASTNode::Variable ) {
 }

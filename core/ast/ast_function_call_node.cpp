@@ -1,5 +1,4 @@
-#include <string>
-#include "ast_node.h"
+#include "../ast_node.h"
 
 ASTFunctionCallNode::ASTFunctionCallNode() : ASTNode( ASTNode::FunctionCall ) {
 }

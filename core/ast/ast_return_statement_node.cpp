@@ -1,5 +1,4 @@
-#include <string>
-#include "ast_node.h"
+#include "../ast_node.h"
 
 // An ASTNode corresponding to a return statement. It has exactly one child
 // node - either the return expression, or an Null literal.

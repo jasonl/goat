@@ -1,6 +1,6 @@
 #include <string>
-#include "ast_node.h"
-#include "lexer.h"
+#include "../ast_node.h"
+#include "../lexer.h"
 /*
   A Function definition contains a number of child nodes:
   - A number of ParameterDef nodes, each corresponding to one of the parameters
