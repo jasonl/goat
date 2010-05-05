@@ -37,6 +37,10 @@ void Scope::AddParameterVariable( char *name ) {
   // TODO
 }
 
+void Scope::AddClassVariable( char *name ) {
+  // TODO
+}
+
 void Scope::AddStackVariable( char *name ) {
   Variable *lastVar = NULL, *newVar = new Variable( std::string(name) ), *cursorVar;
   

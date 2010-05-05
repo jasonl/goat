@@ -39,6 +39,7 @@ class Scope {
   ~Scope();
   void AddStackVariable( char* );
   void AddParameterVariable( char* );
+  void AddClassVariable( char* );
   bool HasVariable( char* );
   offset GetVariableOffset( char* ); 
   offset GetTypeHashOffset( char* );
