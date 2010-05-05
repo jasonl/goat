@@ -4,10 +4,9 @@
  *
  * Created on 12 November 2009, 6:15 PM
  */
-#include <stdio.h>
-#include <stdlib.h>
-#include <malloc.h>
-#include <stdarg.h>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
 #include <string.h>
 #include <iostream>
 #include <string>
@@ -15,124 +14,66 @@
 #include "lexer.h"
 #include "ast_node.h"
 #include "parser.h"
-#include "goat.h"
+#include "goat.hpp"
 #include "scope.h"
+#include "source_file.hpp"
 
-using namespace std;
 
 #ifndef TEST
 int main(int argc, char** argv) {
-  char prev_cols[100];
-  GoatState *G;
-    
-  G = (GoatState*)malloc( sizeof(GoatState) );
-  G->verbose = 0;
-  G->sourceFile = NULL;
-  
-  goatParseArguments( G, argc, argv );
+  int verbose = 0;
+  std::string sourceFileName;
+  SourceFile *sourceFile = NULL;
 
-  if (G->sourceFile == NULL) {
-    printf("You must supply an input file\n");
-    free(G);
-    return ( EXIT_FAILURE );
-    }
-  
-  goatLexer( G, G->sourceFile );
-  if(G->verbose & VERBOSE_TOKENS) goatPrintTokens( G );
+  sourceFileName = parseCommandLine( argc, argv, &verbose );
 
-  Parser *parser = new Parser( G->tokens );
-  G->astRoot = parser->parse();
+  sourceFile = new SourceFile( sourceFileName );
 
-  if( G->astRoot == NULL ) return( EXIT_FAILURE );
+  sourceFile->Tokenize();
+  if( verbose & VERBOSE_TOKENS ) sourceFile->PrintTokens();
 
-  if(G->verbose & VERBOSE_AST) {
-    memset(prev_cols, 0, 100);
-    G->astRoot->print(0, 0, prev_cols );
-  }
+  sourceFile->Parse();
+  if( verbose & VERBOSE_AST ) sourceFile->PrintAST();
 
-  Scope *lobby = new Scope( NULL );
-  G->astRoot->Analyse( lobby );
-  
-  delete G->astRoot;
-  delete parser;
-  free(G);
-  return ( EXIT_SUCCESS );
+  sourceFile->Analyse();
+
+  delete sourceFile;
+  return EXIT_SUCCESS;
 }
 #endif
 
-void goatPrintTokens( GoatState *G ) {
-    Token *curr = G->tokens;
-
-    if (curr == 0) { printf("No tokens\n"); return; }
-    
-    printf("Token List\n");
-
-    while(curr != 0) {
-        printf("%d ", curr->line_no);
-        switch( curr->type ) {
-	case Indent:            printf("Indent         ");break;
-	case Comment:           printf("Comment        ");break;
-	case IndentIncrease:    printf("IndentIncrease ");break;
-	case IndentDecrease:    printf("IndentDecrease ");break;
-	case Comma:             printf("Comma          ");break;
-	case Period:            printf("Period         ");break;
-	case Lambda:            printf("Lambda         ");break;
-	case Colon:             printf("Colon          ");break;
-	case RightParen:        printf("RightParen     ");break;
-	case LeftParen:         printf("LeftParen      ");break;
-	case Equals:            printf("Equals         ");break;
-	case Integer:           printf("Integer        ");break;
-	case String:            printf("String         ");break;
-	case Identifier:        printf("Identifier     ");break;
-	case EndOfFile:         printf("EndOfFile      ");break;
-	case Newline:           printf("Newline        ");break;
-	case Whitespace:        printf("WhiteSpace     ");break;
-	default:                printf("%d            ", curr->type);break;
-        }
-
-        switch(curr -> type) {
-            case Integer:
-            case String:
-            case Identifier:
-                printf("%s", curr->content);
-                break;
-	default:
-                break;
-
-        }
-
-        printf("\n");
-        curr = curr->next;
-    }
-}
-
 void goatFatalError( const std::string msg ) {
-  cout << "FATAL ERROR: %s\n" << msg;
+  std::cerr << "FATAL ERROR: %s\n" << msg;
 }
 
 #ifndef TEST
+
 // We don't use this during tests so we can replace this function with
 // an mocked goatError() to allow us to test that errors are raised. It's
 // in test/test_helper.c
 void goatError( int lineNo, const std::string fmt, ... ) {
   va_list arg;
   va_start( arg, fmt );
-  printf( "\x1b[1;31mError\x1b[0;37;00m[%d]", lineNo );
-  vprintf( fmt.c_str(), arg );
-  printf("\n");
+  std::cout << "\x1b[1;31mError\x1b[0;37;00m[" << lineNo << "]";
+  vfprintf( stdout, fmt.c_str(), arg );
+  std::cout << "\n";
   va_end(arg);
 }
+
 #endif
 
-void goatParseArguments( GoatState *G, int argc, char *argv[]) {
+std::string parseCommandLine( int argc, char *argv[], int *verbose) {
   int i;
+  std::string fileName;
+
   if (argc == 1) {
-    printf("Goat - An experimental language\n");
-    printf("----------\n");
-    printf("Correct usage:\n");
-    printf("goat <options> input_file.gt\n");
-    printf("options:\n");
-    printf("-v              Run in verbose mode.\n");
+    std::cerr << "Goat - An experimental language\n";
+    std::cerr << "-------------------------------\n\n";
+    std::cerr << "Correct usage:\n";
+    std::cerr << "goat <options> input_file.gt\n\n";
+    std::cerr << "options:\n";
+    std::cerr << "-vlex              Print token stream.\n";
+    std::cerr << "-vast              Print AST.\n";
     exit(0);
   }
   
@@ -147,30 +88,32 @@ void goatParseArguments( GoatState *G, int argc, char *argv[]) {
 	  // -vAST - print the AST
 	  case 'a':
 	  case 'A':
-	    G->verbose = G->verbose | VERBOSE_AST;
+	    *verbose |= VERBOSE_AST;
 	    break;
 	  // -vLex - print lexical token stream
 	  case 'l':
 	  case 'L':
-	    G->verbose = G->verbose | VERBOSE_TOKENS;
+	    *verbose |= VERBOSE_TOKENS;
 	    break;
 	  // -vScope - print scopes
 	  case 'S':
 	  case 's':
-	    G->verbose = G->verbose | VERBOSE_SCOPES;
+	    *verbose |= VERBOSE_SCOPES;
 	    break;
 	  }
 	break;
       default:
-	printf("Invalid option: %s\n", argv[i] );
+	std::cerr << "Invalid option: " << argv[i] << "\n";
 	exit(0);
       }
     }
     else {
       // Input file
-      if(G->sourceFile == NULL) G->sourceFile = argv[i];
+      fileName = argv[i];
     }
   }
+
+  return fileName;
 }
 
 

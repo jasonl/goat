@@ -6,8 +6,9 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <string>
 
-#include "goat.h"
+#include "goat.hpp"
 #include "lexer.h"
 
 #define DEFAULT_LEXER_STATE_TRANSITIONS( next_char ) \
@@ -30,16 +31,16 @@
 // Implements a basic state-machine based tokenizer, which splits the source
 // file into a linked list of Tokens. Expects a UTF8-encoded source file, and
 // maintains the UTF8 encoding for string literals and identifiers.
-int goatLexer( GoatState *G, char* sourceFileName ) {
+Token* goatLexer( std::string sourceFileName ) {
     int indent=0, prev_indent=0, line_no = 1; // Number of indent spaces on the current and previous lines
     char *curr, *next, *end; // Position pointers into the source code
     char *thunk_start = 0, *thunk_end = 0;  // Thunk pointers for the current token
     CodePoint cp;
     enum TOKEN_TYPE lexer_state = Indent;
-    Token *t, *last_token; //
+    Token *t, *last_token, *tokens = NULL; //
 
     // Load the file into memory, and set the pointers to it
-    goatMapFileToMemory( sourceFileName, &next, &end );
+    goatMapFileToMemory( sourceFileName.c_str(), &next, &end );
 
     // Generate an empty first token
     t = (Token *)malloc(sizeof(Token));
@@ -55,9 +56,6 @@ int goatLexer( GoatState *G, char* sourceFileName ) {
 	// Ignore \r
 	if ( cp.wchar == '\r') goatGetNextCodePoint( &cp, &next, &end );
 	
-	// Print the character in verbose mode
-        if (G->verbose) printf("%s", cp.utf8);
-
         switch( lexer_state ) {
 
             case Indent: // Indent is just Whitespace before any non-space characters on a line.
@@ -87,7 +85,6 @@ int goatLexer( GoatState *G, char* sourceFileName ) {
             case Comment:
                 while(cp.wchar != '\n' && next < end) { 
 		  goatGetNextCodePoint( &cp, &next, &end); 
-		  if(G->verbose) printf("%s", cp.utf8); 
 		}
 		lexer_state = Newline;
 		break;
@@ -172,23 +169,23 @@ int goatLexer( GoatState *G, char* sourceFileName ) {
       break;
     }
 
-    goatTranslateKeywordTokens( G );
+    goatTranslateKeywordTokens( tokens );
     
     // Add an End-of-File marker
     lexer_state = EndOfFile;
     PUSH_EMPTY_TOKEN;
 
-    return 1;
+    return tokens;
 }
 
 // After the first tokenizing pass, the lexer will have created Identifier
 // tokens for all non-quoted strings of characters, including keywords such
 // as "if", "end", "else" etc. This function iterates over the token stream,
 // and changes those tokens.
-void goatTranslateKeywordTokens( GoatState *G ) {
+void goatTranslateKeywordTokens( Token *tokens ) {
   Token *curr_token, *next_token, *prev_token;
 
-  next_token = curr_token = G->tokens;
+  next_token = curr_token = tokens;
 
   while( next_token ) {
     prev_token = curr_token;
@@ -240,7 +237,7 @@ void goatTranslateKeywordTokens( GoatState *G ) {
 
 
 // Creates a mapping between the source file on disk and the buffer in memory.
-void goatMapFileToMemory( char * sourceFileName, char **next, char **end) {
+void goatMapFileToMemory( const char * sourceFileName, char **next, char **end) {
     int fp;
     size_t size;
     struct stat sb;

@@ -5,8 +5,8 @@
  * Created on 12 November 2009, 6:18 PM
  */
 
-#ifndef _LEXER_H
-#define	_LEXER_H
+#ifndef __LEXER_H
+#define	__LEXER_H
 
 // 32-bit wide integer to hold the code-point value
 typedef unsigned long w_char;
@@ -57,11 +57,11 @@ typedef struct {
   if(prev_indent != indent ) { \
     if(prev_indent < indent) { \
       t->type = IndentIncrease; t->content = 0; t->line_no = line_no; \
-      if(G->tokens == 0) { G->tokens = t; } else { last_token->next = t; } \
+      if(tokens == NULL) { tokens = t; } else { last_token->next = t; } \
       last_token = t; t = (Token *)malloc(sizeof(Token)); \
     } else { \
       t->type = IndentDecrease; t->content = 0; t->line_no = line_no; \
-      if(G->tokens == 0) { G->tokens = t; } else { last_token->next = t; } \
+      if(tokens == NULL) { tokens = t; } else { last_token->next = t; } \
       last_token = t; t = (Token *)malloc(sizeof(Token)); \
     } \
   }
@@ -72,21 +72,21 @@ typedef struct {
   t->type = lexer_state; t->line_no = line_no;\
   t->content = (char *) malloc( (thunk_end - thunk_start) + 3 ); \
   strncpy(t->content, thunk_start, (thunk_end - thunk_start) + 1); \
-  if(G->tokens == 0) { G->tokens = t; } else { last_token->next = t; } \
+  if(tokens == NULL) { tokens = t; } else { last_token->next = t; } \
   last_token = t; t = (Token *)malloc(sizeof(Token));
 
 // Pushes a token onto the end of the token list, but ignores the current thunk
 #define PUSH_EMPTY_TOKEN \
   t->type = lexer_state; t->line_no = line_no;\
-  if(G->tokens == 0) { G->tokens = t; } else { last_token->next = t; } \
+  if(tokens == NULL) { tokens = t; } else { last_token->next = t; } \
   last_token = t; t = (Token *)malloc(sizeof(Token)); \
 
 // Function prototypes
 struct _GoatState; // declared in goat.h
 
-int goatLexer( struct _GoatState*, char* );
-void goatMapFileToMemory( char*, char**, char** );
+Token* goatLexer( std::string );
+void goatMapFileToMemory( const char*, char**, char** );
 void goatGetNextCodePoint( CodePoint*, char**, char**);
-void goatTranslateKeywordTokens( struct _GoatState* );
+void goatTranslateKeywordTokens( Token* );
 #endif	/* _LEXER_H */
 

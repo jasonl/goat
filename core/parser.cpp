@@ -56,14 +56,14 @@
 #include "lexer.h"
 #include "ast_node.h"
 #include "parser.h"
-#include "goat.h"
+#include "goat.hpp"
 
 const char *TOKEN_TYPES[]={"Whitespace", "Indent", "Comment", "NewLine", "Identifier",
 			   "RightParen", "LeftParen", "Lambda", "Colon", "Period", "Comma",
 			   "Equals", "End", "Integer", "String", "If", "Else", "Class", "Return", "HashRocket",
 			   "IndentIncrease", "IndentDecrease", "End of File"};
 
-ASTNode * Parser::parse() {
+ASTNode * Parser::Parse() {
   ASTNode *astRoot = new ASTSourceFileNode;
   ASTNode *newChild;
 

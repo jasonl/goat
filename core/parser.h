@@ -19,7 +19,7 @@ class Parser {
   friend class ParserTest;
  public:
   Parser( struct _Token *tokenStream ) { currentToken = tokenStream; }
-  ASTNode *parse();
+  ASTNode *Parse();
   INT_MATCHER_PROTOTYPE_FOR( Expression );
   MATCHER_PROTOTYPE_FOR( FunctionDef );
   MATCHER_PROTOTYPE_FOR( FunctionCall );
