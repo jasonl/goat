@@ -11,6 +11,7 @@
 #ifndef __SCOPE_H
 #define __SCOPE_H
 
+#include <string>
 typedef signed long offset;
 
 // A variable allocated in any given scope.
@@ -37,10 +38,10 @@ class Scope {
  public:
   Scope( Scope* );
   ~Scope();
-  void AddStackVariable( char* );
-  void AddParameterVariable( char* );
-  void AddClassVariable( char* );
-  bool HasVariable( char* );
+  void AddStackVariable( std::string );
+  void AddParameterVariable( std::string );
+  void AddClassVariable( std::string );
+  bool HasVariable( std::string );
   offset GetVariableOffset( char* ); 
   offset GetTypeHashOffset( char* );
   offset GetDispatchOffset( char* );

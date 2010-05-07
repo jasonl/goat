@@ -37,13 +37,13 @@ void ASTFunctionDefNode::Analyse( Scope *_scope ) {
 
   // Add the parameters to the scope
   for(ASTIterator i = ParameterDefs(); i != endParams; i++) {
-    if( scope->HasVariable( i->token->content )) {
+    if( scope->HasVariable( i->Identifier() )) {
       // TODO: Raise an error/warning when we find a name collision between the parameter name
       // and anything else. Warning where the name is found not in the exact same scope, (e.g.
       // a parameter named the same as a global variable) and an error when in the same scope
       // (e.g. When a function λ(param,param) is defined.
     } else {
-      scope->AddParameterVariable( i->token->content );
+      scope->AddParameterVariable( i->Identifier() );
     }
   }
 

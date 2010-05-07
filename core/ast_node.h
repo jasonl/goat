@@ -1,9 +1,11 @@
 #ifndef AST_NODE_H
 #define AST_NODE_H
 
-#include <iterator>
+#include <list>
+#include <string>
+#include "token.hpp"
 #include "scope.h"
-struct _Token;
+
 class AssemblyBlock;
 class ASTIterator;
 
@@ -22,6 +24,7 @@ const std::string NODE_TYPES[] = {
 };
 
 class ASTNode {
+  friend class ASTIterator;
  public:
   enum NODE_TYPE {
     SourceFile,
@@ -48,9 +51,14 @@ class ASTNode {
   AssemblyBlock* GenerateCode();
 
   void print(int, int, char*);
+  std::string Identifier() { return identifier; }
+  //Scope *Scope() { return scope; }
+  //NodeType Type() { return type; }
 
+  //private:
   enum NODE_TYPE type;
-  struct _Token *token;
+  Token *token;
+  std::string identifier;
   Scope *scope;
   ASTNode *parent;
   ASTNode *firstChild;
@@ -70,6 +78,8 @@ public:
   ASTNode& operator*() { return *p; }
   ASTNode* operator->() { return p; }
 };
+
+typedef std::list<Token>::iterator TokenIterator;
 
 // Include the derived classes here for convenience
 #include "ast/ast_block_node.hpp"

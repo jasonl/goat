@@ -3,7 +3,7 @@
 
 class ASTMutableAssignmentNode : public ASTNode {
 public:
-  ASTMutableAssignmentNode( struct _Token* );
+  ASTMutableAssignmentNode( TokenIterator& );
   void Analyse( Scope* );
   void SetRValue( ASTNode* );
 private:

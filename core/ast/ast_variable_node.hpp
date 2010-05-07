@@ -3,7 +3,7 @@
 
 class ASTVariableNode : public ASTNode {
 public:
-  ASTVariableNode();
+  ASTVariableNode( std::string );
   void Analyse( Scope *scope );
 };
 

@@ -3,7 +3,7 @@
 
 class ASTFunctionCallNode : public ASTNode {
 public:
-  ASTFunctionCallNode();
+  ASTFunctionCallNode( std::string );
   void Analyse( Scope* );
 };
 

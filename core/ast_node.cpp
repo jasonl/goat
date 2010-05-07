@@ -1,10 +1,10 @@
 #include <string>
 #include <iostream>
+#include "token.hpp"
 #include "lexer.h"
 #include "ast_node.h"
 
 ASTNode::ASTNode( enum NODE_TYPE _type) {
-  token = NULL;
   type = _type;
   firstChild = NULL;
   parent = NULL;
@@ -81,7 +81,7 @@ void ASTNode::print(int depth, int skip, char *prev_cols) {
   std::cout << NODE_TYPES[type];
 
   if( token ) {
-    std::cout << ":" << token->content;
+    std::cout << ":" << token->Content();
   }
   std::cout << "\n";
 

@@ -1,8 +1,8 @@
 #include "../ast_node.h"
 #include "../lexer.h"
 
-ASTClassDefinitionNode::ASTClassDefinitionNode( struct _Token *_token) : ASTNode( ASTNode::ClassDefinition ) {
-  token = _token;
+ASTClassDefinitionNode::ASTClassDefinitionNode( std::string _identifier) : ASTNode( ASTNode::ClassDefinition ) {
+  identifier = _identifier;
 }
 
 void ASTClassDefinitionNode::Analyse( Scope *_scope ) {
@@ -15,11 +15,11 @@ void ASTClassDefinitionNode::Analyse( Scope *_scope ) {
     // This all depends on the knowledge that only MutableAssignment
     // and ImmutableAssignment ASTNodes can be found in a class body
 
-    if( scope->HasVariable(i->token->content) ) {
+    if( scope->HasVariable(i->token->Content()) ) {
       // TODO: Add warning of redefinition
     }
 
-    scope->AddClassVariable( i->token->content );
+    scope->AddClassVariable( i->token->Content() );
     i->Analyse( scope );
     
   }

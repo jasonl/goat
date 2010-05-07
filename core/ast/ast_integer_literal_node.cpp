@@ -1,7 +1,7 @@
 #include "../ast_node.h"
 
-ASTIntegerLiteralNode::ASTIntegerLiteralNode( struct _Token *_token ) : ASTNode( ASTNode::IntegerLiteral ) {
-  token = _token;
+ASTIntegerLiteralNode::ASTIntegerLiteralNode( std::string _identifier ) : ASTNode( ASTNode::IntegerLiteral ) {
+  identifier = _identifier;
 }
 
 void ASTIntegerLiteralNode::Analyse( Scope *scope ) {

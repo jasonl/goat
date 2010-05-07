@@ -1,7 +1,11 @@
 #include <string>
 #include <iostream>
+#include <cstdio>
+#include <fcntl.h>
 #include "malloc.h" // For free -- TO BE REMOVED
 #include <cstring> // For memset
+#include <sys/mman.h> // For mmap
+#include <sys/stat.h>
 
 #include "ast_node.h"
 #include "lexer.h"
@@ -11,7 +15,6 @@
 
 SourceFile::SourceFile( std::string _fileName ) {
   fileName = _fileName;
-  tokenStream = NULL;
   astRoot = NULL;
   lobby = NULL;
 }
@@ -35,13 +38,35 @@ SourceFile::~SourceFile() {
 }
 
 void SourceFile::Tokenize() {
-  tokenStream = goatLexer( fileName );
+  int fp;
+  size_t size;
+  struct stat sb;
+  char *start, *end;
+
+  fp = open(fileName.c_str(), O_RDONLY);
+  
+  // Get the file size
+  if(fstat(fp, &sb) == -1) {
+    printf("Error getting file stat");
+    return;
+  }
+  size = sb.st_size;
+
+  start = (char *) mmap( NULL, size, PROT_READ, MAP_SHARED, fp, 0);
+  end = start + size;
+  
+  if( start == MAP_FAILED ) {
+    printf("Map failed\n");
+  }
+  
+  Lexer *lexer = new Lexer( start, end, this );
+  lexer->Lex();
 }
 
 // Parse()
 // Transforms the stream of tokens into an Abstract Syntax Tree
 void SourceFile::Parse() {
-  if( tokenStream) {
+  if( ! tokenStream.empty() ) {
     Parser *parser = new Parser( tokenStream );
     astRoot = parser->Parse();
   } else {
@@ -60,18 +85,13 @@ void SourceFile::Analyse() {
 }
 
 void SourceFile::PrintTokens() {
-  Token *curr = tokenStream;
+  std::list<Token>::iterator curr = tokenStream.begin();
 
-  if (curr == 0) { 
-    std::cout << "No tokens\n"; 
-    return; 
-  }
-    
   std::cout << "Token List\n";
 
-  while( curr ) {
-    std::cout << curr->line_no;
-    switch( curr->type ) 
+  for( std::list<Token>::iterator curr = tokenStream.begin(); curr != tokenStream.end(); curr++) {
+    std::cout << curr->LineNumber() << " ";
+    switch( curr->Type() ) 
       {
       case Indent:            std::cout << "Indent         "; break;
       case Comment:           std::cout << "Comment        "; break;
@@ -90,22 +110,21 @@ void SourceFile::PrintTokens() {
       case EndOfFile:         std::cout << "EndOfFile      "; break;
       case Newline:           std::cout << "Newline        "; break;
       case Whitespace:        std::cout << "WhiteSpace     "; break;
-      default:                std::cout << curr->type;        break;
+      default:                std::cout << curr->Type();        break;
       }
       
-    switch(curr -> type) 
+    switch( curr->Type() ) 
       {
       case Integer:
       case String:
       case Identifier:
-	std::cout << curr->content;
+	std::cout << curr->Content();
 	break;
       default:
 	break;
       }
 	
     std::cout << "\n";
-    curr = curr->next;
     }
 }
 

@@ -33,16 +33,16 @@ Scope::~Scope() {
   }
 }
 
-void Scope::AddParameterVariable( char *name ) {
+void Scope::AddParameterVariable( std::string name ) {
   // TODO
 }
 
-void Scope::AddClassVariable( char *name ) {
+void Scope::AddClassVariable( std::string name ) {
   // TODO
 }
 
-void Scope::AddStackVariable( char *name ) {
-  Variable *lastVar = NULL, *newVar = new Variable( std::string(name) ), *cursorVar;
+void Scope::AddStackVariable( std::string name ) {
+  Variable *lastVar = NULL, *newVar = new Variable( name ), *cursorVar;
   
   if (firstVariable == NULL) {
     newVar->ebpOffset = 0;
@@ -61,7 +61,7 @@ void Scope::AddStackVariable( char *name ) {
   }
 }
 
-bool Scope::HasVariable( char *name ) {
+bool Scope::HasVariable( std::string name ) {
   Variable *lastVar = firstVariable;
 
   while (lastVar) {

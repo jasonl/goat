@@ -8,42 +8,11 @@
 #ifndef __LEXER_H
 #define	__LEXER_H
 
+#include <list>
+#include "source_file.hpp"
+
 // 32-bit wide integer to hold the code-point value
 typedef unsigned long w_char;
-
-// Token types
-enum TOKEN_TYPE { Whitespace,
-                  Indent,
-                  Comment,
-                  Newline,
-                  Identifier,
-                  RightParen,
-                  LeftParen,
-                  Lambda,
-                  Colon,
-                  Period,
-                  Comma,
-                  Equals,
-                  End,
-                  Integer,
-                  String,
-                  If,
-                  Else,
-		  Return,
-		  Class,
-                  HashRocket,
-                  IndentIncrease,
-                  IndentDecrease,
-		  EndOfFile
-                  };
-
-// holds a lexical token
-typedef struct _Token {
-    enum TOKEN_TYPE type;
-    int line_no;
-    char *content;
-    struct _Token *next;
-} Token;
 
 // This struct holds the UTF-8 and Unicode representation
 typedef struct {
@@ -52,41 +21,23 @@ typedef struct {
     char utf8[4];            // UTF-8 encoded value
 } CodePoint;
 
-// Inline macros to push tokens onto the linked list of tokens.
-#define PUSH_INDENT_TOKEN \
-  if(prev_indent != indent ) { \
-    if(prev_indent < indent) { \
-      t->type = IndentIncrease; t->content = 0; t->line_no = line_no; \
-      if(tokens == NULL) { tokens = t; } else { last_token->next = t; } \
-      last_token = t; t = (Token *)malloc(sizeof(Token)); \
-    } else { \
-      t->type = IndentDecrease; t->content = 0; t->line_no = line_no; \
-      if(tokens == NULL) { tokens = t; } else { last_token->next = t; } \
-      last_token = t; t = (Token *)malloc(sizeof(Token)); \
-    } \
-  }
+class Lexer {
+ public:
+  Lexer( char*, char*, SourceFile* );
+  void Lex();
+ private:
+  int currentLine, prevIndent, indent;
+  TokenType lexerState;
+  char *thunkStart, *thunkEnd;
+  char *sourceCurr, *sourceNext, *sourceEnd;
+  std::list<Token> &tokenStream;
+  void PushIndentToken();
+  void PushToken();
+  void PushEmptyToken();
+  void GetNextCodePoint( CodePoint* );
+  void TranslateKeywordToken( Token* );
+  void DefaultStateTransitions( CodePoint& );
+};
 
-// Pushes a token onto the end of the token list, and stores the current thunk
-// in that token, as we want to use it later (e.g. string literals, indentifiers etc)
-#define PUSH_TOKEN \
-  t->type = lexer_state; t->line_no = line_no;\
-  t->content = (char *) malloc( (thunk_end - thunk_start) + 3 ); \
-  strncpy(t->content, thunk_start, (thunk_end - thunk_start) + 1); \
-  if(tokens == NULL) { tokens = t; } else { last_token->next = t; } \
-  last_token = t; t = (Token *)malloc(sizeof(Token));
-
-// Pushes a token onto the end of the token list, but ignores the current thunk
-#define PUSH_EMPTY_TOKEN \
-  t->type = lexer_state; t->line_no = line_no;\
-  if(tokens == NULL) { tokens = t; } else { last_token->next = t; } \
-  last_token = t; t = (Token *)malloc(sizeof(Token)); \
-
-// Function prototypes
-struct _GoatState; // declared in goat.h
-
-Token* goatLexer( std::string );
-void goatMapFileToMemory( const char*, char**, char** );
-void goatGetNextCodePoint( CodePoint*, char**, char**);
-void goatTranslateKeywordTokens( Token* );
 #endif	/* _LEXER_H */
 

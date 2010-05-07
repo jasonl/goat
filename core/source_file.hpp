@@ -2,11 +2,14 @@
 #define __SOURCE_FILE_H
 
 #include <string>
+#include <list>
+#include "token.hpp"
 
 class ASTNode;
 class Scope;
 
 class SourceFile {
+  friend class Lexer;
 public:
   SourceFile( std::string );
   ~SourceFile();
@@ -17,7 +20,7 @@ public:
   void PrintAST();
 private:
   std::string fileName;
-  Token *tokenStream;
+  std::list<Token> tokenStream;
   ASTNode *astRoot;
   Scope *lobby;
 };

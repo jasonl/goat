@@ -1,6 +1,8 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#include <list>
+
 class ASTNode;
 
 // For these macros, INT denotes "intermediate", for matcher functions which 
@@ -15,10 +17,12 @@ class ASTNode;
 
 #define MATCH(name) Match##name()
 
+typedef std::list<Token>::iterator TokenIterator;
+
 class Parser {
   friend class ParserTest;
  public:
-  Parser( struct _Token *tokenStream ) { currentToken = tokenStream; }
+  Parser( std::list<Token> &tokenStream) { currentToken = tokenStream.begin(); endToken = tokenStream.end(); }
   ASTNode *Parse();
   INT_MATCHER_PROTOTYPE_FOR( Expression );
   MATCHER_PROTOTYPE_FOR( FunctionDef );
@@ -35,14 +39,15 @@ class Parser {
   INT_MATCHER_PROTOTYPE_FOR( Receiver );
   MATCHER_PROTOTYPE_FOR( ReturnStatement );
   MATCHER_PROTOTYPE_FOR( ClassDefinition );
-  void ConsumeToken() { currentToken = currentToken->next; }
-  void ResetTokenPosition( struct _Token *savedCurr ) { currentToken = savedCurr; }
-  int CurrentSourcePosition() { return currentToken->line_no; }
-  bool TokenIs( enum TOKEN_TYPE type) { return currentToken && currentToken->type == type; }
-  bool TokenIsNot( enum TOKEN_TYPE type) { return !currentToken || currentToken->type != type; }
-  bool LookAheadFor( enum TOKEN_TYPE type );
+  void ConsumeToken() { currentToken++; }
+  void ResetTokenPosition( TokenIterator savedCurr ) { currentToken = savedCurr; }
+  int CurrentSourcePosition() { return currentToken->LineNumber(); }
+  bool TokenIs( TokenType type );
+  bool TokenIsNot( TokenType type );
+  bool LookAheadFor( TokenType type );
  private:
-  struct _Token *currentToken;
+  TokenIterator currentToken;
+  TokenIterator endToken;
 };
 
 #endif

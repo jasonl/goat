@@ -2,18 +2,18 @@
 #include "../scope.h"
 #include "../lexer.h"
 
-ASTImmutableAssignmentNode::ASTImmutableAssignmentNode( struct _Token *_token) : ASTNode( ASTNode::ImmutableAssignment ) {
-  token = _token;
+ASTImmutableAssignmentNode::ASTImmutableAssignmentNode( TokenIterator &_token) : ASTNode( ASTNode::ImmutableAssignment ) {
+  token = &(*_token);
 }
 
 void ASTImmutableAssignmentNode::Analyse( Scope *_scope ) {
   scope = _scope;
   
-  if(scope->HasVariable( token->content )) {
+  if(scope->HasVariable( token->Content() )) {
     // Error
   }
 
-  scope->AddStackVariable( token->content );
+  scope->AddStackVariable( token->Content() );
   
   rValue->Analyse( scope );  
 }
