@@ -6,6 +6,7 @@
 
 ASTNode::ASTNode( enum NODE_TYPE _type) {
   type = _type;
+  token = NULL;
   firstChild = NULL;
   parent = NULL;
   nextSibling = NULL;
