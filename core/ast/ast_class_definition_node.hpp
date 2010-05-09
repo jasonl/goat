@@ -3,7 +3,7 @@
 
 class ASTClassDefinitionNode : public ASTNode {
 public:
-  ASTClassDefinitionNode( std::string );
+  ASTClassDefinitionNode( TokenIterator& );
   void Analyse( Scope* );
 };
 

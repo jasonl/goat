@@ -41,6 +41,7 @@ class ASTNode {
   };
 
   ASTNode( enum NODE_TYPE );
+  ASTNode( enum NODE_TYPE, Token* );
   ~ASTNode();
 
   void append( ASTNode* );
@@ -51,14 +52,12 @@ class ASTNode {
   AssemblyBlock* GenerateCode();
 
   void print(int, int, char*);
-  std::string Identifier() { return identifier; }
-  //Scope *Scope() { return scope; }
-  //NodeType Type() { return type; }
+  std::string Content() { return token->Content(); }
+  enum NODE_TYPE Type() { return type; }
 
-  //private:
+  protected:
   enum NODE_TYPE type;
   Token *token;
-  std::string identifier;
   Scope *scope;
   ASTNode *parent;
   ASTNode *firstChild;

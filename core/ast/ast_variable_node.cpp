@@ -1,7 +1,7 @@
 #include "../ast_node.h"
 
-ASTVariableNode::ASTVariableNode( std::string _identifier) : ASTNode( ASTNode::Variable ) {
-  identifier = _identifier;
+ASTVariableNode::ASTVariableNode( TokenIterator & _token ) : ASTNode( ASTNode::Variable ) {
+  token = &(*_token);
 }
 
 void ASTVariableNode::Analyse( Scope *scope ) {

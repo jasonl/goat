@@ -4,7 +4,7 @@ ASTMutableAssignmentNode::ASTMutableAssignmentNode( TokenIterator &_token) : AST
   token = &(*_token);
 }
 
-void ASTMutableAssignmentNode::Analyse( Scope *scope ) {
+void ASTMutableAssignmentNode::Analyse( Scope *_scope ) {
 }
 
 void ASTMutableAssignmentNode::SetRValue( ASTNode *_rValue ) {

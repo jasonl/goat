@@ -3,7 +3,7 @@
 
 class ASTParameterDefNode : public ASTNode {
 public:
-  ASTParameterDefNode( std::string );
+  ASTParameterDefNode( TokenIterator& );
 };
 
 #endif

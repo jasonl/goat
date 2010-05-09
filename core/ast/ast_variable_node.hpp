@@ -3,8 +3,8 @@
 
 class ASTVariableNode : public ASTNode {
 public:
-  ASTVariableNode( std::string );
-  void Analyse( Scope *scope );
+  ASTVariableNode( TokenIterator& );
+  void Analyse( Scope* );
 };
 
 #endif

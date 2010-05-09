@@ -220,19 +220,19 @@ INT_MATCHER_FOR( Expression ) {
   }
   
   if( TokenIs( String ) ) {
-    thisNode = new ASTStringLiteralNode( currentToken->Content() );
+    thisNode = new ASTStringLiteralNode( currentToken );
     ConsumeToken();
     return thisNode;
   }
 
   if( TokenIs( Integer )) {
-    thisNode = new ASTIntegerLiteralNode( currentToken->Content() );
+    thisNode = new ASTIntegerLiteralNode( currentToken );
     ConsumeToken();
     return thisNode;
   }
 
   if( TokenIs( Identifier )) {
-    thisNode = new ASTVariableNode( currentToken->Content() );
+    thisNode = new ASTVariableNode( currentToken );
     ConsumeToken();
     return thisNode;
   }
@@ -266,20 +266,20 @@ INT_MATCHER_FOR( Receiver ) {
     // Lookahead to determine if this identifier is actually
     // a receiver or a method name
     if (!LookAheadFor( LeftParen )) {
-      thisNode = new ASTVariableNode( currentToken->Content() );
+      thisNode = new ASTVariableNode( currentToken );
       ConsumeToken();
       return thisNode;
     }
   }
 
   if (TokenIs( String ) ) {
-    thisNode = new ASTStringLiteralNode( currentToken->Content() );
+    thisNode = new ASTStringLiteralNode( currentToken );
     ConsumeToken();
     return thisNode;
   }
 
   if (TokenIs( Integer )) {
-    thisNode = new ASTIntegerLiteralNode( currentToken->Content() );
+    thisNode = new ASTIntegerLiteralNode( currentToken );
     ConsumeToken();
     return thisNode;
   }
@@ -340,7 +340,7 @@ ASTFunctionCallNode *Parser::MatchMethodInvocation() {
     must_match_paren = TRUE;
   }
  
-  thisNode = new ASTFunctionCallNode( functionName->Content() );
+  thisNode = new ASTFunctionCallNode( functionName );
 
   while((newChild = MATCH( Parameter ))) {
     thisNode->append(newChild);
@@ -466,7 +466,7 @@ MATCHER_FOR( ParameterDef ) {
   ASTParameterDefNode *thisNode;
 
   if (TokenIs( Identifier )) {
-    thisNode = new ASTParameterDefNode( currentToken->Content() );
+    thisNode = new ASTParameterDefNode( currentToken );
     ConsumeToken();
     return thisNode;
   } else {
@@ -646,7 +646,7 @@ MATCHER_FOR( ClassDefinition ) {
   ConsumeToken();
 
   if( TokenIs( Identifier )) {
-    thisNode = new ASTClassDefinitionNode( currentToken->Content() );
+    thisNode = new ASTClassDefinitionNode( currentToken );
   } else {
     goatError(CurrentSourcePosition(), "Unexpected token %s found after class keyword. Identifier expected", TOKEN_TYPES[currentToken->Type()]);
     ResetTokenPosition( savedCurr );

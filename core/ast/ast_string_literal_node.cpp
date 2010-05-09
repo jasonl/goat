@@ -1,7 +1,7 @@
 #include "../ast_node.h"
 
-ASTStringLiteralNode::ASTStringLiteralNode( std::string _identifier ) : ASTNode( ASTNode::StringLiteral ) {
-  identifier = _identifier;
+ASTStringLiteralNode::ASTStringLiteralNode( TokenIterator &_token ) : ASTNode( ASTNode::StringLiteral ) {
+  token = &(*_token);
 }
 
 void ASTStringLiteralNode::Analyse( Scope *scope ) {

@@ -3,7 +3,7 @@
 
 class ASTStringLiteralNode : public ASTNode {
 public:
-  ASTStringLiteralNode( std::string );
+  ASTStringLiteralNode( TokenIterator& );
   void Analyse( Scope * );
 };
 

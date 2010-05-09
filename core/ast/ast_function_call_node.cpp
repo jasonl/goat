@@ -1,7 +1,7 @@
 #include "../ast_node.h"
 
-ASTFunctionCallNode::ASTFunctionCallNode( std::string _identifier) : ASTNode( ASTNode::FunctionCall ) {
-  identifier = _identifier;
+ASTFunctionCallNode::ASTFunctionCallNode( TokenIterator &_token ) : ASTNode( ASTNode::FunctionCall ) {
+  token = &(*_token);
 }
 
 void ASTFunctionCallNode::Analyse(Scope *scope) {

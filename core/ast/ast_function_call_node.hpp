@@ -3,7 +3,7 @@
 
 class ASTFunctionCallNode : public ASTNode {
 public:
-  ASTFunctionCallNode( std::string );
+  ASTFunctionCallNode( TokenIterator& );
   void Analyse( Scope* );
 };
 
