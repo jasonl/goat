@@ -12,29 +12,30 @@ Lexer::Lexer( char* _start, char* _end, SourceFile *sourceFile ):
   sourceNext(_start), sourceEnd(_end), tokenStream( sourceFile->tokenStream)
 {
   //tokenStream = sourceFile->tokenStream;
+  prevIndent = indent = 0;
   currentLine = 1;
   lexerState = Indent;
   thunkStart = thunkEnd = NULL;
 }
 
 void Lexer::PushIndentToken() {
-  Token *newToken;
+  TokenType newType;
 
   if(prevIndent != indent ) {
     if(prevIndent < indent) {
-      newToken = new Token( IndentIncrease );
+      newType = IndentIncrease;
     } else {
-      newToken = new Token( IndentDecrease );    
+      newType = IndentDecrease;    
     }
-    newToken->SetLineNumber( currentLine );
-    tokenStream.push_back( *newToken );
+    Token newToken( newType );
+    newToken.SetLineNumber( currentLine );
+    tokenStream.push_back( newToken );
   }
 }
 
 // Adds a Token to the tokenStream which has content (e.g. Strings etc), pointed to
 // by the thunkStart and thunkEnd pointers.
 void Lexer::PushToken() {
-  Token *newToken;
   size_t thunkLength;
   
   thunkLength = (size_t)(thunkEnd - thunkStart);
@@ -42,17 +43,17 @@ void Lexer::PushToken() {
 
   if( thunk == "end" ) return;
   
-  newToken = new Token( lexerState, thunk );
-  newToken->SetLineNumber( currentLine );
+  Token newToken( lexerState, thunk );
+  newToken.SetLineNumber( currentLine );
   TranslateKeywordToken( newToken );
-  tokenStream.push_back( *newToken );
+  tokenStream.push_back( newToken );
 }
 
 // Adds a token to the tokenStream which has no content
 void Lexer::PushEmptyToken() {
-  Token *newToken = new Token( lexerState );
-  newToken->SetLineNumber( currentLine );
-  tokenStream.push_back( *newToken );
+  Token newToken( lexerState );
+  newToken.SetLineNumber( currentLine );
+  tokenStream.push_back( newToken );
 }
 
 // Changes the lexer state according to the next character in the stream
@@ -230,33 +231,33 @@ void Lexer::Lex() {
 }
 
 // Transforms Identifier tokens into keyword tokens.
-void Lexer::TranslateKeywordToken( Token *token ) {
+void Lexer::TranslateKeywordToken( Token &token ) {
 
-  if( token->Type() != Identifier ) return; 
+  if( token.Type() != Identifier ) return; 
 
-  if( token->Content() == "if" ) {
-    token->SetType( If );
-    token->ClearContent();
+  if( token.Content() == "if" ) {
+    token.SetType( If );
+    token.ClearContent();
   }
 
-  if( token->Content() == "else" ) {
-    token->SetType( Else );
-    token->ClearContent();
+  if( token.Content() == "else" ) {
+    token.SetType( Else );
+    token.ClearContent();
   }
 
-  if( token->Content() == "class" ) {
-    token->SetType( Class );
-    token->ClearContent();
+  if( token.Content() == "class" ) {
+    token.SetType( Class );
+    token.ClearContent();
   }
 
-  if( token->Content() == "new" ) {
-    token->SetType( New );
-    token->ClearContent();
+  if( token.Content() == "new" ) {
+    token.SetType( New );
+    token.ClearContent();
   }
 
-  if( token->Content() == "return" ) {
-    token->SetType( Return );
-    token->ClearContent();
+  if( token.Content() == "return" ) {
+    token.SetType( Return );
+    token.ClearContent();
   }
 }
 

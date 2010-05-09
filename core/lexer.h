@@ -35,7 +35,7 @@ class Lexer {
   void PushToken();
   void PushEmptyToken();
   void GetNextCodePoint( CodePoint* );
-  void TranslateKeywordToken( Token* );
+  void TranslateKeywordToken( Token& );
   void DefaultStateTransitions( CodePoint& );
 };
 

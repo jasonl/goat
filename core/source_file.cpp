@@ -20,15 +20,6 @@ SourceFile::SourceFile( std::string _fileName ) {
 }
 
 SourceFile::~SourceFile() {
-  Token *lastToken;
-
-  // Free the memory allocated for the tokens
-  //while( tokenStream ) {
-  //  lastToken = tokenStream;
-  //  tokenStream = lastToken->next;
-  //  free(lastToken);
-  // }
-
   // Free the AST
   if( astRoot ) delete astRoot;
 
@@ -59,16 +50,16 @@ void SourceFile::Tokenize() {
     printf("Map failed\n");
   }
   
-  Lexer *lexer = new Lexer( start, end, this );
-  lexer->Lex();
+  Lexer lexer( start, end, this );
+  lexer.Lex();
 }
 
 // Parse()
 // Transforms the stream of tokens into an Abstract Syntax Tree
 void SourceFile::Parse() {
   if( ! tokenStream.empty() ) {
-    Parser *parser = new Parser( tokenStream );
-    astRoot = parser->Parse();
+    Parser parser( tokenStream );
+    astRoot = parser.Parse();
   } else {
     std::cerr << "Unable to parse source file. No tokens found";
   }
