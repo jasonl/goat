@@ -19,4 +19,9 @@ void ASTConditionalNode::AddElseBlock( ASTBlockNode *_elseBlock ) {
 }
 
 void ASTConditionalNode::Analyse( Scope *scope ) {
+  ASTIterator end(NULL);
+
+  for( ASTIterator i = ChildNodes(); i != end; ++i ) {
+    i->Analyse( scope );
+  }
 }
