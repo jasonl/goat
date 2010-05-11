@@ -302,7 +302,7 @@ MATCHER_FOR( FunctionCall ) {
   }
 
   if( receiver ) {
-    thisNode->InsertFirstChild(receiver);
+    thisNode->AddReceiver( receiver );
   }
 
   while((newParent = MATCH( MethodInvocation ))) {    

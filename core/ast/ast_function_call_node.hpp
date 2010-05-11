@@ -4,7 +4,11 @@
 class ASTFunctionCallNode : public ASTNode {
 public:
   ASTFunctionCallNode( TokenIterator& );
+  ASTNode *Receiver() { return receiver; }
+  void AddReceiver( ASTNode* );
   void Analyse( Scope* );
+private:
+  ASTNode *receiver;
 };
 
 #endif
