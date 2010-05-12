@@ -4,5 +4,6 @@ ASTIntegerLiteralNode::ASTIntegerLiteralNode( TokenIterator &_token ) : ASTNode(
   token = &(*_token);
 }
 
-void ASTIntegerLiteralNode::Analyse( Scope *scope ) {
+void ASTIntegerLiteralNode::Analyse( Scope *_scope ) {
+  scope = _scope;
 }

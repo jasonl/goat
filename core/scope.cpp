@@ -76,6 +76,11 @@ bool Scope::HasVariable( std::string name ) {
   return false;
 }
 
+bool Scope::HasParameterVariable( std::string name ) {
+  // TODO: Yes, this may require logic..
+  return true;
+}
+
 // It is the callers responsibility to ensure there is
 // a variable in the scope by calling HasVariable. 
 offset Scope::GetVariableOffset( char* name ) {

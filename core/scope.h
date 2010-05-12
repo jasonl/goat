@@ -42,6 +42,7 @@ class Scope {
   void AddParameterVariable( std::string );
   void AddClassVariable( std::string );
   bool HasVariable( std::string );
+  bool HasParameterVariable( std::string );
   offset GetVariableOffset( char* ); 
   offset GetTypeHashOffset( char* );
   offset GetDispatchOffset( char* );

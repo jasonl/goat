@@ -4,6 +4,7 @@
 class ASTParameterDefNode : public ASTNode {
 public:
   ASTParameterDefNode( TokenIterator& );
+  void Analyse( Scope* );
 };
 
 #endif
