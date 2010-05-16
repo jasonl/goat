@@ -18,6 +18,7 @@ public:
   void Analyse();
   void PrintTokens();
   void PrintAST();
+  std::list<Token>& GetTokenStream() { return tokenStream; }
 private:
   std::string fileName;
   std::list<Token> tokenStream;

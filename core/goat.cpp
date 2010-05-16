@@ -19,7 +19,7 @@
 #include "source_file.hpp"
 
 
-#ifndef TEST
+#ifndef GOATTEST
 int main(int argc, char** argv) {
   int verbose = 0;
   std::string sourceFileName;

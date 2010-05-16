@@ -2,6 +2,7 @@ CC = g++
 CFLAGS = -Wall
 SRC = core/*.cpp core/ast/*.cpp
 TEST_SRC = test/*.cpp
+GTEST_ROOT = /home/jason/gtest-1.5.0
 
 debug: core/*.cpp core/ast/*.cpp core/ast/*.hpp core/*.h
 	@${CC} ${CFLAGS} -ggdb ${SRC} -o goat
@@ -9,5 +10,5 @@ debug: core/*.cpp core/ast/*.cpp core/ast/*.hpp core/*.h
 release: core/*.cpp core/*.h
 	@${CC} ${CFLAGS} -O1 ${SRC} -o goat
 
-goat-test: core/*.cpp core/*.h test/*.cpp test/*.gt test/*.h
-	@$(CC) ${CFLAGS} -O0 -ggdb -D TEST -I ./core ${SRC} ${TEST_SRC} -o goat-test
+goat-test: core/*.cpp core/*.h test/*.cpp test/*.gt
+	@$(CC) ${CFLAGS} -O0 -ggdb -pthread -D GOATTEST -I ./core -I ${GTEST_ROOT}/include ${GTEST_ROOT}/make/gtest_main.a ${SRC} ${TEST_SRC} -o goat-test 
