@@ -10,5 +10,5 @@ debug: core/*.cpp core/ast/*.cpp core/ast/*.hpp core/*.h
 release: core/*.cpp core/*.h
 	@${CC} ${CFLAGS} -O1 ${SRC} -o goat
 
-goat-test: core/*.cpp core/*.h test/*.cpp test/*.gt
+goat-test: core/*.cpp core/ast/*.cpp core/*.h test/*.cpp test/*.gt
 	@$(CC) ${CFLAGS} -O0 -ggdb -pthread -D GOATTEST -I ./core -I ${GTEST_ROOT}/include ${GTEST_ROOT}/make/gtest_main.a ${SRC} ${TEST_SRC} -o goat-test 

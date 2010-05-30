@@ -269,7 +269,7 @@ INT_MATCHER_FOR( Receiver ) {
       thisNode = new ASTVariableNode( currentToken );
       ConsumeToken();
       return thisNode;
-    }
+      }
   }
 
   if (TokenIs( String ) ) {
@@ -521,7 +521,7 @@ MATCHER_FOR( Conditional ) {
     ResetTokenPosition( savedCurr );
     return NULL;
   }
-  thisNode->append(ifChild);
+  thisNode->AddIfBlock(ifChild);
 
   if (TokenIsNot( Else ) ) {
     // So no else clause
@@ -543,7 +543,7 @@ MATCHER_FOR( Conditional ) {
     ResetTokenPosition( savedCurr );
     return NULL;
   }
-  thisNode->append(elseChild);
+  thisNode->AddElseBlock(elseChild);
   return thisNode;
 }
 

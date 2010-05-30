@@ -1,6 +1,8 @@
 #include "../ast_node.h"
 
 ASTConditionalNode::ASTConditionalNode() : ASTNode( ASTNode::Conditional ) {
+  ifBlock = NULL;
+  elseBlock = NULL;
 }
 
 void ASTConditionalNode::AddExpression( ASTNode *_expr ) {
