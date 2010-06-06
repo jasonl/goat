@@ -8,8 +8,8 @@
 #include "goat.hpp"
 #include "lexer.h"
 
-Lexer::Lexer( char* _start, char* _end, SourceFile *sourceFile ):
-  sourceNext(_start), sourceEnd(_end), tokenStream( sourceFile->tokenStream)
+Lexer::Lexer( char* _start, char* _end, SourceFile *_sourceFile ):
+  sourceNext(_start), sourceEnd(_end), sourceFile( _sourceFile )
 {
   //tokenStream = sourceFile->tokenStream;
   prevIndent = indent = 0;
@@ -29,7 +29,7 @@ void Lexer::PushIndentToken() {
     }
     Token newToken( newType );
     newToken.SetLineNumber( currentLine );
-    tokenStream.push_back( newToken );
+    sourceFile->tokenStream.push_back( newToken );
   }
 }
 
@@ -46,14 +46,14 @@ void Lexer::PushToken() {
   Token newToken( lexerState, thunk );
   newToken.SetLineNumber( currentLine );
   TranslateKeywordToken( newToken );
-  tokenStream.push_back( newToken );
+  sourceFile->tokenStream.push_back( newToken );
 }
 
 // Adds a token to the tokenStream which has no content
 void Lexer::PushEmptyToken() {
   Token newToken( lexerState );
   newToken.SetLineNumber( currentLine );
-  tokenStream.push_back( newToken );
+  sourceFile->tokenStream.push_back( newToken );
 }
 
 // Changes the lexer state according to the next character in the stream

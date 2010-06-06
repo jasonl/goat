@@ -24,13 +24,13 @@ typedef struct {
 class Lexer {
  public:
   Lexer( char*, char*, SourceFile* );
-  void Lex();
+  virtual void Lex();
  private:
   int currentLine, prevIndent, indent;
   TokenType lexerState;
   char *thunkStart, *thunkEnd;
   char *sourceCurr, *sourceNext, *sourceEnd;
-  std::list<Token> &tokenStream;
+  SourceFile *sourceFile;
   void PushIndentToken();
   void PushToken();
   void PushEmptyToken();
