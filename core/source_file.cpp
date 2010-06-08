@@ -101,6 +101,11 @@ void SourceFile::PrintTokens() {
       case EndOfFile:         std::cout << "EndOfFile      "; break;
       case Newline:           std::cout << "Newline        "; break;
       case Whitespace:        std::cout << "WhiteSpace     "; break;
+      case If:                std::cout << "If             "; break;
+      case Else:              std::cout << "Else           "; break;
+      case Return:            std::cout << "Return         "; break;
+      case Class:             std::cout << "Class          "; break;
+      case Asm:               std::cout << "Asm            "; break;
       default:                std::cout << curr->Type();        break;
       }
       
