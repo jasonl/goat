@@ -18,6 +18,11 @@ Lexer::Lexer( char* _start, char* _end, SourceFile *_sourceFile ):
   thunkStart = thunkEnd = NULL;
 }
 
+void Lexer::StartThunk( CodePoint &cp ) {
+  thunkStart = sourceCurr;
+  thunkEnd = sourceCurr + cp.bytes -1;
+}
+
 void Lexer::PushIndentToken() {
   TokenType newType;
 
@@ -79,8 +84,7 @@ void Lexer::DefaultStateTransitions( CodePoint &cp ) {
     case '\r': lexerState = Newline; break;
     default: 
       lexerState = Identifier; 
-      thunkStart = sourceCurr; 
-      thunkEnd = sourceCurr + cp.bytes - 1; 
+      StartThunk( cp );
     }
 }
 
@@ -105,8 +109,7 @@ void Lexer::Lex() {
 	PushIndentToken();
 	if(cp.wchar >= '0' && cp.wchar <= '9') { 
 	  lexerState = Integer; 
-	  thunkStart = sourceCurr; 
-	  thunkEnd = sourceCurr + cp.bytes - 1;
+	  StartThunk( cp );
 	  break;
 	}
 	DefaultStateTransitions( cp );
@@ -115,8 +118,7 @@ void Lexer::Lex() {
       case Whitespace:
 	if(cp.wchar >= 0x30 && cp.wchar <= 0x39) { 
 	  lexerState = Integer; 
-	  thunkStart = sourceCurr; 
-	  thunkEnd = sourceCurr + cp.bytes - 1; 
+	  StartThunk( cp );
 	  break; 
 	}
 	DefaultStateTransitions( cp );
@@ -164,7 +166,7 @@ void Lexer::Lex() {
 	  case ',':    lexerState = Comma; PushEmptyToken(); break;		
 	  case ';':    lexerState = Comment; break;	       
 	  case '\n':   lexerState = Newline; break;    
-	  default:     lexerState = Identifier; thunkStart = sourceCurr; thunkEnd=sourceCurr+cp.bytes-1; \
+	  default:     lexerState = Identifier; StartThunk( cp );
 	  }	
 	break;
 
