@@ -6,11 +6,18 @@
 enum TokenType { RightParen, LeftParen,
 		 Lambda, Colon, Period, Comma, Equals,
 		 Identifier, Integer, String,
-		 If, Else, Return, End, New,
+		 If, Else, Return, End, New, Asm,
 		 Class,
 		 Indent, IndentIncrease, IndentDecrease, 
 		 Newline, Whitespace, Comment,
-		 EndOfFile };
+		 EndOfFile, 
+		 
+		 // Assembly-only tokens
+		 RightSquare, LeftSquare,
+		 Plus, Minus, Multiply,
+		 Label
+		 
+};
 
 class Token {
 public:

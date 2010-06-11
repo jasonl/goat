@@ -38,7 +38,10 @@ class Parser {
   ASTFunctionCallNode *MatchMethodInvocation();
   INT_MATCHER_PROTOTYPE_FOR( Receiver );
   MATCHER_PROTOTYPE_FOR( ReturnStatement );
-  MATCHER_PROTOTYPE_FOR( ClassDefinition );
+  MATCHER_PROTOTYPE_FOR( ClassDefinition ); 
+  // Assembly Language Matchers
+  MATCHER_PROTOTYPE_FOR( IndirectOperand );
+  MATCHER_PROTOTYPE_FOR( IndirectOperandTerm );
   void ConsumeToken() { currentToken++; }
   void ResetTokenPosition( TokenIterator savedCurr ) { currentToken = savedCurr; }
   int CurrentSourcePosition() { return currentToken->LineNumber(); }

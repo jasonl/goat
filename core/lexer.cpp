@@ -7,6 +7,7 @@
 
 #include "goat.hpp"
 #include "lexer.h"
+#include "assembly_lexer.hpp"
 
 Lexer::Lexer( char* _start, char* _end, SourceFile *_sourceFile ):
   sourceNext(_start), sourceEnd(_end), sourceFile( _sourceFile )
@@ -52,6 +53,15 @@ void Lexer::PushToken() {
   newToken.SetLineNumber( currentLine );
   TranslateKeywordToken( newToken );
   sourceFile->tokenStream.push_back( newToken );
+
+  if( thunk == "asm" ) {
+    AssemblyLexer asmLexer( indent, sourceNext, sourceEnd, sourceFile );
+    asmLexer.SetCurrentLine( currentLine );
+    asmLexer.Lex();
+    sourceNext = asmLexer.GetCurrentPosition();
+    currentLine = asmLexer.GetCurrentLine();
+  }
+
 }
 
 // Adds a token to the tokenStream which has no content
@@ -259,6 +269,11 @@ void Lexer::TranslateKeywordToken( Token &token ) {
 
   if( token.Content() == "return" ) {
     token.SetType( Return );
+    token.ClearContent();
+  }
+
+  if( token.Content() == "asm" ) {
+    token.SetType( Asm );
     token.ClearContent();
   }
 }

@@ -25,7 +25,7 @@ class Lexer {
  public:
   Lexer( char*, char*, SourceFile* );
   virtual void Lex();
- private:
+ protected:
   int currentLine, prevIndent, indent;
   TokenType lexerState;
   char *thunkStart, *thunkEnd;

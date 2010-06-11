@@ -106,6 +106,10 @@ void SourceFile::PrintTokens() {
       case Return:            std::cout << "Return         "; break;
       case Class:             std::cout << "Class          "; break;
       case Asm:               std::cout << "Asm            "; break;
+	// Assembly Tokens
+      case Plus:              std::cout << "Plus           "; break;
+      case Minus:             std::cout << "Minus          "; break;
+      case Multiply:          std::cout << "Multiply       "; break;
       default:                std::cout << curr->Type();        break;
       }
       

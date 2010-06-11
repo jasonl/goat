@@ -37,7 +37,8 @@ class ASTNode {
     ParameterDef,
     FunctionCall, Parameter, NamedParameter,
     IntegerLiteral, Variable, StringLiteral, NullLiteral,
-    ReturnStatement
+    ReturnStatement,
+    Operand, IndirectOperand, IndirectOperandTerm,
   };
 
   ASTNode( enum NODE_TYPE );
@@ -45,6 +46,7 @@ class ASTNode {
   ~ASTNode();
 
   void append( ASTNode* );
+  void AppendChild( ASTNode *_a ) { append(_a); }
   void InsertFirstChild( ASTNode* );
   virtual ASTIterator ChildNodes();
 
@@ -87,9 +89,12 @@ typedef std::list<Token>::iterator TokenIterator;
 #include "ast/ast_function_call_node.hpp"
 #include "ast/ast_function_def_node.hpp"
 #include "ast/ast_immutable_assignment_node.hpp"
+#include "ast/ast_indirect_operand_node.hpp"
+#include "ast/ast_indirect_operand_term_node.hpp"
 #include "ast/ast_integer_literal_node.hpp"
 #include "ast/ast_mutable_assignment_node.hpp"
 #include "ast/ast_null_literal_node.hpp"
+#include "ast/ast_operand_node.hpp"
 #include "ast/ast_parameter_node.hpp"
 #include "ast/ast_parameter_def_node.hpp"
 #include "ast/ast_return_statement_node.hpp"

@@ -7,7 +7,14 @@
  * -----------------------------------------------------------------------------
  * block                 = indent_increase,{ statement_group }, indent_decrease;
  * statement_group       = statement, { statement }
- * statement             = [ assignment | function_call | conditional | class_def | return_statement], newline;
+ * statement             = [ assignment | function_call | conditional | class_def | return_statement | inline_assembly ], newline;
+ *
+ *
+ * inline_assembly_block = asm, indent_increase, assembly_statement, {assembly_statement}, indent_decrease
+ * assembly_statement    = [ label ], identifier, { assembly_operand, { comma, assembly_operand }}
+ * assembly_operand      = identifier | indirect_operand | integer
+ * indirect_operand      = left_square, identifier, [indirect_operand_term], [indirect_operand_term], right_square
+ * indirect_operand_term = plus | minus | multiply, identifier | integer
  *
  * assignment            = mutable_assignment | immutable_assignment;
  * mutable_assignment    = identifier, equals, expression;
