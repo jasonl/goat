@@ -65,10 +65,17 @@
 #include "parser.h"
 #include "goat.hpp"
 
-const char *TOKEN_TYPES[]={"Whitespace", "Indent", "Comment", "NewLine", "Identifier",
-			   "RightParen", "LeftParen", "Lambda", "Colon", "Period", "Comma",
-			   "Equals", "End", "Integer", "String", "If", "Else", "Class", "Return", "HashRocket",
-			   "IndentIncrease", "IndentDecrease", "End of File"};
+const char *TOKEN_TYPES[]={ "RightParen", "LeftParen", "Lambda", "Colon", "Period", 
+			    "Comma", "Equals", "Identifier", "Integer", "String",
+			    "If", "Else", "Return", "End", "New", 
+			    "Asm", "Class", "Indent", "IndentIncrease", "IndentDecrease", 
+			    "Newline", "Whitespace", "Comment", "EndOfFile", 
+		 
+			    // Assembly-only tokens
+			    "RightSquare", "LeftSquare",
+			    "Plus", "Minus", "Multiply",
+			    "Label"		 
+};
 
 ASTNode * Parser::Parse() {
   ASTNode *astRoot = new ASTSourceFileNode;
@@ -191,6 +198,7 @@ INT_MATCHER_FOR( Statement )
   if((thisNode = MATCH( Assignment )) || 
      (thisNode = MATCH( FunctionCall )) || 
      (thisNode = MATCH( Conditional )) ||
+     (thisNode = MATCH( InlineAssembly )) ||
      (thisNode = MATCH( ReturnStatement))) {   
     return thisNode;
   }

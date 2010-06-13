@@ -40,6 +40,11 @@ class Parser {
   MATCHER_PROTOTYPE_FOR( ReturnStatement );
   MATCHER_PROTOTYPE_FOR( ClassDefinition ); 
   // Assembly Language Matchers
+  MATCHER_PROTOTYPE_FOR( InlineAssembly );
+  MATCHER_PROTOTYPE_FOR( Instruction );
+  INT_MATCHER_PROTOTYPE_FOR( Operand );
+  MATCHER_PROTOTYPE_FOR( DirectOperand );
+  MATCHER_PROTOTYPE_FOR( ImmediateOperand );
   MATCHER_PROTOTYPE_FOR( IndirectOperand );
   MATCHER_PROTOTYPE_FOR( IndirectOperandTerm );
   void ConsumeToken() { currentToken++; }

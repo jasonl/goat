@@ -15,8 +15,7 @@ enum TokenType { RightParen, LeftParen,
 		 // Assembly-only tokens
 		 RightSquare, LeftSquare,
 		 Plus, Minus, Multiply,
-		 Label
-		 
+		 Label		 
 };
 
 class Token {

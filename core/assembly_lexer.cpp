@@ -43,7 +43,8 @@ void AssemblyLexer::AssemblyStateTransitions( CodePoint &cp ) {
 //
 void AssemblyLexer::Lex() {
   CodePoint cp;
-  
+  bool firstLine = true;
+
   GetNextCodePoint( &cp );
 
   // TODO: suck up whitespace after the asm token
@@ -58,13 +59,18 @@ void AssemblyLexer::Lex() {
 
   lexerState = Indent;
   
-  while( sourceNext < sourceEnd ){
+  while( sourceNext <= sourceEnd ){
     sourceCurr = sourceNext;
     GetNextCodePoint( &cp );
     
     switch( lexerState ) {
     case Indent:
       if(cp.wchar == ' ') { indent++; break; }
+
+      if( firstLine ) {
+	PushIndentToken();
+	firstLine = false;
+      }
 
       if( indent < baseIndent ) {
 	PushIndentToken();
@@ -90,17 +96,18 @@ void AssemblyLexer::Lex() {
       break;
 
     case Comment:
-	while(cp.wchar != '\n' && sourceNext < sourceEnd) { 
-	  GetNextCodePoint( &cp ); 
-	}
-	GetNextCodePoint( &cp );
-	prevIndent = indent; indent = 0; currentLine++;
-	lexerState = Indent;
-	break;
-
+      while(cp.wchar != '\n' && sourceNext < sourceEnd) { 
+	GetNextCodePoint( &cp ); 
+      }
+      GetNextCodePoint( &cp );
+      prevIndent = indent; indent = 0; currentLine++;
+      lexerState = Indent;
+      break;
+      
     case Plus:
     case Minus:
     case Multiply:
+    case Label:
       PushToken(); // We want to keep the operator in the Token
       AssemblyStateTransitions( cp );
       break;
@@ -128,6 +135,7 @@ void AssemblyLexer::Lex() {
       case '-':  PushToken(); StartThunk( cp ); lexerState = Minus; break;
       case '*':  PushToken(); StartThunk( cp ); lexerState = Multiply; break;
       case '\n': PushToken(); lexerState = Newline; break;
+      case ':':  lexerState = Label; thunkEnd += cp.bytes; break;
       default:
 	thunkEnd += cp.bytes;
 	break;
@@ -136,7 +144,17 @@ void AssemblyLexer::Lex() {
       break;
     default:
       std::cout << "Invalid lexer state identified in AssemblyLexer";
-    }
+    }    
+  }
+
+  // Handle the end of file if we encounter it
+  switch( lexerState ) {
+  case Identifier:
+  case Label:
+  case Integer:
+    PushToken();
+  default:
+    break;
   }
     
 }

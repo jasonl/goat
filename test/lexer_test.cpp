@@ -98,5 +98,25 @@ namespace {
     EXPECT_EQ( Return, (++i)->Type() );
   }
 
+  // Tests correct tokenization of inline assembly
+  TEST_F( LexerTest, ShouldTokenizeAssembly ) {
+    TokenIterator i = LoadAndTokenize( "test/asm.gt" );
+
+    EXPECT_EQ( Asm, i->Type() );
+    EXPECT_EQ( Newline, (++i)->Type() );
+    EXPECT_EQ( IndentIncrease, (++i)->Type() );
+    EXPECT_EQ( Label, (++i)->Type() );
+    EXPECT_EQ( "label:", i->Content() );
+    EXPECT_EQ( Identifier, (++i)->Type() );
+    EXPECT_EQ( "mov", i->Content() );
+    EXPECT_EQ( Identifier, (++i)->Type() );
+    EXPECT_EQ( "eax", i->Content() );
+    EXPECT_EQ( Comma, (++i)->Type() );
+    EXPECT_EQ( Integer, (++i)->Type() );
+    EXPECT_EQ( "32", i->Content() );
+    EXPECT_EQ( Newline, (++i)->Type() );
+
+  }
+
 
 }

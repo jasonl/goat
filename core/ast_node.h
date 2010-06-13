@@ -15,12 +15,17 @@ const std::string NODE_TYPES[] = {
   "StatementGroup", "Statement", "ClassStatement", "My",
   "\x1b[0;36mMutableAssignment\x1b[0;37;00m", "\x1b[0;36mImmutableAssignment\x1b[0;37;00m",
   "\x1b[1;35mConditional\x1b[0;37;00m",
-  "ClassDefinition",
+  "ClassDefinition", "This",
   "\x1b[1;31mFunctionDef\x1b[0;37;00m", "OneLineFunctionDef", "BlockFunctionDef",
   "ParameterDef",
   "\x1b[1;34mFunctionCall\x1b[0;37;00m", "Parameter", "NamedParameter",
   "IntegerLiteral", "Variable", "StringLiteral", "NullLiteral",
-  "\x1b[1;32mReturnStatement\x1b[0;37;00m"
+  "\x1b[1;32mReturnStatement\x1b[0;37;00m",
+  "\x1b[1;34mInlineAssembly\x1b[0;37;00m",
+  "Instruction",
+  "Label",
+  "DirectOperand", "ImmediateOperand",
+  "IndirectOperand", "IndirectOperandTerm"
 };
 
 class ASTNode {
@@ -38,7 +43,11 @@ class ASTNode {
     FunctionCall, Parameter, NamedParameter,
     IntegerLiteral, Variable, StringLiteral, NullLiteral,
     ReturnStatement,
-    Operand, IndirectOperand, IndirectOperandTerm,
+    InlineAssembly,
+    Instruction,
+    Label,
+    DirectOperand, ImmediateOperand,
+    IndirectOperand, IndirectOperandTerm
   };
 
   ASTNode( enum NODE_TYPE );
@@ -86,15 +95,19 @@ typedef std::list<Token>::iterator TokenIterator;
 #include "ast/ast_block_node.hpp"
 #include "ast/ast_class_definition_node.hpp"
 #include "ast/ast_conditional_node.hpp"
+#include "ast/ast_direct_operand_node.hpp"
 #include "ast/ast_function_call_node.hpp"
 #include "ast/ast_function_def_node.hpp"
+#include "ast/ast_immediate_operand_node.hpp"
 #include "ast/ast_immutable_assignment_node.hpp"
 #include "ast/ast_indirect_operand_node.hpp"
 #include "ast/ast_indirect_operand_term_node.hpp"
+#include "ast/ast_inline_assembly_node.hpp"
+#include "ast/ast_instruction_node.hpp"
 #include "ast/ast_integer_literal_node.hpp"
+#include "ast/ast_label_node.hpp"
 #include "ast/ast_mutable_assignment_node.hpp"
 #include "ast/ast_null_literal_node.hpp"
-#include "ast/ast_operand_node.hpp"
 #include "ast/ast_parameter_node.hpp"
 #include "ast/ast_parameter_def_node.hpp"
 #include "ast/ast_return_statement_node.hpp"
