@@ -35,12 +35,12 @@ class Integer
       mov ecx, #addend      ; Load type hash of first argument into ECX
       cmp ecx, #Integer      ; test that divisor is an Integer
       jne incorrect_type
-      add eax, *addend
+      add eax, ^addend
       mov edx, &Integer
       mov ecx, #Integer
       pop ebp
       ret
-      incorrect_type:     
+      incorrect_type:
 
   ; Integer subtraction
   ; Subtracts the subtrahend from the value of this instance, and returns
@@ -50,7 +50,7 @@ class Integer
       mov ecx, #subtrahend    ; Load type hash of first argument into ECX
       cmp ecx, #Integer      ; test that divisor is an Integer
       jne incorrect_type
-      sub eax, *subtrahend
+      sub eax, ^subtrahend
       mov edx, &Integer
       mov ecx, #Integer
       pop ebp
@@ -65,7 +65,7 @@ class Integer
       mov ecx, #factor      ; Load type hash of first argument into ECX
       cmp ecx, #Integer      ; test that divisor is an Integer
       jne incorrect_type
-      imul *factor           ; This instance's value is already in eax
+      imul ^factor           ; This instance's value is already in eax
       mov edx, &Integer      ; dispatch function
       mov ecx, #Integer      ; Integer type hash
       pop ebp
@@ -83,7 +83,7 @@ class Integer
       cmp ecx, #Integer      ; test that divisor is an Integer
       jne incorrect_type
       cdq                    ; sign extend EAX into EDX:EAX
-      idiv *divisor
+      idiv ^divisor
       mov eax, edx           ; remainder in edx, we want to return it in eax
       mov edx, &Integer      ; dispatch function
       mov ecx, #Integer      ; Integer type hash
@@ -98,7 +98,7 @@ class Integer
       mov ecx, #term         ; Load type has of the first argument into ecx
       cmp ecx, #Integer      ; Test that the term is an Integer
       jne incorrect_type
-      cmp eax, *term         ; Test the two number
+      cmp eax, ^term         ; Test the two number
       jg true
       mov eax, 0             ; False boolean value
       mov edx, &Boolean      ; Boolean object dispatch function
@@ -119,7 +119,7 @@ class Integer
       mov ecx, #term         ; Load type has of the first argument into ecx
       cmp ecx, #Integer      ; Test that the term is an Integer
       jne incorrect_type
-      cmp eax, *term         ; Test the two number
+      cmp eax, ^term         ; Test the two number
       jl true                ; Jump if less than
       mov eax, 0             ; False boolean value
       mov edx, &Boolean      ; Boolean object dispatch function
@@ -140,7 +140,7 @@ class Integer
       mov ecx, #term         ; Load type has of the first argument into ecx
       cmp ecx, #Integer      ; Test that the term is an Integer
       jne incorrect_type
-      cmp eax, *term         ; Test the two numbers
+      cmp eax, ^term         ; Test the two numbers
       jge true
       mov eax, 0             ; False boolean value
       mov edx, &Boolean      ; Boolean object dispatch function
@@ -161,7 +161,7 @@ class Integer
       mov ecx, #term         ; Load type has of the first argument into ecx
       cmp ecx, #Integer      ; Test that the term is an Integer
       jne incorrect_type
-      cmp eax, *term         ; Test the two number
+      cmp eax, ^term         ; Test the two number
       jle true
       mov eax, 0             ; False boolean value
       mov edx, &Boolean      ; Boolean object dispatch function
@@ -181,7 +181,7 @@ class Integer
       mov ecx, #term         ; Load type hash of the first argumment into ecx
       cmp ecx, #Integer
       jne not_equal          ; If it's not an Integer, then it cannot be equal
-      cmp eax, *term         ; Do the comparison
+      cmp eax, ^term         ; Do the comparison
       jne not_equal
       mov eax, 1             ; return Boolean(true)
       mov edx, &Boolean
@@ -200,7 +200,7 @@ class Integer
       mov ecx, #term         ; Load type hash of the first argumment into ecx
       cmp ecx, #Integer
       jne not_equal          ; If it's not an Integer, then it cannot be equal
-      cmp eax, *term         ; Do the comparison
+      cmp eax, ^term         ; Do the comparison
       jne not_equal
       mov eax, 0             ; return Boolean(true)
       mov edx, &Boolean
@@ -214,4 +214,3 @@ class Integer
       pop ebp
       ret
 
-end
