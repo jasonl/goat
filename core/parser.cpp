@@ -199,6 +199,7 @@ INT_MATCHER_FOR( Statement )
      (thisNode = MATCH( FunctionCall )) || 
      (thisNode = MATCH( Conditional )) ||
      (thisNode = MATCH( InlineAssembly )) ||
+     (thisNode = MATCH( ClassDefinition )) ||
      (thisNode = MATCH( ReturnStatement))) {   
     return thisNode;
   }
@@ -676,16 +677,16 @@ MATCHER_FOR( ClassDefinition ) {
   }
   ConsumeToken();
 
-
   if( TokenIsNot( IndentIncrease )) {
     // Empty class
     return thisNode;
   }
   ConsumeToken();
 
-  while((newNode = MATCH(Assignment))) {
-    thisNode->append(newNode);
-    if( TokenIs( Newline )) {
+  while((newNode = MATCH(Assignment)) || TokenIs(Newline) ) {
+    if( newNode ) {
+      thisNode->append(newNode);
+    } else if( TokenIs( Newline )) {
       ConsumeToken();
     } else {
       goatError(CurrentSourcePosition(), "Unexpected token %s found in class definition block. Could not match assignment", TOKEN_TYPES[currentToken->Type()]);
