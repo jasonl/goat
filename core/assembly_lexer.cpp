@@ -72,7 +72,13 @@ void AssemblyLexer::Lex() {
 	firstLine = false;
       }
 
-      if( indent < baseIndent ) {
+      // Don't worry about changing indent on newlines
+      if(cp.wchar == '\n') {
+	lexerState = Newline;
+	break;
+      }
+
+      if( indent <= baseIndent ) {
 	PushIndentToken();
 	return;
       }
