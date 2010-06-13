@@ -142,42 +142,23 @@ MATCHER_FOR( Block ) {
   thisNode = new ASTBlockNode();
 
   // Match at least one statement
-  if((newChild = MATCH(Statement))) {
-    if( TokenIs( Newline )) {
-      ConsumeToken();
-      thisNode->append(newChild);
-      
-      // Ignore any blank links
-      while( TokenIs( Newline )) {
-	ConsumeToken();
-      }
+  if((newChild = MATCH(Statement)) || TokenIs(Newline)) {
+    if(newChild) {
+      thisNode->AppendChild(newChild);
     } else {
-      // Found something on a line we couldn't match
-      goatError(CurrentSourcePosition(), "Unexpected token %s[%s] found.", TOKEN_TYPES[currentToken->Type()], currentToken->Content().c_str() );
-      delete thisNode;
-      return 0;
+      ConsumeToken();
     }
-  }
-  else {
+  } else {
     goatError(CurrentSourcePosition(), "Could not match a statement in block");
     delete thisNode;
     return NULL;
   }
 
-  while((newChild = MATCH(Statement))) {
-    if( TokenIs( Newline )) {
-      ConsumeToken();
-      thisNode->append( newChild );
-      
-      // Ignore any blank links
-      while( TokenIs( Newline )) {
-	ConsumeToken();
-      }
+  while((newChild = MATCH(Statement)) || TokenIs(Newline) ) {
+    if( newChild ) {
+      thisNode->AppendChild( newChild );
     } else {
-      // Found something on a line we couldn't match
-      goatError(CurrentSourcePosition(), "Unexpected token %s[%s] found.", TOKEN_TYPES[currentToken->Type()], currentToken->Content().c_str() );
-      delete thisNode;
-      return 0;
+      ConsumeToken();
     }  
   }
 
