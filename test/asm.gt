@@ -1,2 +1,3 @@
 asm
   label: mov eax, 32
+
