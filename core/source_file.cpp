@@ -17,6 +17,7 @@ SourceFile::SourceFile( std::string _fileName ) {
   fileName = _fileName;
   astRoot = NULL;
   lobby = NULL;
+  indentStack.push(0);
 }
 
 SourceFile::~SourceFile() {

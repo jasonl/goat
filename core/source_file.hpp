@@ -3,6 +3,7 @@
 
 #include <string>
 #include <list>
+#include <stack>
 #include "token.hpp"
 
 class ASTNode;
@@ -19,6 +20,7 @@ public:
   void PrintTokens();
   void PrintAST();
   std::list<Token>& GetTokenStream() { return tokenStream; }
+  std::stack<int> indentStack;
 private:
   std::string fileName;
   std::list<Token> tokenStream;

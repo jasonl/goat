@@ -25,17 +25,20 @@ void Lexer::StartThunk( CodePoint &cp ) {
 }
 
 void Lexer::PushIndentToken() {
-  TokenType newType;
-
-  if(prevIndent != indent ) {
-    if(prevIndent < indent) {
-      newType = IndentIncrease;
+  if( !sourceFile->indentStack.empty() && sourceFile->indentStack.top() != indent ) {
+    if( !sourceFile->indentStack.empty() && sourceFile->indentStack.top() < indent) {
+      sourceFile->indentStack.push( indent );
+      Token newToken( IndentIncrease );
+      newToken.SetLineNumber( currentLine );
+      sourceFile->tokenStream.push_back( newToken );
     } else {
-      newType = IndentDecrease;    
+      Token newToken( IndentDecrease );
+      while( !sourceFile->indentStack.empty() && sourceFile->indentStack.top() > indent ) {
+	newToken.SetLineNumber( currentLine );
+	sourceFile->tokenStream.push_back( newToken );
+	sourceFile->indentStack.pop();
+      }
     }
-    Token newToken( newType );
-    newToken.SetLineNumber( currentLine );
-    sourceFile->tokenStream.push_back( newToken );
   }
 }
 
@@ -60,8 +63,11 @@ void Lexer::PushToken() {
     asmLexer.Lex();
     sourceNext = asmLexer.GetCurrentPosition();
     currentLine = asmLexer.GetCurrentLine();
+    indent = asmLexer.GetIndent();
+    return Indent;
   }
-
+  
+  return Newline;
 }
 
 // Adds a token to the tokenStream which has no content
@@ -155,9 +161,10 @@ void Lexer::Lex() {
 	
       case Newline:
 	PushEmptyToken();
-	prevIndent = indent; indent = 0; currentLine++;
+	indent = 0; currentLine++;
 	
-	if (cp.wchar == ' ' || cp.wchar == '\t') {
+	if (cp.wchar == ' ') {
+	  indent++;
 	  lexerState = Indent;
 	  break;
 	}
@@ -236,6 +243,14 @@ void Lexer::Lex() {
     default:
       break;
     }
+
+  // Add implied IndentDecrease tokens
+  Token newToken( IndentDecrease );
+  while( !sourceFile->indentStack.empty() && sourceFile->indentStack.top() > 0 ) {
+    newToken.SetLineNumber( currentLine );
+    sourceFile->tokenStream.push_back( newToken );
+    sourceFile->indentStack.pop();
+  }
   
   // Add an End-of-File marker
   lexerState = EndOfFile;
