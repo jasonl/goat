@@ -33,7 +33,7 @@ class Integer
     ; mov ebp, esp
     asm
       mov ecx, #addend      ; Load type hash of first argument into ECX
-      cmp ecx, #Integer      ; test that divisor is an Integer
+      cmp ecx, #Integer     ; test that divisor is an Integer
       jne incorrect_type
       add eax, ^addend
       mov edx, &Integer
@@ -55,13 +55,13 @@ class Integer
       mov ecx, #Integer
       pop ebp
       ret
-      incorrect_type:     
+      incorrect_type:
 
   ; Integer multiplication
   ; Multiplies the two signed integers and returns the result. Any overflow
   ; is discarded
   *: λ( factor )
-    asm  
+    asm
       mov ecx, #factor      ; Load type hash of first argument into ECX
       cmp ecx, #Integer      ; test that divisor is an Integer
       jne incorrect_type
@@ -70,7 +70,7 @@ class Integer
       mov ecx, #Integer      ; Integer type hash
       pop ebp
       ret                    ; and return
-      incorrect_type: 
+      incorrect_type:
 
   ; Modulo operation. a % b returns the remainder when a is divided by
   ; b using integer division.
@@ -78,7 +78,7 @@ class Integer
   ; my - the divident (which determines the sign of the result)
   ; divisor - the divisor, must be an Integer
   %: λ( divisor )
-    asm  
+    asm
       mov ecx, #divisor      ; Load type hash of first argument into ECX
       cmp ecx, #Integer      ; test that divisor is an Integer
       jne incorrect_type
