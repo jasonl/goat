@@ -111,6 +111,7 @@ void SourceFile::PrintTokens() {
       case Plus:              std::cout << "Plus           "; break;
       case Minus:             std::cout << "Minus          "; break;
       case Multiply:          std::cout << "Multiply       "; break;
+      case Label:             std::cout << "Label          "; break;
       default:                std::cout << curr->Type();        break;
       }
       
@@ -119,6 +120,7 @@ void SourceFile::PrintTokens() {
       case Integer:
       case String:
       case Identifier:
+      case Label:
 	std::cout << curr->Content();
 	break;
       default:
