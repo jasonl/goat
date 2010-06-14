@@ -88,16 +88,11 @@ ASTNode * Parser::Parse() {
   }
 
 
-  while((newChild = MATCH(Statement))) {
-    if( TokenIs( Newline )) {
-      ConsumeToken();
+  while((newChild = MATCH(Statement)) || TokenIs(Newline)) {
+    if( newChild) {
       astRoot->append(newChild);
-      
-      // Ignore any blank links
-      while( TokenIs( Newline )) {
-	ConsumeToken();
-      }
-
+    } else if ( TokenIs(Newline) ) {
+      ConsumeToken();
     } else if( TokenIs( EndOfFile)) {
       return astRoot;
     } else {
