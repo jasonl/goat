@@ -1,20 +1,15 @@
-greatest_common_divisor: λ( a, b)
+greatest_common_divisor: λ( a, b )
   if a > b
     return gcd( a, b )
   else
     return gcd( b, a )
-  end
-end
-
 
 ; Recursively apply Euclid's algorithm to find the GCD
 ; - requires that a is larger than b
 
-gcd: λ( a, b)
+gcd: λ( a, b )
   if b ≡ 0
     return a
   else
     return gcd( b, a % b )
-  end
-end
 
