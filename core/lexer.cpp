@@ -44,13 +44,13 @@ void Lexer::PushIndentToken() {
 
 // Adds a Token to the tokenStream which has content (e.g. Strings etc), pointed to
 // by the thunkStart and thunkEnd pointers.
-void Lexer::PushToken() {
+TokenType Lexer::PushToken() {
   size_t thunkLength;
   
   thunkLength = (size_t)(thunkEnd - thunkStart);
   std::string thunk( thunkStart, thunkLength + 1 ); 
 
-  if( thunk == "end" ) return;
+  if( thunk == "end" ) return Newline;
   
   Token newToken( lexerState, thunk );
   newToken.SetLineNumber( currentLine );
@@ -97,7 +97,6 @@ void Lexer::DefaultStateTransitions( CodePoint &cp ) {
     case ';': lexerState = Comment; break;
     case ' ': lexerState = Whitespace; break;
     case '\n': lexerState = Newline; break;
-    case '\r': lexerState = Newline; break;
     default: 
       lexerState = Identifier; 
       StartThunk( cp );
@@ -121,6 +120,11 @@ void Lexer::Lex() {
 	
       case Indent: // Indent is just Whitespace before any non-space characters on a line.
 	if(cp.wchar == ' ') { indent++; break; }
+
+	if(cp.wchar == '\n') {
+	  lexerState = Newline;
+	  break;
+	}
 
 	PushIndentToken();
 	if(cp.wchar >= '0' && cp.wchar <= '9') { 
@@ -173,14 +177,14 @@ void Lexer::Lex() {
 
 	switch( cp.wchar ) 
 	  {
-	  case '(':    lexerState = LeftParen; PushEmptyToken(); break;
-	  case ')':    lexerState = RightParen; PushEmptyToken(); break;		
+	  case '(':    lexerState = LeftParen; break;
+	  case ')':    lexerState = RightParen; break;		
 	  case '"':    lexerState = String; thunkStart=sourceNext; thunkEnd=sourceNext; break;
-	  case '.':    lexerState = Period; PushEmptyToken();  break;					
-	  case 0x03bb: lexerState = Lambda; PushEmptyToken(); break;
-	  case ':':    lexerState = Colon; PushEmptyToken(); break;
-	  case '=':    lexerState = Equals; PushEmptyToken(); break;		
-	  case ',':    lexerState = Comma; PushEmptyToken(); break;		
+	  case '.':    lexerState = Period; break;					
+	  case 0x03bb: lexerState = Lambda; break;
+	  case ':':    lexerState = Colon; break;
+	  case '=':    lexerState = Equals; break;		
+	  case ',':    lexerState = Comma; break;		
 	  case ';':    lexerState = Comment; break;	       
 	  case '\n':   lexerState = Newline; break;    
 	  default:     lexerState = Identifier; StartThunk( cp );
@@ -199,8 +203,9 @@ void Lexer::Lex() {
 	  case '"':    PushToken(); lexerState = String; break;
 	  case ':':    PushToken(); lexerState = Colon; break;
 	  case ',':    PushToken(); lexerState = Comma; break;
+	  case ';':    PushToken(); lexerState = Comment; break;	       
 	  case ')':    PushToken(); lexerState = RightParen; break;
-	  case '\n':   PushToken(); lexerState = Newline; break;
+	  case '\n':   lexerState = PushToken(); break;
 	  default:
 	    thunkEnd += cp.bytes;
 	    break; // If it's not listed above, it's part of the identifier

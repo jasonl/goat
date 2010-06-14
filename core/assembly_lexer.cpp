@@ -4,6 +4,8 @@
 #include "assembly_lexer.hpp"
 
 void AssemblyLexer::AssemblyStateTransitions( CodePoint &cp ) {
+  if( cp.wchar == '\r' ) GetNextCodePoint( &cp );
+
   switch( cp.wchar ) {
   case ' ':  lexerState = Whitespace; break;
   case '[':  lexerState = LeftSquare; break;
@@ -51,6 +53,7 @@ void AssemblyLexer::Lex() {
 
   if( cp.wchar != '\n' ) {
     lexerState = Newline;
+    currentLine++;
     PushEmptyToken();
   } else {
     // Raise an error
@@ -59,9 +62,13 @@ void AssemblyLexer::Lex() {
 
   lexerState = Indent;
   
-  while( sourceNext <= sourceEnd ){
+  while( sourceNext < sourceEnd ){
     sourceCurr = sourceNext;
     GetNextCodePoint( &cp );
+
+    if(cp.wchar == '\r') {
+      continue;
+    }
     
     switch( lexerState ) {
     case Indent:
@@ -79,7 +86,7 @@ void AssemblyLexer::Lex() {
       }
 
       if( indent <= baseIndent ) {
-	PushIndentToken();
+	sourceNext = sourceCurr;
 	return;
       }
       
@@ -90,11 +97,11 @@ void AssemblyLexer::Lex() {
       PushEmptyToken();
       prevIndent = indent; indent = 0; currentLine++;
       if (cp.wchar == ' ' || cp.wchar == '\t') {
+	indent++;
 	lexerState = Indent;
 	break;
       }
-
-      PushIndentToken();
+      AssemblyStateTransitions( cp );
       break;
       
     case Whitespace:
@@ -106,8 +113,7 @@ void AssemblyLexer::Lex() {
 	GetNextCodePoint( &cp ); 
       }
       GetNextCodePoint( &cp );
-      prevIndent = indent; indent = 0; currentLine++;
-      lexerState = Indent;
+      lexerState = Newline;
       break;
       
     case Plus:

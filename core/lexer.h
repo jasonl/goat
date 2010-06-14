@@ -1,6 +1,6 @@
 /* 
  * File:   lexer.h
- * Author: jason
+ * Author: Jason Langenauer <jason@jasonlangenauer.com>
  *
  * Created on 12 November 2009, 6:18 PM
  */
@@ -33,7 +33,7 @@ class Lexer {
   SourceFile *sourceFile;
   void StartThunk( CodePoint& );
   void PushIndentToken();
-  void PushToken();
+  TokenType PushToken();
   void PushEmptyToken();
   void GetNextCodePoint( CodePoint* );
   void TranslateKeywordToken( Token& );
