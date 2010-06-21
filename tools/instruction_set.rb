@@ -18,6 +18,7 @@ a_c.write "\#include \"instruction.h\"\n"
 a_c.write "\#include \"assembly_block.h\"\n\n"
 
 a_h.write "class AssemblyBlock \{\n"
+a_h.write "public:\n"
 
 File.open( ins_h, "r" ).each_line do |l|
   next unless l[0..0] == '{'
@@ -69,6 +70,25 @@ File.open( ins_h, "r" ).each_line do |l|
   a_c.write ") );\n"
   a_c.write "\}\n\n"
 end
+
+a_h.write <<-PROTOTYPES
+ private:
+  void push_back( Instruction* );
+  Instruction *first;
+  Instruction *last;
+PROTOTYPES
+
+a_c.write <<-DEFINITIONS
+  void AssemblyBlock::push_back( Instruction* i ) {
+    if(!first) {
+      first = i;
+      last = i;
+    } else {
+      last->next = i;
+      last = i;
+    }
+  }  
+DEFINITIONS
 
 a_h.write "};\n"
 

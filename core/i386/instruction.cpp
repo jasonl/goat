@@ -1,41 +1,21 @@
-#include <string>
-#include "operand.h"
+#include "instruction.h"
 
-using namespace std;
-
-class Label {
-
-};
-
-class Instruction {
-  Instruction(string);
-  Instruction(string, Operand& );
-  Instruction(string, Operand&, Operand&);
-  Instruction(string, Operand&, Operand&, Operand&);
-  ~Instruction();
-private:
-  Label *label;
-  string mnemonic;
-  Operand *operand1;
-  Operand *operand2;
-  Operand *operand3;
-};
-
-Instruction::Instruction( string _mnemonic ) {
+Instruction::Instruction( std::string _mnemonic ) {
   mnemonic = _mnemonic;
   operand1 = 0;
   operand2 = 0;
   operand3 = 0;
+  next = NULL;
 }
 
-Instruction::Instruction( string _mnemonic, Operand& op1 ) {
+Instruction::Instruction( std::string _mnemonic, Operand& op1 ) {
   mnemonic = _mnemonic;
   operand1 = &op1;
   operand2 = 0;
   operand3 = 0;
 }
 
-Instruction::Instruction( string _mnemonic,  Operand& op1,
+Instruction::Instruction( std::string _mnemonic,  Operand& op1,
 			  Operand& op2 ) {
   mnemonic = _mnemonic;
   operand1 = &op1;
@@ -43,7 +23,7 @@ Instruction::Instruction( string _mnemonic,  Operand& op1,
   operand3 = 0;
 }
 
-Instruction::Instruction( string _mnemonic, Operand& op1, 
+Instruction::Instruction( std::string _mnemonic, Operand& op1, 
 			  Operand& op2, Operand& op3 ) {
   mnemonic = _mnemonic;
   operand1 = &op1;

@@ -830,3 +830,12 @@ void AssemblyBlock::XOR( Operand &op1, Operand &op2 ) {
   this->push_back( new Instruction("XOR", op1, op2) );
 }
 
+void AssemblyBlock::push_back( Instruction* i ) {
+  if(!first) {
+    first = i;
+    last = i;
+  } else {
+    last->next = i;
+    last = i;
+  }
+}  

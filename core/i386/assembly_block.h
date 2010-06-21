@@ -1,4 +1,7 @@
+#include "instruction.h"
+
 class AssemblyBlock {
+ public:
   void AAA();
   void AAD();
   void AAM();
@@ -206,4 +209,8 @@ class AssemblyBlock {
   void XCHG( Operand&, Operand& );
   void XLAT();
   void XOR( Operand&, Operand& );
+ private:
+  void push_back( Instruction* );
+  Instruction *first;
+  Instruction *last;
 };

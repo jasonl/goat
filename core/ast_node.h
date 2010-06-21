@@ -3,11 +3,17 @@
 
 #include <list>
 #include <string>
+#include <stdint.h>
 #include "token.hpp"
 #include "scope.h"
 
-class AssemblyBlock;
+#include "i386/operand.h"
+#include "i386/assembly_block.h"
+
 class ASTIterator;
+
+typedef uint32_t Hash;
+Hash goatHash( std::string );
 
 const std::string NODE_TYPES[] = { 
   "SourceFile",
@@ -60,7 +66,7 @@ class ASTNode {
   virtual ASTIterator ChildNodes();
 
   virtual void Analyse( Scope* );
-  AssemblyBlock* GenerateCode();
+  virtual AssemblyBlock* GenerateCode() { return NULL; }
 
   void print(int, int, char*);
   std::string Content() { return token->Content(); }

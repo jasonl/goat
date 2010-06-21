@@ -3,29 +3,36 @@
 
 #include <stdint.h>
 
-typedef enum _operand_type {
-  Null,
-  Register,
-  Memory,
-  Immediate
-} operand_type;
-
-typedef uint32_t register_t;
+typedef uint32_t Register;
 
 class Operand {
 public:
-  Operand( operand_type );
-  static Operand& Prototype(const register_t);
+  enum OperandType { 
+    Null,
+    Direct,
+    Indirect,
+    Immediate };
+
+  enum OperandSize {
+    Byte,
+    Word,
+    Dword };
+
+  Operand( OperandType );
+  Operand( uint32_t, OperandSize ); // For immediate operands
+  static Operand& Prototype(const Register);
   Operand& operator[](Operand&) const;
   Operand& operator+(Operand&);
   Operand& operator+(const int32_t);
   Operand& operator-(const int32_t);
   Operand& operator*(const uint8_t);
   bool isPrototype();
-  //private:
-  operand_type type;
-  register_t base;
-  register_t offset;
+
+ private:
+  OperandType type;
+  OperandSize size;
+  Register base;
+  Register offset;
   uint32_t value;
   int32_t displacement;
   // The scale is either 1, 2, 4 or 8, and is the value the offset
@@ -44,4 +51,9 @@ extern Operand &al, &ah, &bl, &bh, &cl, &ch, &dl, &dh;
 extern Operand &ax, &bx, &cx, &dx, &sp, &bp, &di, &si;
 extern Operand &eax, &ebx, &ecx, &edx, &esp, &ebp, &esi, &edi;
 extern const Operand _;
+
+Operand &Byte( unsigned uint8_t );
+Operand &Word( unsigned uint16_t );
+Operand &Dword( unsigned uint32_t );
+
 #endif

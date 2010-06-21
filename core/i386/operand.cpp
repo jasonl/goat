@@ -1,12 +1,13 @@
 #include <stdint.h>
 #include <iostream>
-#include "operand.h"
 #include "instructions.h"
+#include "operand.h"
+
 
 using namespace std;
 
 // Indirect Memory Operand operator
-const Operand _ = Operand( Null );
+const Operand _ = Operand( Operand::Null );
 
 // 8-bit GP Registers
 Operand &al = Operand::Prototype( AL );
@@ -44,19 +45,31 @@ Operand &edi = Operand::Prototype( EDI );
 // operands which can be referred to
 //
 // Constructor - for non-prototype operands
-Operand::Operand( operand_type type ) {
-  this->type = type;
-  this->scale = 0;
-  this->displacement = 0;
-  this->prototype = false;
+Operand::Operand( OperandType _type ):
+  type( _type ) {
+  scale = 0;
+  displacement = 0;
+  prototype = false;
 }
+
+// Immediate Operand Constructor
+Operand::Operand( uint32_t _value, OperandSize _size ):
+  size(_size), value(_value) {
+  type = Immediate;
+  prototype = false;
+  scale = 0;
+  displacement = 0;
+  base = 0;
+  offset = 0;
+}
+
 
 // Prototype constructor - A prototype operand is one that
 // represents registers directly, and indirect operands are
 // created from the prototypes using the overloaded operators
 // below
-Operand& Operand::Prototype(const register_t base) {
-  Operand &this_op = *new Operand( Register );
+Operand& Operand::Prototype(const Register base) {
+  Operand &this_op = *new Operand( Direct );
   this_op.prototype = true;
   this_op.base = base;
   return this_op;
@@ -74,14 +87,14 @@ Operand& Operand::Prototype(const register_t base) {
 Operand& Operand::operator[](Operand &reg) const{
 
   if(reg.prototype) {
-    Operand &this_op = *new Operand( Memory );
+    Operand &this_op = *new Operand( Indirect );
     this_op.base = reg.base;
+    return this_op;
   } else {
     Operand &this_op = reg;
-    this_op.type = Memory;
+    this_op.type = Indirect;
     return this_op;
   }
-
 }
 
 // Offset indirect operand constructor - creates a new Operand
@@ -179,4 +192,16 @@ Operand& Operand::operator*(const uint8_t scale_b) {
 
 bool Operand::isPrototype() {
   return prototype;
+}
+
+// Helper methods for creating specific sized immediate operands
+Operand &Byte( uint8_t _value ) {
+  return *new Operand( _value, Operand::Byte );
+}
+
+Operand &Word( uint16_t _value ) {
+  return *new Operand( _value, Operand::Byte );
+}
+Operand &Dword( uint32_t _value ) {
+  return *new Operand( _value, Operand::Byte );
 }
