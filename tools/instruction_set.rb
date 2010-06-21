@@ -74,6 +74,7 @@ end
 a_h.write <<-PROTOTYPES
  private:
   void push_back( Instruction* );
+  void AppendBlock( AssemblyBlock* );
   Instruction *first;
   Instruction *last;
 PROTOTYPES
@@ -88,6 +89,13 @@ a_c.write <<-DEFINITIONS
       last = i;
     }
   }  
+
+  void AssemblyBlock::AppendBlock( AssemblyBlock *ab ) {
+    if( ab->first == NULL || ab->last == NULL ) { return; }
+    last->next = ab->first;
+    last = ab->last;
+    delete ab;
+  }
 DEFINITIONS
 
 a_h.write "};\n"

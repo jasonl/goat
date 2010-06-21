@@ -211,6 +211,7 @@ class AssemblyBlock {
   void XOR( Operand&, Operand& );
  private:
   void push_back( Instruction* );
+  void AppendBlock( AssemblyBlock* );
   Instruction *first;
   Instruction *last;
 };

@@ -839,3 +839,10 @@ void AssemblyBlock::push_back( Instruction* i ) {
     last = i;
   }
 }  
+
+void AssemblyBlock::AppendBlock( AssemblyBlock *ab ) {
+  if( ab == NULL || ab->first == NULL || ab->last == NULL ) { return; }
+  last->next = ab->first;
+  last = ab->last;
+  delete ab;
+}
