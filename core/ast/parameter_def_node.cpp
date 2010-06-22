@@ -1,10 +1,11 @@
 #include "../ast_node.h"
 
-ASTParameterDefNode::ASTParameterDefNode( TokenIterator &_token ) : ASTNode( ASTNode::ParameterDef ) {
+ParameterDefNode::ParameterDefNode( TokenIterator &_token ): 
+  ASTNode( ASTNode::ParameterDef ) {
   token = &(*_token);
 }
 
-void ASTParameterDefNode::Analyse( Scope *_scope ) {
+void ParameterDefNode::Analyse( Scope *_scope ) {
   scope = _scope;
 
   if( scope->HasParameterVariable( Content() )) {

@@ -389,7 +389,7 @@ ASTFunctionCallNode *Parser::MatchMethodInvocation() {
 
 MATCHER_FOR( FunctionDef ) {
   ASTFunctionDefNode *thisNode;
-  ASTParameterDefNode *parameter;
+  ParameterDefNode *parameter;
   ASTNode *functionBody;
   TokenIterator savedCurr = currentToken;
   int must_match = FALSE;
@@ -407,7 +407,7 @@ MATCHER_FOR( FunctionDef ) {
   
   thisNode = new ASTFunctionDefNode;
 
-  while((parameter = MATCH( ParameterDef ))) {
+  while((parameter = MatchParameterDef())) {
     thisNode->AddParameterDef( parameter );
     
     // So if we match a right Parenthesis, that's a complete function call
@@ -454,11 +454,11 @@ MATCHER_FOR( FunctionDef ) {
   }
 }
 
-MATCHER_FOR( ParameterDef ) {
-  ASTParameterDefNode *thisNode;
+ParameterDefNode *Parser::MatchParameterDef() {
+  ParameterDefNode *thisNode;
 
   if (TokenIs( Identifier )) {
-    thisNode = new ASTParameterDefNode( currentToken );
+    thisNode = new ParameterDefNode( currentToken );
     ConsumeToken();
     return thisNode;
   } else {
