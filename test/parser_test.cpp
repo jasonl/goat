@@ -277,7 +277,7 @@ namespace {
     Add( IndentIncrease );
     Add( Identifier, "var"); Add( Equals ); Add( Integer, "23" ); Add( Newline );
     Add( IndentDecrease );
-    ASTConditionalNode *conditional = Parser( tokenStream ).MatchConditional();
+    ConditionalNode *conditional = Parser( tokenStream ).MatchConditional();
     ASSERT_TRUE( conditional );
     EXPECT_EQ( ASTNode::Conditional, conditional->Type() );
     ASSERT_TRUE( conditional->IfBlock() );
@@ -293,7 +293,7 @@ namespace {
     Add( IndentIncrease );
     Add( Identifier, "function" ); Add( LeftParen ); Add( RightParen ); Add(Newline);
     Add( IndentDecrease );
-    ASTConditionalNode *conditional = Parser( tokenStream ).MatchConditional();
+    ConditionalNode *conditional = Parser( tokenStream ).MatchConditional();
 
     ASSERT_TRUE( conditional );
     EXPECT_EQ( ASTNode::Conditional, conditional->Type() );
@@ -309,7 +309,7 @@ namespace {
     Add( Identifier, "var"); Add( Equals ); Add( Integer, "23" ); Add( Newline );
     Add( IndentDecrease ); Add( Else ); Add( Newline );
     Add( Identifier, "function" ); Add( LeftParen ); Add( RightParen ); Add(Newline);
-    ASTConditionalNode *conditional = Parser( tokenStream ).MatchConditional();
+    ConditionalNode *conditional = Parser( tokenStream ).MatchConditional();
 
     ASSERT_FALSE( conditional );
   }

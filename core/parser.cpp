@@ -480,14 +480,14 @@ MATCHER_FOR( Parameter ) {
   return NULL;
 }
 
-MATCHER_FOR( Conditional ) {
-  ASTConditionalNode *thisNode; 
+ConditionalNode *Parser::MatchConditional() {
+  ConditionalNode *thisNode; 
   ASTNode *exprChild;
   BlockNode *ifChild, *elseChild;
   TokenIterator savedCurr = currentToken;
 
   if (TokenIsNot( If )) { return NULL; }
-  thisNode = new ASTConditionalNode;
+  thisNode = new ConditionalNode;
   ConsumeToken();
 
   if (!(int)(exprChild = MATCH( Expression))) {

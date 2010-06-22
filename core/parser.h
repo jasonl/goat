@@ -34,7 +34,7 @@ class Parser {
   INT_MATCHER_PROTOTYPE_FOR( Assignment );
   MATCHER_PROTOTYPE_FOR( MutableAssignment );
   MATCHER_PROTOTYPE_FOR( ImmutableAssignment );
-  MATCHER_PROTOTYPE_FOR( Conditional );
+  ConditionalNode *MatchConditional();
   ASTFunctionCallNode *MatchMethodInvocation();
   INT_MATCHER_PROTOTYPE_FOR( Receiver );
   MATCHER_PROTOTYPE_FOR( ReturnStatement );

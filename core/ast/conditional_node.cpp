@@ -1,26 +1,26 @@
 #include "../ast_node.h"
 
-ASTConditionalNode::ASTConditionalNode() : ASTNode( ASTNode::Conditional ) {
+ConditionalNode::ConditionalNode() : ASTNode( ASTNode::Conditional ) {
   ifBlock = NULL;
   elseBlock = NULL;
 }
 
-void ASTConditionalNode::AddExpression( ASTNode *_expr ) {
+void ConditionalNode::AddExpression( ASTNode *_expr ) {
   append( _expr );
   expression = _expr;
 }
 
-void ASTConditionalNode::AddIfBlock( BlockNode *_ifBlock ) {
+void ConditionalNode::AddIfBlock( BlockNode *_ifBlock ) {
   append( _ifBlock );
   ifBlock = _ifBlock;
 }
 
-void ASTConditionalNode::AddElseBlock( BlockNode *_elseBlock ) {
+void ConditionalNode::AddElseBlock( BlockNode *_elseBlock ) {
   append( _elseBlock );
   elseBlock = _elseBlock;
 }
 
-void ASTConditionalNode::Analyse( Scope *scope ) {
+void ConditionalNode::Analyse( Scope *scope ) {
   ASTIterator end(NULL);
 
   for( ASTIterator i = ChildNodes(); i != end; ++i ) {

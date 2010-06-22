@@ -1,9 +1,9 @@
-#ifndef __AST_CONDITIONAL_NODE_H
-#define __AST_CONDITIONAL_NODE_H
+#ifndef __CONDITIONAL_NODE_H
+#define __CONDITIONAL_NODE_H
 
-class ASTConditionalNode : public ASTNode {
+class ConditionalNode : public ASTNode {
 public:
-  ASTConditionalNode();
+  ConditionalNode();
   void Analyse( Scope* );
   void AddExpression( ASTNode* );
   void AddIfBlock( BlockNode* );
