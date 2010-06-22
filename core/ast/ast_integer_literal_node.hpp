@@ -5,6 +5,7 @@ class ASTIntegerLiteralNode : public ASTNode {
 public:
   ASTIntegerLiteralNode( TokenIterator& );
   void Analyse( Scope * );
+  AssemblyBlock *GenerateCode();
 };
 
 #endif
