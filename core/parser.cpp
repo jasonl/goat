@@ -224,7 +224,7 @@ INT_MATCHER_FOR( Expression ) {
   }
 
   if( TokenIs( Identifier )) {
-    thisNode = new ASTVariableNode( currentToken );
+    thisNode = new VariableNode( currentToken );
     ConsumeToken();
     return thisNode;
   }
@@ -258,7 +258,7 @@ INT_MATCHER_FOR( Receiver ) {
     // Lookahead to determine if this identifier is actually
     // a receiver or a method name
     if (!LookAheadFor( LeftParen )) {
-      thisNode = new ASTVariableNode( currentToken );
+      thisNode = new VariableNode( currentToken );
       ConsumeToken();
       return thisNode;
       }

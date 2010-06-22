@@ -120,6 +120,6 @@ typedef std::list<Token>::iterator TokenIterator;
 #include "ast/ast_source_file_node.hpp"
 #include "ast/ast_string_literal_node.hpp"
 #include "ast/ast_this_node.hpp"
-#include "ast/ast_variable_node.hpp"
+#include "ast/variable_node.h"
 
 #endif
