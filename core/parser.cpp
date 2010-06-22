@@ -387,8 +387,8 @@ ASTFunctionCallNode *Parser::MatchMethodInvocation() {
   }
 }
 
-MATCHER_FOR( FunctionDef ) {
-  ASTFunctionDefNode *thisNode;
+FunctionDefNode *Parser::MatchFunctionDef() {
+  FunctionDefNode *thisNode;
   ParameterDefNode *parameter;
   ASTNode *functionBody;
   TokenIterator savedCurr = currentToken;
@@ -405,7 +405,7 @@ MATCHER_FOR( FunctionDef ) {
   }
   ConsumeToken();
   
-  thisNode = new ASTFunctionDefNode;
+  thisNode = new FunctionDefNode;
 
   while((parameter = MatchParameterDef())) {
     thisNode->AddParameterDef( parameter );

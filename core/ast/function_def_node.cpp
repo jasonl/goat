@@ -8,28 +8,28 @@
   - A Block node, which contains the function's body.
 */
 
-ASTFunctionDefNode::ASTFunctionDefNode() : ASTNode( ASTNode::FunctionDef ) {
+FunctionDefNode::FunctionDefNode() : ASTNode( ASTNode::FunctionDef ) {
   scope = NULL;
 }
 
-ASTFunctionDefNode::~ASTFunctionDefNode() {
+FunctionDefNode::~FunctionDefNode() {
   if( scope ) delete scope;
 }
 
-ASTIterator ASTFunctionDefNode::ParameterDefs() {
+ASTIterator FunctionDefNode::ParameterDefs() {
   return ASTIterator( firstChild );
 }
 
-void ASTFunctionDefNode::AddBody( ASTNode* _body ) {
+void FunctionDefNode::AddBody( ASTNode* _body ) {
   append( _body );
   body = _body;
 }
 
-void ASTFunctionDefNode::AddParameterDef( ASTNode *_param ) {
+void FunctionDefNode::AddParameterDef( ASTNode *_param ) {
   append( _param );
 }
 
-void ASTFunctionDefNode::Analyse( Scope *_scope ) {
+void FunctionDefNode::Analyse( Scope *_scope ) {
   ASTIterator endParams( body ); // body is first node after last ParameterDef
 
   // Create a new lexical scope for the function body

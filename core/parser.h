@@ -25,7 +25,7 @@ class Parser {
   Parser( std::list<Token> &tokenStream) { currentToken = tokenStream.begin(); endToken = tokenStream.end(); }
   ASTNode *Parse();
   INT_MATCHER_PROTOTYPE_FOR( Expression );
-  MATCHER_PROTOTYPE_FOR( FunctionDef );
+  FunctionDefNode *MatchFunctionDef();
   MATCHER_PROTOTYPE_FOR( FunctionCall );
   ParameterNode *MatchParameter();
   ParameterDefNode *MatchParameterDef();
