@@ -8,6 +8,7 @@ public:
   ASTNode *ReturnExpr() { return returnValue; }
   ASTIterator ChildNodes();
   void Analyse( Scope* );
+  AssemblyBlock *GenerateCode();
 private:
   ASTNode *returnValue;
 };

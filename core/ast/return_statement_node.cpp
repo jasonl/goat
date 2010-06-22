@@ -20,4 +20,11 @@ void ReturnStatementNode::Analyse( Scope *_scope ) {
   if(returnValue) returnValue->Analyse( scope );
 }
 
+AssemblyBlock *ReturnStatementNode::GenerateCode() {
+  AssemblyBlock *a = returnValue->GenerateCode();
+  a->POP(ebp);
+  a->RET();
+  return a;
+}
+
 
