@@ -13,3 +13,14 @@ void ASTBlockNode::Analyse( Scope *_scope) {
     i->Analyse( scope );
   }
 }
+
+AssemblyBlock *ASTBlockNode::GenerateCode() {
+  AssemblyBlock *a = new AssemblyBlock;
+  ASTIterator end(NULL);
+
+  for(ASTIterator i = ChildNodes(); i != end; i++) {
+    a->AppendBlock( i->GenerateCode() );
+  }
+
+  return a;
+}

@@ -5,6 +5,7 @@ class ASTBlockNode : public ASTNode {
  public:
   ASTBlockNode();
   void Analyse( Scope* );
+  AssemblyBlock *GenerateCode();
 };
 
 #endif

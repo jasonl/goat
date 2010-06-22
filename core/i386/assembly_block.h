@@ -209,9 +209,9 @@ class AssemblyBlock {
   void XCHG( Operand&, Operand& );
   void XLAT();
   void XOR( Operand&, Operand& );
+  void AppendBlock( AssemblyBlock* );
  private:
   void push_back( Instruction* );
-  void AppendBlock( AssemblyBlock* );
   Instruction *first;
   Instruction *last;
 };
