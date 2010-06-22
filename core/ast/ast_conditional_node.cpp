@@ -10,12 +10,12 @@ void ASTConditionalNode::AddExpression( ASTNode *_expr ) {
   expression = _expr;
 }
 
-void ASTConditionalNode::AddIfBlock( ASTBlockNode *_ifBlock ) {
+void ASTConditionalNode::AddIfBlock( BlockNode *_ifBlock ) {
   append( _ifBlock );
   ifBlock = _ifBlock;
 }
 
-void ASTConditionalNode::AddElseBlock( ASTBlockNode *_elseBlock ) {
+void ASTConditionalNode::AddElseBlock( BlockNode *_elseBlock ) {
   append( _elseBlock );
   elseBlock = _elseBlock;
 }

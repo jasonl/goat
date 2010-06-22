@@ -202,7 +202,9 @@ class AssemblyBlock {
   void STOSD();
   void STR( Operand& );
   void SUB( Operand&, Operand& );
+  #ifndef TEST
   void TEST( Operand&, Operand& );
+  #endif
   void VERR( Operand& );
   void VERW( Operand& );
   void WAIT();

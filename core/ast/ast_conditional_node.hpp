@@ -6,14 +6,14 @@ public:
   ASTConditionalNode();
   void Analyse( Scope* );
   void AddExpression( ASTNode* );
-  void AddIfBlock( ASTBlockNode* );
-  void AddElseBlock( ASTBlockNode* );
+  void AddIfBlock( BlockNode* );
+  void AddElseBlock( BlockNode* );
   ASTNode *Expression() { return expression; }
-  ASTBlockNode *IfBlock() { return ifBlock; }
-  ASTBlockNode *ElseBlock() { return elseBlock; }
+  BlockNode *IfBlock() { return ifBlock; }
+  BlockNode *ElseBlock() { return elseBlock; }
 private:
   ASTNode *expression;
-  ASTBlockNode *elseBlock, *ifBlock;
+  BlockNode *elseBlock, *ifBlock;
 };
 
 #endif

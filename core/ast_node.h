@@ -98,7 +98,7 @@ public:
 typedef std::list<Token>::iterator TokenIterator;
 
 // Include the derived classes here for convenience
-#include "ast/ast_block_node.hpp"
+#include "ast/block_node.h"
 #include "ast/ast_class_definition_node.hpp"
 #include "ast/ast_conditional_node.hpp"
 #include "ast/ast_direct_operand_node.hpp"

@@ -30,7 +30,7 @@ class Parser {
   MATCHER_PROTOTYPE_FOR( Parameter );
   MATCHER_PROTOTYPE_FOR( ParameterDef );
   INT_MATCHER_PROTOTYPE_FOR( Statement );
-  MATCHER_PROTOTYPE_FOR( Block );
+  BlockNode *MatchBlock();
   INT_MATCHER_PROTOTYPE_FOR( Assignment );
   MATCHER_PROTOTYPE_FOR( MutableAssignment );
   MATCHER_PROTOTYPE_FOR( ImmutableAssignment );

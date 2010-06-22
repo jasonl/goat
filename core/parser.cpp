@@ -127,14 +127,14 @@ bool Parser::TokenIsNot( TokenType type ) {
 }
 
 // Matches a block - a group of statements with a common indent
-MATCHER_FOR( Block ) {
-  ASTBlockNode *thisNode = NULL;
+BlockNode *Parser::MatchBlock() {
+  BlockNode *thisNode = NULL;
   ASTNode *newChild = NULL;
     
   if(TokenIsNot( IndentIncrease )) { return NULL; }
   ConsumeToken();
 
-  thisNode = new ASTBlockNode();
+  thisNode = new BlockNode();
 
   // Match at least one statement
   if((newChild = MATCH(Statement)) || TokenIs(Newline)) {
@@ -443,7 +443,7 @@ MATCHER_FOR( FunctionDef ) {
   }
   ConsumeToken();
   
-  if ((int)(functionBody = MATCH( Block ))) {
+  if ((functionBody = MatchBlock())) {
     thisNode->AddBody(functionBody);
     return thisNode;  
   } else {
@@ -483,7 +483,7 @@ MATCHER_FOR( Parameter ) {
 MATCHER_FOR( Conditional ) {
   ASTConditionalNode *thisNode; 
   ASTNode *exprChild;
-  ASTBlockNode *ifChild, *elseChild;
+  BlockNode *ifChild, *elseChild;
   TokenIterator savedCurr = currentToken;
 
   if (TokenIsNot( If )) { return NULL; }
@@ -507,7 +507,7 @@ MATCHER_FOR( Conditional ) {
   ConsumeToken();
 
   // Match the block to be run if the condition executes to true
-  if(!(int)(ifChild = MATCH( Block ))) {
+  if(!(ifChild = MatchBlock())) {
     goatError(CurrentSourcePosition(), "Unexpected token %s found after if keyword.", TOKEN_TYPES[currentToken->Type()]);
     delete thisNode;
     ResetTokenPosition( savedCurr );
@@ -529,7 +529,7 @@ MATCHER_FOR( Conditional ) {
   }
   ConsumeToken();
 
-  if (!(elseChild = MATCH( Block ))) {
+  if (!(elseChild = MatchBlock())) {
     goatError(CurrentSourcePosition(), "Unexpected token %s found after else keyword.", TOKEN_TYPES[currentToken->Type()]);
     delete thisNode;
     ResetTokenPosition( savedCurr );

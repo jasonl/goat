@@ -1,10 +1,18 @@
 #include "../ast_node.h"
 
-ASTBlockNode::ASTBlockNode() : ASTNode( ASTNode::Block ) {
+/*
+ * BlockNode
+ *
+ * AST-Node represeting a block, which is simply a group of statements.
+ * Note that a block does not create a new lexical scope
+ * 
+ */
+
+BlockNode::BlockNode() : ASTNode( ASTNode::Block ) {
   
 }
 
-void ASTBlockNode::Analyse( Scope *_scope) {
+void BlockNode::Analyse( Scope *_scope) {
   ASTIterator end(NULL);
 
   scope = _scope;
@@ -14,7 +22,7 @@ void ASTBlockNode::Analyse( Scope *_scope) {
   }
 }
 
-AssemblyBlock *ASTBlockNode::GenerateCode() {
+AssemblyBlock *BlockNode::GenerateCode() {
   AssemblyBlock *a = new AssemblyBlock;
   ASTIterator end(NULL);
 
