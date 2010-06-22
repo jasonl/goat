@@ -27,7 +27,7 @@ class Parser {
   INT_MATCHER_PROTOTYPE_FOR( Expression );
   MATCHER_PROTOTYPE_FOR( FunctionDef );
   MATCHER_PROTOTYPE_FOR( FunctionCall );
-  MATCHER_PROTOTYPE_FOR( Parameter );
+  ParameterNode *MatchParameter();
   MATCHER_PROTOTYPE_FOR( ParameterDef );
   INT_MATCHER_PROTOTYPE_FOR( Statement );
   BlockNode *MatchBlock();

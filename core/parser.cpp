@@ -466,13 +466,13 @@ MATCHER_FOR( ParameterDef ) {
   }
 }
 
-MATCHER_FOR( Parameter ) {
-  ASTParameterNode *thisNode;
+ParameterNode *Parser::MatchParameter() {
+  ParameterNode *thisNode;
   ASTNode *newChild;
 
   //TODO: Add matching for named parameters
   if(( newChild = MATCH( Expression ))) {
-    thisNode = new ASTParameterNode;
+    thisNode = new ParameterNode;
     thisNode->append(newChild);
     return thisNode;
   }
