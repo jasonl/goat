@@ -176,7 +176,7 @@ INT_MATCHER_FOR( Statement )
      (thisNode = MATCH( Conditional )) ||
      (thisNode = MATCH( InlineAssembly )) ||
      (thisNode = MATCH( ClassDefinition )) ||
-     (thisNode = MATCH( ReturnStatement))) {   
+     (thisNode = MatchReturnStatement())) {   
     return thisNode;
   }
 
@@ -605,8 +605,8 @@ MATCHER_FOR( ImmutableAssignment ) {
   return NULL;
 }
 
-MATCHER_FOR( ReturnStatement ) {
-  ASTReturnStatementNode *thisNode;
+ReturnStatementNode *Parser::MatchReturnStatement() {
+  ReturnStatementNode *thisNode;
   ASTNode *returnExpr;
 
   if( TokenIsNot( Return )) {
@@ -614,7 +614,7 @@ MATCHER_FOR( ReturnStatement ) {
   }
   ConsumeToken();
 
-  thisNode = new ASTReturnStatementNode;
+  thisNode = new ReturnStatementNode;
 
   if(!(returnExpr = MATCH( Expression ))){
     returnExpr = new ASTNullLiteralNode;

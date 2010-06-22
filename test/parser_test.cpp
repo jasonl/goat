@@ -325,7 +325,7 @@ namespace {
   TEST_F( ParserTest, ShouldMatchReturnStatement ) {
     Add( Return ); 
     Add( Identifier, "a" ); Add( Identifier, "+" ); Add( Identifier, "b" );
-    ASTReturnStatementNode *returnStatement = Parser( tokenStream ).MatchReturnStatement();
+    ReturnStatementNode *returnStatement = Parser( tokenStream ).MatchReturnStatement();
     ASSERT_TRUE( returnStatement );
     EXPECT_EQ( ASTNode::ReturnStatement, returnStatement->Type() );
 
@@ -335,7 +335,7 @@ namespace {
 
   TEST_F( ParserTest, ShouldAddNullLiteralToEmptyReturnStatement ) {
     Add( Return ); Add( Newline );
-    ASTReturnStatementNode *returnStatement = Parser( tokenStream ).MatchReturnStatement();
+    ReturnStatementNode *returnStatement = Parser( tokenStream ).MatchReturnStatement();
     ASSERT_TRUE( returnStatement );
     EXPECT_EQ( ASTNode::ReturnStatement, returnStatement->Type() );
 

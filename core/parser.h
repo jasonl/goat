@@ -37,7 +37,7 @@ class Parser {
   ConditionalNode *MatchConditional();
   ASTFunctionCallNode *MatchMethodInvocation();
   INT_MATCHER_PROTOTYPE_FOR( Receiver );
-  MATCHER_PROTOTYPE_FOR( ReturnStatement );
+  ReturnStatementNode *MatchReturnStatement();
   MATCHER_PROTOTYPE_FOR( ClassDefinition ); 
   // Assembly Language Matchers
   MATCHER_PROTOTYPE_FOR( InlineAssembly );

@@ -1,9 +1,9 @@
-#ifndef __AST_RETURN_STATEMENT_NODE_H
-#define __AST_RETURN_STATEMENT_NODE_H
+#ifndef __RETURN_STATEMENT_NODE_H
+#define __RETURN_STATEMENT_NODE_H
 
-class ASTReturnStatementNode : public ASTNode {
+class ReturnStatementNode : public ASTNode {
 public:
-  ASTReturnStatementNode();
+  ReturnStatementNode();
   void SetReturnValue( ASTNode* );
   ASTNode *ReturnExpr() { return returnValue; }
   ASTIterator ChildNodes();
