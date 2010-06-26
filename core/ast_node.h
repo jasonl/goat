@@ -95,6 +95,8 @@ public:
   ASTNode* operator->() { return p; }
 };
 
+
+
 typedef std::list<Token>::iterator TokenIterator;
 
 #include "ast/operand_node.h"
