@@ -2,6 +2,10 @@
 #include "../lexer.h"
 
 ASTDirectOperandNode::ASTDirectOperandNode( TokenIterator &_token ): 
-  ASTNode( ASTNode::DirectOperand ) {
+  OperandNode( ASTNode::DirectOperand ) {
   token = &(*_token);
+}
+
+Operand *ASTDirectOperandNode::GenerateOperand() {
+  return NULL;
 }

@@ -2,6 +2,6 @@
 #include "../lexer.h"
 
 ASTImmediateOperandNode::ASTImmediateOperandNode( TokenIterator &_token ) : 
-  ASTNode( ASTNode::ImmediateOperand ) {
+  OperandNode( ASTNode::ImmediateOperand ) {
   token = &(*_token);
 }
