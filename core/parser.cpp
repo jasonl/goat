@@ -78,7 +78,7 @@ const char *TOKEN_TYPES[]={ "RightParen", "LeftParen", "Lambda", "Colon", "Perio
 };
 
 ASTNode * Parser::Parse() {
-  ASTNode *astRoot = new ASTSourceFileNode;
+  ASTNode *astRoot = new SourceFileNode;
   ASTNode *newChild;
 
   // Remove any leading newlines - e.g. from comments
