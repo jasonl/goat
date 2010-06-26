@@ -59,7 +59,7 @@ File.open( ins_h, "r" ).each_line do |l|
   end
   a_c.write " " unless num_operands == 0
   a_c.write ") \{\n"
-  a_c.write "  this->push_back( new Instruction(\""
+  a_c.write "  AppendInstruction( new Instruction(\""
   a_c.write operand_name
   a_c.write "\""
   a_c.write ", " unless num_operands == 0
@@ -72,9 +72,9 @@ File.open( ins_h, "r" ).each_line do |l|
 end
 
 a_h.write <<-PROTOTYPES
- private:
-  void push_back( Instruction* );
   void AppendBlock( AssemblyBlock* );
+  void AppendInstruction( Instruction* );
+ private:
   Instruction *first;
   Instruction *last;
 PROTOTYPES
@@ -95,6 +95,15 @@ a_c.write <<-DEFINITIONS
     last->next = ab->first;
     last = ab->last;
     delete ab;
+  }
+
+  void AssemblyBlock::AppendInstruction( Instruction *i ) {
+    if(first == NULL ) {
+      first = i;
+    } else {
+      last->next = i;
+    }
+    last = i;
   }
 DEFINITIONS
 
