@@ -13,8 +13,8 @@ method_cache = {}
 a_c = File.open( assembly_c, "w")
 a_h = File.open( assembly_h, "w")
 
-a_c.write "\#include \"operand.h\"\n"
-a_c.write "\#include \"instruction.h\"\n"
+a_h.write "\#include \"operand.h\"\n"
+a_h.write "\#include \"instruction.h\"\n"
 a_c.write "\#include \"assembly_block.h\"\n\n"
 
 a_h.write "class AssemblyBlock \{\n"
@@ -64,7 +64,7 @@ File.open( ins_h, "r" ).each_line do |l|
   a_c.write "\""
   a_c.write ", " unless num_operands == 0
   num_operands.times do |n|
-    a_c.write "op" + (n+1).to_s
+    a_c.write "&op" + (n+1).to_s
     a_c.write ", " unless n+1 == num_operands
   end
   a_c.write ") );\n"
@@ -80,16 +80,6 @@ a_h.write <<-PROTOTYPES
 PROTOTYPES
 
 a_c.write <<-DEFINITIONS
-  void AssemblyBlock::push_back( Instruction* i ) {
-    if(!first) {
-      first = i;
-      last = i;
-    } else {
-      last->next = i;
-      last = i;
-    }
-  }  
-
   void AssemblyBlock::AppendBlock( AssemblyBlock *ab ) {
     if( ab->first == NULL || ab->last == NULL ) { return; }
     last->next = ab->first;

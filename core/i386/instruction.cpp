@@ -8,27 +8,27 @@ Instruction::Instruction( std::string _mnemonic ) {
   next = NULL;
 }
 
-Instruction::Instruction( std::string _mnemonic, Operand& op1 ) {
+Instruction::Instruction( std::string _mnemonic, Operand *op1 ) {
   mnemonic = _mnemonic;
-  operand1 = &op1;
-  operand2 = 0;
-  operand3 = 0;
+  operand1 = op1;
+  operand2 = NULL;
+  operand3 = NULL;
 }
 
-Instruction::Instruction( std::string _mnemonic,  Operand& op1,
-			  Operand& op2 ) {
+Instruction::Instruction( std::string _mnemonic,  Operand *op1,
+			  Operand *op2 ) {
   mnemonic = _mnemonic;
-  operand1 = &op1;
-  operand2 = &op2;
-  operand3 = 0;
+  operand1 = op1;
+  operand2 = op2;
+  operand3 = NULL;
 }
 
-Instruction::Instruction( std::string _mnemonic, Operand& op1, 
-			  Operand& op2, Operand& op3 ) {
+Instruction::Instruction( std::string _mnemonic, Operand* op1, 
+			  Operand* op2, Operand* op3 ) {
   mnemonic = _mnemonic;
-  operand1 = &op1;
-  operand2 = &op2;
-  operand3 = &op3;
+  operand1 = op1;
+  operand2 = op2;
+  operand3 = op3;
 }
 
 Instruction::~Instruction() {

@@ -24,5 +24,7 @@ AssemblyBlock *InstructionNode::GenerateCode() {
     j++;
   }
 
+  ins = new ::Instruction( Content(), operands[0], operands[1], operands[2]);
+  a->AppendInstruction(ins);
   return a;
 }

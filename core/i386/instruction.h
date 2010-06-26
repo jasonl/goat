@@ -10,9 +10,9 @@ class Instruction {
   friend class AssemblyBlock;
 public:
   Instruction(std::string);
-  Instruction(std::string, Operand& );
-  Instruction(std::string, Operand&, Operand&);
-  Instruction(std::string, Operand&, Operand&, Operand&);
+  Instruction(std::string, Operand* );
+  Instruction(std::string, Operand*, Operand*);
+  Instruction(std::string, Operand*, Operand*, Operand*);
   ~Instruction();
 private:
   AsmLabel *label;

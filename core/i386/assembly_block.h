@@ -1,7 +1,7 @@
+#include "operand.h"
 #include "instruction.h"
-
 class AssemblyBlock {
- public:
+public:
   void AAA();
   void AAD();
   void AAM();
@@ -202,9 +202,7 @@ class AssemblyBlock {
   void STOSD();
   void STR( Operand& );
   void SUB( Operand&, Operand& );
-  #ifndef TEST
   void TEST( Operand&, Operand& );
-  #endif
   void VERR( Operand& );
   void VERW( Operand& );
   void WAIT();
@@ -214,7 +212,6 @@ class AssemblyBlock {
   void AppendBlock( AssemblyBlock* );
   void AppendInstruction( Instruction* );
  private:
-  void push_back( Instruction* );
   Instruction *first;
   Instruction *last;
 };
