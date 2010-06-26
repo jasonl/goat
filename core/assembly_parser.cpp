@@ -10,7 +10,7 @@ extern const char *TOKEN_TYPES[];
 MATCHER_FOR( InlineAssembly ) {
   TokenIterator savedPos = currentToken;
   ASTInlineAssemblyNode *thisNode = NULL;
-  ASTInstructionNode *instruction = NULL;
+  InstructionNode *instruction = NULL;
 
   if( TokenIsNot(Asm) ) {
     return NULL;
@@ -52,11 +52,11 @@ MATCHER_FOR( InlineAssembly ) {
   return thisNode;
 }
 
-MATCHER_FOR( Instruction ) {
+InstructionNode *Parser::MatchInstruction() {
   TokenIterator savedPos = currentToken;
   ASTLabelNode *label = NULL;
   ASTNode *operand = NULL;
-  ASTInstructionNode *thisNode = NULL;
+  InstructionNode *thisNode = NULL;
   bool must_match = false;
 
   if( TokenIs(Label) ) {
@@ -65,7 +65,7 @@ MATCHER_FOR( Instruction ) {
     
     // When a 
     if( TokenIs(Newline) ) {
-      thisNode = new ASTInstructionNode( currentToken );
+      thisNode = new InstructionNode( currentToken );
       thisNode->AppendChild( label );
       ConsumeToken();
       return thisNode;
@@ -73,7 +73,7 @@ MATCHER_FOR( Instruction ) {
   }
 
   if( TokenIs(Identifier) ) {
-    thisNode = new ASTInstructionNode( currentToken );
+    thisNode = new InstructionNode( currentToken );
     ConsumeToken();
 
     if( label ) thisNode->AppendChild( label );
