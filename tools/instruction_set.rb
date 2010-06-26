@@ -13,6 +13,11 @@ method_cache = {}
 a_c = File.open( assembly_c, "w")
 a_h = File.open( assembly_h, "w")
 
+a_h.write '#ifndef __ASSEMBLY_BLOCK_H'
+a_h.write "\n"
+a_h.write '#define __ASSEMBLY_BLOCK_H'
+a_h.write "\n"
+
 a_h.write "\#include \"operand.h\"\n"
 a_h.write "\#include \"instruction.h\"\n"
 a_c.write "\#include \"assembly_block.h\"\n\n"
@@ -74,6 +79,7 @@ end
 a_h.write <<-PROTOTYPES
   void AppendBlock( AssemblyBlock* );
   void AppendInstruction( Instruction* );
+  InstructionIterator Instructions() { return InstructionIterator( first ); }
  private:
   Instruction *first;
   Instruction *last;
@@ -98,6 +104,7 @@ a_c.write <<-DEFINITIONS
 DEFINITIONS
 
 a_h.write "};\n"
+a_h.write '#endif'
 
 a_h.close
 a_c.close

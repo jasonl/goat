@@ -18,6 +18,7 @@ class ASTNode;
 #define VERBOSE_TOKENS 0x01
 #define VERBOSE_AST 0x02
 #define VERBOSE_SCOPES 0x04
+#define VERBOSE_ASM 0x08
 
 std::string parseCommandLine( int, char**, int*);
 void goatFatalError( std::string );

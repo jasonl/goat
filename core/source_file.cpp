@@ -17,6 +17,7 @@ SourceFile::SourceFile( std::string _fileName ) {
   fileName = _fileName;
   astRoot = NULL;
   lobby = NULL;
+  assembly = NULL;
   indentStack.push(0);
 }
 
@@ -71,6 +72,14 @@ void SourceFile::Analyse() {
 
   if( astRoot ) {
     astRoot->Analyse( lobby );
+  } else {
+    std::cerr << "No Abstract Syntax Tree was built from this source file";
+  }
+}
+
+void SourceFile::GenerateCode() {
+  if( astRoot ) {
+    assembly = astRoot->GenerateCode();
   } else {
     std::cerr << "No Abstract Syntax Tree was built from this source file";
   }
@@ -139,5 +148,15 @@ void SourceFile::PrintAST() {
     astRoot->print( 0, 0, prev_cols );
   } else {
     std::cout << "No AST Nodes found.\n";
+  }
+}
+
+void SourceFile::PrintAsm() {
+  InstructionIterator end(NULL);
+
+  if( assembly ) {
+    for(InstructionIterator i = assembly->Instructions(); i != end; i++) {
+      std::cout << *i << "\n";
+    }
   }
 }

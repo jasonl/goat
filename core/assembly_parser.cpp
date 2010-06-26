@@ -55,7 +55,7 @@ MATCHER_FOR( InlineAssembly ) {
 InstructionNode *Parser::MatchInstruction() {
   TokenIterator savedPos = currentToken;
   ASTLabelNode *label = NULL;
-  ASTNode *operand = NULL;
+  OperandNode *operand = NULL;
   InstructionNode *thisNode = NULL;
   bool must_match = false;
 
@@ -79,7 +79,7 @@ InstructionNode *Parser::MatchInstruction() {
     if( label ) thisNode->AppendChild( label );
 
     while((operand = MATCH(Operand))) {
-      thisNode->AppendChild( operand );
+      thisNode->AppendOperand( operand );
 
       if( TokenIs(Comma) ) {
 	must_match = true;
@@ -107,8 +107,8 @@ InstructionNode *Parser::MatchInstruction() {
   }
 }
 
-INT_MATCHER_FOR( Operand ) {
-  ASTNode *thisNode = NULL;
+OperandNode *Parser::MatchOperand() {
+  OperandNode *thisNode = NULL;
   if((thisNode = MATCH(DirectOperand)) ||
      (thisNode = MATCH(IndirectOperand)) ||
      (thisNode = MATCH(ImmediateOperand))) {

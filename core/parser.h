@@ -42,7 +42,7 @@ class Parser {
   // Assembly Language Matchers
   MATCHER_PROTOTYPE_FOR( InlineAssembly );
   InstructionNode* MatchInstruction();
-  INT_MATCHER_PROTOTYPE_FOR( Operand );
+  OperandNode *MatchOperand();
   MATCHER_PROTOTYPE_FOR( DirectOperand );
   MATCHER_PROTOTYPE_FOR( ImmediateOperand );
   MATCHER_PROTOTYPE_FOR( IndirectOperand );

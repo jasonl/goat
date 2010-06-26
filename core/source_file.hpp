@@ -5,6 +5,7 @@
 #include <list>
 #include <stack>
 #include "token.hpp"
+#include "i386/assembly_block.h"
 
 class ASTNode;
 class Scope;
@@ -17,8 +18,10 @@ public:
   void Tokenize();
   void Parse();
   void Analyse();
+  void GenerateCode();
   void PrintTokens();
   void PrintAST();
+  void PrintAsm();
   std::list<Token>& GetTokenStream() { return tokenStream; }
   std::stack<int> indentStack;
 private:
@@ -26,6 +29,7 @@ private:
   std::list<Token> tokenStream;
   ASTNode *astRoot;
   Scope *lobby;
+  AssemblyBlock *assembly;
 };
 
 #endif

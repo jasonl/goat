@@ -5,6 +5,7 @@ class ASTInlineAssemblyNode : public ASTNode {
  public:
   ASTInlineAssemblyNode();
   void Analyse( Scope* );
+  AssemblyBlock *GenerateCode();
 };
 
 #endif

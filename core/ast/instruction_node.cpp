@@ -5,6 +5,8 @@
 InstructionNode::InstructionNode( TokenIterator &_token ): 
   ASTNode( ASTNode::Instruction ) {
   token = &(*_token);
+  lastOperand = NULL;
+  firstOperand = NULL;
 }
 
 AssemblyBlock *InstructionNode::GenerateCode() {
@@ -27,4 +29,17 @@ AssemblyBlock *InstructionNode::GenerateCode() {
   ins = new ::Instruction( Content(), operands[0], operands[1], operands[2]);
   a->AppendInstruction(ins);
   return a;
+}
+
+void InstructionNode::AppendOperand( OperandNode *op ) {
+
+  AppendChild( op );
+
+  if( !firstOperand || !lastOperand ) {
+    firstOperand = op;
+    lastOperand = op;
+  } else {
+    lastOperand->nextOperand = op;
+    lastOperand = op;
+  }
 }

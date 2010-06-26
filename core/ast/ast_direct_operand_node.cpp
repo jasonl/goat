@@ -10,7 +10,7 @@ ASTDirectOperandNode::ASTDirectOperandNode( TokenIterator &_token ):
 // lower case registers - eax not EAX
 Operand *ASTDirectOperandNode::GenerateOperand() {
   std::string reg = Content();
-
+  
   if( tolower(reg[0]) == 'e' && reg.length() == 3) {
     if( reg == "eax" ) return &eax;
     if( reg == "ebx" ) return &ebx;

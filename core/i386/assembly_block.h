@@ -1,3 +1,5 @@
+#ifndef __ASSEMBLY_BLOCK_H
+#define __ASSEMBLY_BLOCK_H
 #include "operand.h"
 #include "instruction.h"
 class AssemblyBlock {
@@ -211,7 +213,9 @@ public:
   void XOR( Operand&, Operand& );
   void AppendBlock( AssemblyBlock* );
   void AppendInstruction( Instruction* );
+  InstructionIterator Instructions() { return InstructionIterator( first ); }
  private:
   Instruction *first;
   Instruction *last;
 };
+#endif

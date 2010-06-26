@@ -1,6 +1,7 @@
 #ifndef OPERAND_H
 #define OPERAND_H
 
+#include <iostream>
 #include <stdint.h>
 
 typedef uint32_t Register;
@@ -27,7 +28,7 @@ public:
   Operand& operator-(const int32_t);
   Operand& operator*(const uint8_t);
   bool isPrototype();
-
+  friend std::ostream& operator<<( std::ostream&, const Operand& );
  private:
   OperandType type;
   OperandSize size;

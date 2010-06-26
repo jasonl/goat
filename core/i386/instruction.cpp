@@ -31,6 +31,14 @@ Instruction::Instruction( std::string _mnemonic, Operand* op1,
   operand3 = op3;
 }
 
+std::ostream& operator<<( std::ostream &stream, const Instruction &ins ) {
+  stream << ins.mnemonic;
+  if( ins.operand1 ) stream << " " << *ins.operand1;
+  if( ins.operand2 ) stream << ", " << *ins.operand2;
+  if( ins.operand3 ) stream << ", " << *ins.operand3;
+  return stream;
+} 
+
 Instruction::~Instruction() {
   if (operand1->isPrototype()) delete operand1;
   if (operand2->isPrototype()) delete operand2;

@@ -37,6 +37,9 @@ int main(int argc, char** argv) {
 
   sourceFile->Analyse();
 
+  sourceFile->GenerateCode();
+  if( verbose & VERBOSE_ASM ) sourceFile->PrintAsm();
+
   delete sourceFile;
   return EXIT_SUCCESS;
 }
@@ -100,6 +103,10 @@ std::string parseCommandLine( int argc, char *argv[], int *verbose) {
 	  case 's':
 	    *verbose |= VERBOSE_SCOPES;
 	    break;
+	case 'm':
+	case 'M':
+	  *verbose |= VERBOSE_ASM;
+	break;
 	  }
 	break;
       default:

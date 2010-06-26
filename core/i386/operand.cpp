@@ -3,8 +3,8 @@
 #include "instructions.h"
 #include "operand.h"
 
-
-using namespace std;
+// Function Declarations
+std::string RegisterName( Register );
 
 // Indirect Memory Operand operator
 const Operand _ = Operand( Operand::Null );
@@ -202,6 +202,49 @@ Operand &Byte( uint8_t _value ) {
 Operand &Word( uint16_t _value ) {
   return *new Operand( _value, Operand::Byte );
 }
+
 Operand &Dword( uint32_t _value ) {
   return *new Operand( _value, Operand::Byte );
+}
+
+// Stream helper for outputting the assembly code
+std::ostream &operator<<(std::ostream& stream, const Operand& op) {
+  switch( op.type ) {
+  case Operand::Direct:
+    stream << RegisterName( op.base );
+    break;
+  default:
+    stream << "NYI"; // Not Yet Implemented!
+  }
+  return stream;
+}
+
+std::string RegisterName( const Register reg ) {
+  switch( reg ) {
+  case EAX: return "eax";
+  case EBX: return "ebx";
+  case ECX: return "ecx";
+  case EDX: return "edx";
+  case ESI: return "esi";
+  case EDI: return "edi";
+  case ESP: return "esp";
+  case EBP: return "ebp";
+  case AX: return "ax";
+  case BX: return "bx";
+  case CX: return "cx";
+  case DX: return "dx";
+  case SI: return "si";
+  case DI: return "di";
+  case SP: return "sp";
+  case BP: return "bp";
+  case AL: return "al";
+  case AH: return "ah";
+  case BL: return "bl";
+  case BH: return "bh";
+  case CL: return "cl";
+  case CH: return "ch";
+  case DL: return "dl";
+  case DH: return "dh";
+  default: return "xxx";
+  }
 }

@@ -2,11 +2,13 @@
 #define __INSTRUCTION_NODE
 
 class InstructionNode : public ASTNode {
-  OperandNode *firstChild;
+  OperandNode *firstOperand;
+  OperandNode *lastOperand;
 public:
   InstructionNode( TokenIterator& );
   AssemblyBlock *GenerateCode();
-  OperandIterator Operands() { return OperandIterator(firstChild); }
+  void AppendOperand( OperandNode* );
+  OperandIterator Operands() { return OperandIterator(firstOperand); }
 };
 
 #endif
