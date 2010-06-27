@@ -111,7 +111,7 @@ OperandNode *Parser::MatchOperand() {
   OperandNode *thisNode = NULL;
   if((thisNode = MATCH(DirectOperand)) ||
      (thisNode = MATCH(IndirectOperand)) ||
-     (thisNode = MATCH(ImmediateOperand))) {
+     (thisNode = MatchImmediateOperand())) {
     return thisNode;
   }
   return NULL;
@@ -126,10 +126,10 @@ MATCHER_FOR( DirectOperand ) {
   return thisNode;
 }
 
-MATCHER_FOR( ImmediateOperand ) {
-  ASTImmediateOperandNode *thisNode = NULL;
+ImmediateOperandNode *Parser::MatchImmediateOperand() {
+  ImmediateOperandNode *thisNode = NULL;
   if( TokenIs(Integer) ) {
-    thisNode = new ASTImmediateOperandNode( currentToken );
+    thisNode = new ImmediateOperandNode( currentToken );
     ConsumeToken();
   }
   return thisNode;

@@ -2,11 +2,11 @@
 #include "../ast_node.h"
 #include "../lexer.h"
 
-ASTImmediateOperandNode::ASTImmediateOperandNode( TokenIterator &_token ) : 
+ImmediateOperandNode::ImmediateOperandNode( TokenIterator &_token ) : 
   OperandNode( ASTNode::ImmediateOperand ) {
   token = &(*_token);
 }
 
-Operand *ASTImmediateOperandNode::GenerateOperand() {
+Operand *ImmediateOperandNode::GenerateOperand() {
   return new Operand( atol(Content().c_str()), Operand::Dword );
 }
