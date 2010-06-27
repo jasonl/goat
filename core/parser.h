@@ -43,7 +43,7 @@ class Parser {
   MATCHER_PROTOTYPE_FOR( InlineAssembly );
   InstructionNode* MatchInstruction();
   OperandNode *MatchOperand();
-  MATCHER_PROTOTYPE_FOR( DirectOperand );
+  DirectOperandNode *MatchDirectOperand();
   ImmediateOperandNode *MatchImmediateOperand();
   MATCHER_PROTOTYPE_FOR( IndirectOperand );
   MATCHER_PROTOTYPE_FOR( IndirectOperandTerm );

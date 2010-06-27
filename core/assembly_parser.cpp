@@ -117,10 +117,10 @@ OperandNode *Parser::MatchOperand() {
   return NULL;
 }
 
-MATCHER_FOR( DirectOperand ) {
-  ASTDirectOperandNode *thisNode = NULL;
+DirectOperandNode *Parser::MatchDirectOperand() {
+  DirectOperandNode *thisNode = NULL;
   if( TokenIs(Identifier) ) {
-    thisNode = new ASTDirectOperandNode( currentToken );
+    thisNode = new DirectOperandNode( currentToken );
     ConsumeToken();
   }
   return thisNode;
@@ -187,7 +187,7 @@ MATCHER_FOR( IndirectOperandTerm ) {
     thisNode->AppendChild( value );
     return thisNode;
   } else if ( TokenIs(Identifier) ) {
-    value = new ASTDirectOperandNode( currentToken );
+    value = new DirectOperandNode( currentToken );
     ConsumeToken();
     thisNode->AppendChild( value );
     return thisNode;
