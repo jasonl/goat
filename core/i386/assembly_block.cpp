@@ -829,9 +829,16 @@ void AssemblyBlock::XOR( Operand &op1, Operand &op2 ) {
 }
 
   void AssemblyBlock::AppendBlock( AssemblyBlock *ab ) {
-    if( ab->first == NULL || ab->last == NULL ) { return; }
-    last->next = ab->first;
-    last = ab->last;
+    if( ab == NULL || ab->first == NULL || ab->last == NULL ) return; 
+
+    if( last ) {
+      last->next = ab->first;
+      last = ab->last;
+    } else {
+      first = ab->first;
+      last = ab->last;
+    }
+
     delete ab;
   }
 
