@@ -200,11 +200,11 @@ Operand &Byte( uint8_t _value ) {
 }
 
 Operand &Word( uint16_t _value ) {
-  return *new Operand( _value, Operand::Byte );
+  return *new Operand( _value, Operand::Word );
 }
 
 Operand &Dword( uint32_t _value ) {
-  return *new Operand( _value, Operand::Byte );
+  return *new Operand( _value, Operand::Dword );
 }
 
 // Stream helper for outputting the assembly code
@@ -213,12 +213,16 @@ std::ostream &operator<<(std::ostream& stream, const Operand& op) {
   case Operand::Direct:
     stream << RegisterName( op.base );
     break;
+  case Operand::Immediate:
+    stream << std::showbase << std::hex << op.value;
+    break;
   default:
     stream << "NYI"; // Not Yet Implemented!
   }
   return stream;
 }
 
+// Returns a string with the register name based on the register value
 std::string RegisterName( const Register reg ) {
   switch( reg ) {
   case EAX: return "eax";

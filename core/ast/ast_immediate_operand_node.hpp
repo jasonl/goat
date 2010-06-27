@@ -4,6 +4,7 @@
 class ASTImmediateOperandNode : public OperandNode {
 public:
   ASTImmediateOperandNode( TokenIterator& );
+  Operand *GenerateOperand();
 };
 
 #endif
