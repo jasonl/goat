@@ -2,4 +2,5 @@ goat
 goat.dSYM/*
 goat-test
 *.o
+*.cpp~
 nbproject/*
