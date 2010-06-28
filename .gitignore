@@ -1,4 +1,5 @@
 goat
+goat.dSYM/*
 goat-test
 *.o
 nbproject/*
