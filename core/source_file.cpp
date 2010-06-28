@@ -2,7 +2,6 @@
 #include <iostream>
 #include <cstdio>
 #include <fcntl.h>
-#include "malloc.h" // For free -- TO BE REMOVED
 #include <cstring> // For memset
 #include <sys/mman.h> // For mmap
 #include <sys/stat.h>
