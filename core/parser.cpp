@@ -218,7 +218,7 @@ INT_MATCHER_FOR( Expression ) {
   }
 
   if( TokenIs( Integer )) {
-    thisNode = new ASTIntegerLiteralNode( currentToken );
+    thisNode = new IntegerLiteralNode( currentToken );
     ConsumeToken();
     return thisNode;
   }
@@ -271,7 +271,7 @@ INT_MATCHER_FOR( Receiver ) {
   }
 
   if (TokenIs( Integer )) {
-    thisNode = new ASTIntegerLiteralNode( currentToken );
+    thisNode = new IntegerLiteralNode( currentToken );
     ConsumeToken();
     return thisNode;
   }

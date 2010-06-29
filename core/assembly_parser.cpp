@@ -182,7 +182,7 @@ MATCHER_FOR( IndirectOperandTerm ) {
   ConsumeToken();
 
   if( TokenIs(Integer) ) {
-    value = new ASTIntegerLiteralNode( currentToken );
+    value = new IntegerLiteralNode( currentToken );
     ConsumeToken();
     thisNode->AppendChild( value );
     return thisNode;

@@ -1,15 +1,18 @@
 #include <cstdlib>
 #include "../ast_node.h"
 
-ASTIntegerLiteralNode::ASTIntegerLiteralNode( TokenIterator &_token ) : ASTNode( ASTNode::IntegerLiteral ) {
+IntegerLiteralNode::IntegerLiteralNode( TokenIterator &_token ): 
+  ASTNode( ASTNode::IntegerLiteral ) {
   token = &(*_token);
 }
 
-void ASTIntegerLiteralNode::Analyse( Scope *_scope ) {
+void IntegerLiteralNode::Analyse( Scope *_scope ) {
   scope = _scope;
 }
 
-AssemblyBlock *ASTIntegerLiteralNode::GenerateCode() {
+// Generates the code to put the integer object into EAX/ECX/EDX.
+
+AssemblyBlock *IntegerLiteralNode::GenerateCode() {
   AssemblyBlock *a = new AssemblyBlock;
 
   // All integer values are 32-bit signed values
@@ -23,7 +26,10 @@ AssemblyBlock *ASTIntegerLiteralNode::GenerateCode() {
   return a;
 }
 
-AssemblyBlock *ASTIntegerLiteralNode::PushOntoStack() {
+// Generates the assembly to push the integer object onto the stack
+// for a function call.
+
+AssemblyBlock *IntegerLiteralNode::PushOntoStack() {
   AssemblyBlock *a = new AssemblyBlock;
 
   // All integer values are 32-bit signed values
@@ -34,5 +40,4 @@ AssemblyBlock *ASTIntegerLiteralNode::PushOntoStack() {
   a->PUSH( Dword(val) );
 
   return a;
-
 }
