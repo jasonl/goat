@@ -22,3 +22,17 @@ AssemblyBlock *ASTIntegerLiteralNode::GenerateCode() {
 
   return a;
 }
+
+AssemblyBlock *ASTIntegerLiteralNode::PushOntoStack() {
+  AssemblyBlock *a = new AssemblyBlock;
+
+  // All integer values are 32-bit signed values
+  int32_t val = atol( Content().c_str() );
+
+  a->PUSH( Dword(goatHash("Integer")) );
+  a->PUSH( Dword(0) ); // TODO: Label for dispatch function
+  a->PUSH( Dword(val) );
+
+  return a;
+
+}

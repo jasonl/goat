@@ -6,6 +6,7 @@ public:
   ASTIntegerLiteralNode( TokenIterator& );
   void Analyse( Scope * );
   AssemblyBlock *GenerateCode();
+  AssemblyBlock *PushOntoStack();
 };
 
 #endif
