@@ -7,9 +7,9 @@
 
 extern const char *TOKEN_TYPES[];
 
-MATCHER_FOR( InlineAssembly ) {
+InlineAssemblyNode *Parser::MatchInlineAssembly() {
   TokenIterator savedPos = currentToken;
-  ASTInlineAssemblyNode *thisNode = NULL;
+  InlineAssemblyNode *thisNode = NULL;
   InstructionNode *instruction = NULL;
 
   if( TokenIsNot(Asm) ) {
@@ -30,7 +30,7 @@ MATCHER_FOR( InlineAssembly ) {
   }
   ConsumeToken();
 
-  thisNode = new ASTInlineAssemblyNode();
+  thisNode = new InlineAssemblyNode();
 
   while((instruction = MATCH(Instruction)) || TokenIs(Newline)) {
     if( instruction ) {

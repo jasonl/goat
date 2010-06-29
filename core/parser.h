@@ -40,7 +40,7 @@ class Parser {
   ReturnStatementNode *MatchReturnStatement();
   MATCHER_PROTOTYPE_FOR( ClassDefinition ); 
   // Assembly Language Matchers
-  MATCHER_PROTOTYPE_FOR( InlineAssembly );
+  InlineAssemblyNode * MatchInlineAssembly();
   InstructionNode* MatchInstruction();
   OperandNode *MatchOperand();
   DirectOperandNode *MatchDirectOperand();

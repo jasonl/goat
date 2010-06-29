@@ -1,10 +1,10 @@
 #include "../ast_node.h"
 
-ASTInlineAssemblyNode::ASTInlineAssemblyNode(): 
+InlineAssemblyNode::InlineAssemblyNode(): 
   ASTNode( ASTNode::InlineAssembly ) {  
 }
 
-void ASTInlineAssemblyNode::Analyse( Scope *_scope) {
+void InlineAssemblyNode::Analyse( Scope *_scope) {
   ASTIterator end(NULL);
 
   scope = _scope;
@@ -14,7 +14,7 @@ void ASTInlineAssemblyNode::Analyse( Scope *_scope) {
   }
 }
 
-AssemblyBlock *ASTInlineAssemblyNode::GenerateCode() {
+AssemblyBlock *InlineAssemblyNode::GenerateCode() {
   AssemblyBlock *a = new AssemblyBlock;
   ASTIterator end(NULL);
 
