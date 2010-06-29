@@ -7,6 +7,8 @@ public:
   ASTNode *Receiver() { return receiver; }
   void AddReceiver( ASTNode* );
   void Analyse( Scope* );
+  AssemblyBlock *GenerateCode();
+  AssemblyBlock *PushOntoStack();
 private:
   ASTNode *receiver;
 };

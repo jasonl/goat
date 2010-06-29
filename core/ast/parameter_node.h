@@ -5,6 +5,7 @@ class ParameterNode : public ASTNode {
 public:
   ParameterNode();
   void Analyse( Scope* );
+  AssemblyBlock *PushOntoStack();
 };
 
 #endif

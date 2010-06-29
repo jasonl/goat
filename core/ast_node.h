@@ -67,6 +67,7 @@ class ASTNode {
 
   virtual void Analyse( Scope* );
   virtual AssemblyBlock* GenerateCode() { return NULL; }
+  virtual AssemblyBlock* PushOntoStack() { return NULL; }
 
   void print(int, int, char*);
   std::string Content() { return token->Content(); }
