@@ -1,9 +1,9 @@
-#ifndef __AST_FUNCTION_CALL_NODE
-#define __AST_FUNCTION_CALL_NODE
+#ifndef __FUNCTION_CALL_NODE
+#define __FUNCTION_CALL_NODE
 
-class ASTFunctionCallNode : public ASTNode {
+class FunctionCallNode : public ASTNode {
 public:
-  ASTFunctionCallNode( TokenIterator& );
+  FunctionCallNode( TokenIterator& );
   ASTNode *Receiver() { return receiver; }
   void AddReceiver( ASTNode* );
   void Analyse( Scope* );

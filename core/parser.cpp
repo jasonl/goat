@@ -279,9 +279,9 @@ INT_MATCHER_FOR( Receiver ) {
   return NULL;
 }
 
-MATCHER_FOR( FunctionCall ) {
-  ASTFunctionCallNode *thisNode = NULL;
-  ASTFunctionCallNode *newParent = NULL;
+FunctionCallNode *Parser::MatchFunctionCall() {
+  FunctionCallNode *thisNode = NULL;
+  FunctionCallNode *newParent = NULL;
   ASTNode *receiver = NULL;
   TokenIterator savedCurr = currentToken;
 
@@ -308,9 +308,9 @@ MATCHER_FOR( FunctionCall ) {
 // This is different from the usual, because we break this out
 // to resolve an potential recursion in the grammar.
 
-ASTFunctionCallNode *Parser::MatchMethodInvocation() {
+FunctionCallNode *Parser::MatchMethodInvocation() {
   TokenIterator functionName, savedCurr = currentToken;
-  ASTFunctionCallNode *thisNode = NULL;
+  FunctionCallNode *thisNode = NULL;
   ASTNode *newChild = NULL;
   int must_match = FALSE, must_match_paren = FALSE;
 
@@ -332,7 +332,7 @@ ASTFunctionCallNode *Parser::MatchMethodInvocation() {
     must_match_paren = TRUE;
   }
  
-  thisNode = new ASTFunctionCallNode( functionName );
+  thisNode = new FunctionCallNode( functionName );
 
   while((newChild = MATCH( Parameter ))) {
     thisNode->append(newChild);

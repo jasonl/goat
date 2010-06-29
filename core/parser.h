@@ -26,7 +26,7 @@ class Parser {
   ASTNode *Parse();
   INT_MATCHER_PROTOTYPE_FOR( Expression );
   FunctionDefNode *MatchFunctionDef();
-  MATCHER_PROTOTYPE_FOR( FunctionCall );
+  FunctionCallNode *MatchFunctionCall();
   ParameterNode *MatchParameter();
   ParameterDefNode *MatchParameterDef();
   INT_MATCHER_PROTOTYPE_FOR( Statement );
@@ -35,7 +35,7 @@ class Parser {
   MATCHER_PROTOTYPE_FOR( MutableAssignment );
   MATCHER_PROTOTYPE_FOR( ImmutableAssignment );
   ConditionalNode *MatchConditional();
-  ASTFunctionCallNode *MatchMethodInvocation();
+  FunctionCallNode *MatchMethodInvocation();
   INT_MATCHER_PROTOTYPE_FOR( Receiver );
   ReturnStatementNode *MatchReturnStatement();
   MATCHER_PROTOTYPE_FOR( ClassDefinition ); 

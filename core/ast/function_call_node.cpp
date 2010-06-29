@@ -1,13 +1,15 @@
 #include "../ast_node.h"
 
-ASTFunctionCallNode::ASTFunctionCallNode( TokenIterator &_token ) : ASTNode( ASTNode::FunctionCall ) {
+FunctionCallNode::FunctionCallNode( TokenIterator &_token ): 
+  ASTNode( ASTNode::FunctionCall ) {
   token = &(*_token);
 }
 
-void ASTFunctionCallNode::Analyse(Scope *_scope) {
+void FunctionCallNode::Analyse(Scope *_scope) {
   ASTIterator end(NULL);
   scope = _scope;
 
+  // Add the implicit this receiver if it doesn't exist
   if( Receiver() == NULL ) {
     ASTThisNode *_this = new ASTThisNode();
     AddReceiver( _this );
@@ -18,13 +20,13 @@ void ASTFunctionCallNode::Analyse(Scope *_scope) {
   }
 }
 
-void ASTFunctionCallNode::AddReceiver( ASTNode *_receiver ) {
+void FunctionCallNode::AddReceiver( ASTNode *_receiver ) {
   // TODO: This should check that there isn't already a receiver
   InsertFirstChild( _receiver );
   receiver = _receiver;
 }
 
-AssemblyBlock *ASTFunctionCallNode::GenerateCode() {
+AssemblyBlock *FunctionCallNode::GenerateCode() {
   AssemblyBlock *a = new AssemblyBlock;
   ASTIterator end(NULL);
 
@@ -43,7 +45,7 @@ AssemblyBlock *ASTFunctionCallNode::GenerateCode() {
   return a;
 }
 
-AssemblyBlock *ASTFunctionCallNode::PushOntoStack() {
+AssemblyBlock *FunctionCallNode::PushOntoStack() {
   AssemblyBlock *a = GenerateCode();
 
   a->PUSH( ecx );   // Type Hash of the object
