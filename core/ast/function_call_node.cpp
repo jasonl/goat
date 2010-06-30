@@ -40,7 +40,7 @@ AssemblyBlock *FunctionCallNode::GenerateCode() {
     }
   }
   a->MOV( ecx, Dword(goatHash( Content() )));
-  a->JMP( edx );
+  a->CALL( edx );
 
   return a;
 }
