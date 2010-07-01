@@ -118,7 +118,7 @@ typedef std::list<Token>::iterator TokenIterator;
 #include "ast/integer_literal_node.h"
 #include "ast/ast_label_node.hpp"
 #include "ast/ast_mutable_assignment_node.hpp"
-#include "ast/ast_null_literal_node.hpp"
+#include "ast/null_literal_node.h"
 #include "ast/parameter_node.h"
 #include "ast/parameter_def_node.h"
 #include "ast/return_statement_node.h"

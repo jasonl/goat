@@ -617,7 +617,7 @@ ReturnStatementNode *Parser::MatchReturnStatement() {
   thisNode = new ReturnStatementNode;
 
   if(!(returnExpr = MATCH( Expression ))){
-    returnExpr = new ASTNullLiteralNode;
+    returnExpr = new NullLiteralNode;
   }
   
   // TODO: This is too permissive - it should only return a null literal when
