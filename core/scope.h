@@ -40,15 +40,11 @@ class Scope {
  public:
   Scope( Scope* );
   ~Scope();
-  void AddStackVariable( std::string );
+  void AddLocalVariable( std::string );
   void AddParameterVariable( std::string );
   void AddClassVariable( std::string );
   bool HasVariable( std::string );
   bool HasParameterVariable( std::string );
-  offset GetVariableOffset( char* ); 
-  offset GetTypeHashOffset( char* );
-  offset GetDispatchOffset( char* );
-  offset GetPayloadOffset( char* );
   Operand &GenerateTypeHashOperand( std::string );
   Operand &GeneratePayloadOperand( std::string );
   Operand &GenerateDispatchOperand( std::string );

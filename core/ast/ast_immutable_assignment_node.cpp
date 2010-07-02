@@ -13,7 +13,7 @@ void ASTImmutableAssignmentNode::Analyse( Scope *_scope ) {
     // Error
   }
 
-  scope->AddStackVariable( token->Content() );
+  scope->AddLocalVariable( token->Content() );
   
   rValue->Analyse( scope );  
 }
