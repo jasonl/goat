@@ -8,9 +8,22 @@
  */
  
 
-VariableNode::VariableNode( TokenIterator & _token ) : ASTNode( ASTNode::Variable ) {
+VariableNode::VariableNode( TokenIterator & _token ): 
+  ASTNode( ASTNode::Variable ) {
   token = &(*_token);
 }
 
-void VariableNode::Analyse( Scope *scope ) {
+void VariableNode::Analyse( Scope *_scope ) {
+  scope = _scope;
+
+  if( scope->HasVariable(Content()) ) {
+    
+  } else {
+    FunctionCallNode *fc = new FunctionCallNode( token );
+    ASTThisNode *tn = new ASTThisNode();
+    fc->AddReceiver( tn );
+    parent->ReplaceChild( this, fc );
+    delete this;
+    return;
+  }
 }

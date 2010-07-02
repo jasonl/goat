@@ -63,6 +63,7 @@ class ASTNode {
   void append( ASTNode* );
   void AppendChild( ASTNode *_a ) { append(_a); }
   void InsertFirstChild( ASTNode* );
+  void ReplaceChild( ASTNode*, ASTNode* );
   virtual ASTIterator ChildNodes();
 
   virtual void Analyse( Scope* );

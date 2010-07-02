@@ -33,9 +33,9 @@ int main(int argc, char** argv) {
   if( verbose & VERBOSE_TOKENS ) sourceFile->PrintTokens();
 
   sourceFile->Parse();
-  if( verbose & VERBOSE_AST ) sourceFile->PrintAST();
 
   sourceFile->Analyse();
+  if( verbose & VERBOSE_AST ) sourceFile->PrintAST();
 
   sourceFile->GenerateCode();
   if( verbose & VERBOSE_ASM ) sourceFile->PrintAsm();

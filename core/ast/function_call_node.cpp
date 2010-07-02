@@ -5,6 +5,11 @@ FunctionCallNode::FunctionCallNode( TokenIterator &_token ):
   token = &(*_token);
 }
 
+FunctionCallNode::FunctionCallNode( Token *_token ):
+  ASTNode( ASTNode::FunctionCall ) {
+  token = _token;
+}
+
 void FunctionCallNode::Analyse(Scope *_scope) {
   ASTIterator end(NULL);
   scope = _scope;

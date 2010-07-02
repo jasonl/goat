@@ -71,6 +71,40 @@ void ASTNode::InsertFirstChild( ASTNode *child ) {
   return;
 }
 
+// Replaces a child node with a new one
+void ASTNode::ReplaceChild( ASTNode *childToReplace, ASTNode *newChild ) {
+  ASTNode *currentChild = firstChild;
+  if( childToReplace == NULL || newChild == NULL ) return;
+  
+  // Ensure that the childToReplace exists as a child node.
+  while( currentChild ) {
+    if( currentChild == childToReplace ) break;
+    currentChild = currentChild->nextSibling;
+  }
+
+  // We may have got to here with currentChild == NULL
+  if( currentChild ) {
+    newChild->parent = this;
+
+    if( currentChild->prevSibling) {
+      currentChild->prevSibling->nextSibling = newChild;
+      newChild->prevSibling = currentChild->prevSibling;
+    }
+
+    if( currentChild->nextSibling ) {
+      currentChild->nextSibling->prevSibling = newChild;
+      newChild->nextSibling = currentChild->nextSibling;
+    }
+
+    // Modify the first node pointer if we're replacing that.
+    if( firstChild == currentChild ) {
+      firstChild = newChild;
+    }
+  }
+
+  return;
+}
+
 ASTIterator ASTNode::ChildNodes() {
   return ASTIterator(firstChild);
 }
