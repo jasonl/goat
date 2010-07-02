@@ -5,6 +5,13 @@ ASTMutableAssignmentNode::ASTMutableAssignmentNode( TokenIterator &_token) : AST
 }
 
 void ASTMutableAssignmentNode::Analyse( Scope *_scope ) {
+  scope = _scope;
+  
+  if(!scope->HasVariable( Content() )) {
+    scope->AddLocalVariable( Content() );
+  }
+  
+  rValue->Analyse( scope );  
 }
 
 void ASTMutableAssignmentNode::SetRValue( ASTNode *_rValue ) {

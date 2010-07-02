@@ -9,11 +9,11 @@ ASTImmutableAssignmentNode::ASTImmutableAssignmentNode( TokenIterator &_token) :
 void ASTImmutableAssignmentNode::Analyse( Scope *_scope ) {
   scope = _scope;
   
-  if(scope->HasVariable( token->Content() )) {
+  if(scope->HasVariable( Content() )) {
     // Error
   }
 
-  scope->AddLocalVariable( token->Content() );
+  scope->AddLocalVariable( Content() );
   
   rValue->Analyse( scope );  
 }
