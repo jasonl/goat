@@ -5,6 +5,8 @@ class VariableNode : public ASTNode {
 public:
   VariableNode( TokenIterator& );
   void Analyse( Scope* );
+  AssemblyBlock *GenerateCode();
+  AssemblyBlock *PushOntoStack();
 };
 
 #endif

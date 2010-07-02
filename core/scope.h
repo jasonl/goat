@@ -12,6 +12,8 @@
 #define __SCOPE_H
 
 #include <string>
+#include "i386/operand.h"
+
 typedef signed long offset;
 
 // A variable allocated in any given scope.
@@ -47,6 +49,9 @@ class Scope {
   offset GetTypeHashOffset( char* );
   offset GetDispatchOffset( char* );
   offset GetPayloadOffset( char* );
+  Operand &GenerateTypeHashOperand( std::string );
+  Operand &GeneratePayloadOperand( std::string );
+  Operand &GenerateDispatchOperand( std::string );
  private:
   Scope *enclosingScope;
   Variable *firstVariable;

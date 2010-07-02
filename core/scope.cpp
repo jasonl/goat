@@ -110,3 +110,23 @@ offset Scope::GetDispatchOffset( char* name ) {
 offset Scope::GetPayloadOffset( char* name ) {
   return GetVariableOffset( name ) - PAYLOAD_OFFSET;
 }
+
+// Generates the assembly operand pointing to the variable's
+// payload. Note this does not add a size specifier to the 
+// Operand, so this must be done by the caller, for example
+// when pushing an operand's value onto the stack.
+Operand &Scope::GeneratePayloadOperand( std::string _var ) {
+  return eax;
+}
+
+// Generates the assembly operand pointing to the variable's
+// type hash. Does not add an operand size specifier
+Operand &Scope::GenerateTypeHashOperand( std::string _var ) {
+  return eax;
+}
+
+// Generates the assembly operand pointing to the variable's
+// dispatch function. Does not add an operand size specifier.
+Operand &Scope::GenerateDispatchOperand( std::string _var ) {
+  return eax;
+}
