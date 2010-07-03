@@ -30,20 +30,22 @@ void VariableNode::Analyse( Scope *_scope ) {
 
 AssemblyBlock *VariableNode::GenerateCode() {
   AssemblyBlock *a = new AssemblyBlock();
+  std::string varName = Content();
   
-  a->MOV( eax, scope->GeneratePayloadOperand(Content()) );
-  a->MOV( ecx, scope->GenerateTypeHashOperand(Content()) );
-  a->MOV( edx, scope->GenerateDispatchOperand(Content()) );
+  a->MOV( eax, scope->GeneratePayloadOperand(varName) );
+  a->MOV( ecx, scope->GenerateTypeHashOperand(varName) );
+  a->MOV( edx, scope->GenerateDispatchOperand(varName) );
 
   return a;
 }
 
 AssemblyBlock *VariableNode::PushOntoStack() {
   AssemblyBlock *a = new AssemblyBlock();
+  std::string varName = Content();
 
-  a->PUSH( scope->GenerateTypeHashOperand(Content()) );
-  a->PUSH( scope->GenerateDispatchOperand(Content()) );
-  a->PUSH( scope->GeneratePayloadOperand(Content()) );
+  a->PUSH( Dword(scope->GenerateTypeHashOperand(varName)) );
+  a->PUSH( Dword(scope->GenerateDispatchOperand(varName)) );
+  a->PUSH( Dword(scope->GeneratePayloadOperand(varName)) );
 
   return a;
 }

@@ -29,6 +29,7 @@ public:
   Operand& operator-(const int32_t);
   Operand& operator*(const uint8_t);
   bool isPrototype();
+  void SetSize( OperandSize _size ) { size = _size; } 
   friend std::ostream& operator<<( std::ostream&, const Operand& );
   friend std::string BuildIndirectOperand( const Operand& );
  private:
@@ -58,5 +59,7 @@ extern const Operand _;
 Operand &Byte( unsigned uint8_t );
 Operand &Word( unsigned uint16_t );
 Operand &Dword( unsigned uint32_t );
+
+Operand &Dword( Operand& );
 
 #endif

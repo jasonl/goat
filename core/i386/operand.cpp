@@ -208,6 +208,20 @@ Operand &Dword( uint32_t _value ) {
   return *new Operand( _value, Operand::Dword );
 }
 
+// Helper methods for converting an operand
+Operand &Dword( Operand &op ) {
+  if( op.isPrototype() ) {
+    Operand *new_op = new Operand( Operand::Null );
+    *new_op = op;
+    new_op->SetSize( Operand::Dword );
+    return *new_op;
+  } else {
+    op.SetSize( Operand::Dword );
+    return op;
+  }
+}
+
+
 // Stream helper for outputting the assembly code
 std::ostream &operator<<(std::ostream& stream, const Operand& op) {
   switch( op.size ) {
