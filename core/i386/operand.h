@@ -15,6 +15,7 @@ public:
     Immediate };
 
   enum OperandSize {
+    None,
     Byte,
     Word,
     Dword };

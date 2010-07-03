@@ -50,6 +50,7 @@ Operand::Operand( OperandType _type ):
   scale = 0;
   displacement = 0;
   prototype = false;
+  size = None;
 }
 
 // Immediate Operand Constructor
@@ -209,6 +210,20 @@ Operand &Dword( uint32_t _value ) {
 
 // Stream helper for outputting the assembly code
 std::ostream &operator<<(std::ostream& stream, const Operand& op) {
+  switch( op.size ) {
+  case Operand::Byte:
+    stream << "byte ";
+    break;
+  case Operand::Word:
+    stream << "word ";
+    break;
+  case Operand::Dword:
+    stream << "dword ";
+    break;
+  default:
+    break;
+  }
+
   switch( op.type ) {
   case Operand::Direct:
     stream << RegisterName( op.base );
