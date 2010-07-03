@@ -211,6 +211,7 @@ public:
   void XCHG( Operand&, Operand& );
   void XLAT();
   void XOR( Operand&, Operand& );
+  AssemblyBlock();
   void AppendBlock( AssemblyBlock* );
   void AppendInstruction( Instruction* );
   InstructionIterator Instructions() { return InstructionIterator( first ); }

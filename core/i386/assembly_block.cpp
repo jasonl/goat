@@ -828,25 +828,30 @@ void AssemblyBlock::XOR( Operand &op1, Operand &op2 ) {
   AppendInstruction( new Instruction("XOR", &op1, &op2) );
 }
 
-  void AssemblyBlock::AppendBlock( AssemblyBlock *ab ) {
-    if( ab == NULL || ab->first == NULL || ab->last == NULL ) return; 
+AssemblyBlock::AssemblyBlock() {
+  last = NULL;
+  first = NULL;
+}
 
-    if( last ) {
-      last->next = ab->first;
-      last = ab->last;
-    } else {
-      first = ab->first;
-      last = ab->last;
-    }
-
-    delete ab;
+void AssemblyBlock::AppendBlock( AssemblyBlock *ab ) {
+  if( ab == NULL || ab->first == NULL || ab->last == NULL ) return; 
+  
+  if( last ) {
+    last->next = ab->first;
+    last = ab->last;
+  } else {
+    first = ab->first;
+    last = ab->last;
   }
+  
+  delete ab;
+}
 
-  void AssemblyBlock::AppendInstruction( Instruction *i ) {
-    if(first == NULL ) {
-      first = i;
-    } else {
-      last->next = i;
-    }
-    last = i;
+void AssemblyBlock::AppendInstruction( Instruction *i ) {
+  if(first == NULL ) {
+    first = i;
+  } else {
+    last->next = i;
   }
+  last = i;
+}

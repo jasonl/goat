@@ -27,6 +27,12 @@ AssemblyBlock *InstructionNode::GenerateCode() {
   }
 
   ins = new ::Instruction( Content(), operands[0], operands[1], operands[2]);
+
+  // Set the label if there is one.
+  if( firstChild && firstChild->Type() == ASTNode::Label ) {
+    ins->SetLabel( firstChild->Content() );
+  }
+
   a->AppendInstruction(ins);
   return a;
 }

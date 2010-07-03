@@ -14,6 +14,7 @@ Instruction::Instruction( std::string _mnemonic, Operand *op1 ) {
   operand1 = op1;
   operand2 = NULL;
   operand3 = NULL;
+  next = NULL;
   label = NULL;
 }
 
@@ -23,6 +24,7 @@ Instruction::Instruction( std::string _mnemonic,  Operand *op1,
   operand1 = op1;
   operand2 = op2;
   operand3 = NULL;
+  next = NULL;
   label = NULL;
 }
 
@@ -32,6 +34,7 @@ Instruction::Instruction( std::string _mnemonic, Operand* op1,
   operand1 = op1;
   operand2 = op2;
   operand3 = op3;
+  next = NULL;
   label = NULL;
 }
 
@@ -40,7 +43,11 @@ void Instruction::SetLabel( std::string _label ) {
 }
 
 std::ostream& operator<<( std::ostream &stream, const Instruction &ins ) {
-  stream << ins.mnemonic;
+  if( ins.label ) {
+    stream << ins.label->Name() << "\n";
+  }
+
+  stream << "    " << ins.mnemonic;
   if( ins.operand1 ) stream << " " << *ins.operand1;
   if( ins.operand2 ) stream << ", " << *ins.operand2;
   if( ins.operand3 ) stream << ", " << *ins.operand3;

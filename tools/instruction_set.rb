@@ -77,6 +77,7 @@ File.open( ins_h, "r" ).each_line do |l|
 end
 
 a_h.write <<-PROTOTYPES
+  AssemblyBlock();
   void AppendBlock( AssemblyBlock* );
   void AppendInstruction( Instruction* );
   InstructionIterator Instructions() { return InstructionIterator( first ); }
@@ -86,28 +87,33 @@ a_h.write <<-PROTOTYPES
 PROTOTYPES
 
 a_c.write <<-DEFINITIONS
-  void AssemblyBlock::AppendBlock( AssemblyBlock *ab ) {
-    if( ab == NULL || ab->first == NULL || ab->last == NULL ) return; 
+AssemblyBlock::AssemblyBlock() {
+  first = NULL;
+  last = NULL;
+}
 
-    if( last ) {
-      last->next = ab->first;
-      last = ab->last;
-    } else {
-      first = ab->first;
-      last = ab->last;
-    }
+void AssemblyBlock::AppendBlock( AssemblyBlock *ab ) {
+  if( ab == NULL || ab->first == NULL || ab->last == NULL ) return; 
 
-    delete ab;
+  if( last ) {
+    last->next = ab->first;
+    last = ab->last;
+  } else {
+    first = ab->first;
+    last = ab->last;
   }
 
-  void AssemblyBlock::AppendInstruction( Instruction *i ) {
-    if(first == NULL ) {
-      first = i;
-    } else {
-      last->next = i;
-    }
-    last = i;
+  delete ab;
+}
+
+void AssemblyBlock::AppendInstruction( Instruction *i ) {
+  if(first == NULL ) {
+    first = i;
+  } else {
+    last->next = i;
   }
+  last = i;
+}
 DEFINITIONS
 
 a_h.write "};\n"
