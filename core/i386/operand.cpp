@@ -216,6 +216,9 @@ std::ostream &operator<<(std::ostream& stream, const Operand& op) {
   case Operand::Immediate:
     stream << std::showbase << std::hex << op.value;
     break;
+  case Operand::Indirect:
+    stream << BuildIndirectOperand( op );
+    break;
   default:
     stream << "NYI"; // Not Yet Implemented!
   }
@@ -251,4 +254,25 @@ std::string RegisterName( const Register reg ) {
   case DH: return "dh";
   default: return "xxx";
   }
+}
+
+// Generates a string suitable for the assembler representing
+// an indirect operand.
+std::string BuildIndirectOperand( const Operand &op ) {
+  std::string output = "[";
+  if( op.base ) output += RegisterName( op.base );
+  if( op.offset ) {
+    output += "+";
+    output += RegisterName( op.offset );
+    if( op.scale ) {
+      output+= "*";
+      output+= op.scale;
+    }
+  }
+  if( op.displacement ) {
+    output += "+";
+    output += op.displacement;
+  }
+  output += "]";
+  return output;
 }

@@ -29,6 +29,7 @@ public:
   Operand& operator*(const uint8_t);
   bool isPrototype();
   friend std::ostream& operator<<( std::ostream&, const Operand& );
+  friend std::string BuildIndirectOperand( const Operand& );
  private:
   OperandType type;
   OperandSize size;

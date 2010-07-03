@@ -92,7 +92,7 @@ Operand &Scope::GeneratePayloadOperand( std::string _var ) {
 // Generates the assembly operand pointing to the variable's
 // type hash. Does not add an operand size specifier
 Operand &Scope::GenerateTypeHashOperand( std::string _var ) {
-  return eax;
+  return _[ebp+4];
 }
 
 // Generates the assembly operand pointing to the variable's
