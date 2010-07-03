@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -Wall
+CFLAGS = -Wall -Wextra -pedantic
 SRC = core/*.cpp core/ast/*.cpp core/i386/*.cpp
 TEST_SRC = test/*.cpp
 GTEST_ROOT = /home/jason/gtest-1.5.0

@@ -24,19 +24,19 @@ class Parser {
  public:
   Parser( std::list<Token> &tokenStream) { currentToken = tokenStream.begin(); endToken = tokenStream.end(); }
   ASTNode *Parse();
-  INT_MATCHER_PROTOTYPE_FOR( Expression );
+  ASTNode *MatchExpression();
   FunctionDefNode *MatchFunctionDef();
   FunctionCallNode *MatchFunctionCall();
   ParameterNode *MatchParameter();
   ParameterDefNode *MatchParameterDef();
-  INT_MATCHER_PROTOTYPE_FOR( Statement );
+  ASTNode *MatchStatement();
   BlockNode *MatchBlock();
   ASTNode *MatchAssignment();
   MutableAssignmentNode *MatchMutableAssignment();
   ImmutableAssignmentNode *MatchImmutableAssignment();
   ConditionalNode *MatchConditional();
   FunctionCallNode *MatchMethodInvocation();
-  INT_MATCHER_PROTOTYPE_FOR( Receiver );
+  ASTNode *MatchReceiver();
   ReturnStatementNode *MatchReturnStatement();
   MATCHER_PROTOTYPE_FOR( ClassDefinition ); 
   // Assembly Language Matchers
