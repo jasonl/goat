@@ -579,9 +579,9 @@ MATCHER_FOR( MutableAssignment ) {
   return NULL;
 }
 
-MATCHER_FOR( ImmutableAssignment ) {
+ImmutableAssignmentNode *Parser::MatchImmutableAssignment() {
   TokenIterator variable, savedCurr = currentToken;
-  ASTImmutableAssignmentNode *thisNode = NULL;
+  ImmutableAssignmentNode *thisNode = NULL;
   ASTNode *rValue;
   
   if(TokenIsNot( Identifier )) { return NULL; }
@@ -595,7 +595,7 @@ MATCHER_FOR( ImmutableAssignment ) {
   ConsumeToken();
   
   if((rValue = MATCH( Expression ))) {
-    thisNode = new ASTImmutableAssignmentNode( variable );
+    thisNode = new ImmutableAssignmentNode( variable );
     thisNode->SetRValue( rValue );
     return thisNode;
   }

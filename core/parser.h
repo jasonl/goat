@@ -33,7 +33,7 @@ class Parser {
   BlockNode *MatchBlock();
   INT_MATCHER_PROTOTYPE_FOR( Assignment );
   MATCHER_PROTOTYPE_FOR( MutableAssignment );
-  MATCHER_PROTOTYPE_FOR( ImmutableAssignment );
+  ImmutableAssignmentNode *MatchImmutableAssignment();
   ConditionalNode *MatchConditional();
   FunctionCallNode *MatchMethodInvocation();
   INT_MATCHER_PROTOTYPE_FOR( Receiver );

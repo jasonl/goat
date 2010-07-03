@@ -2,11 +2,12 @@
 #include "../scope.h"
 #include "../lexer.h"
 
-ASTImmutableAssignmentNode::ASTImmutableAssignmentNode( TokenIterator &_token) : ASTNode( ASTNode::ImmutableAssignment ) {
+ImmutableAssignmentNode::ImmutableAssignmentNode( TokenIterator &_token): 
+  ASTNode( ASTNode::ImmutableAssignment ) {
   token = &(*_token);
 }
 
-void ASTImmutableAssignmentNode::Analyse( Scope *_scope ) {
+void ImmutableAssignmentNode::Analyse( Scope *_scope ) {
   scope = _scope;
   
   if(scope->HasVariable( Content() )) {
@@ -18,16 +19,16 @@ void ASTImmutableAssignmentNode::Analyse( Scope *_scope ) {
   rValue->Analyse( scope );  
 }
 
-void ASTImmutableAssignmentNode::SetRValue( ASTNode* _rValue ) {
+void ImmutableAssignmentNode::SetRValue( ASTNode* _rValue ) {
   rValue = _rValue;
   firstChild = _rValue; // Required for tests
 }
 
-ASTIterator ASTImmutableAssignmentNode::ChildNodes() {
+ASTIterator ImmutableAssignmentNode::ChildNodes() {
   return ASTIterator(rValue);
 }
 
-AssemblyBlock *ASTImmutableAssignmentNode::GenerateCode() {
+AssemblyBlock *ImmutableAssignmentNode::GenerateCode() {
   AssemblyBlock *a = rValue->GenerateCode();
 
   a->MOV( scope->GeneratePayloadOperand(Content()), eax );
