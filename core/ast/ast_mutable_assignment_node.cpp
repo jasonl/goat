@@ -18,3 +18,13 @@ void ASTMutableAssignmentNode::SetRValue( ASTNode *_rValue ) {
   rValue = _rValue;
   firstChild = _rValue;
 }
+
+AssemblyBlock *ASTMutableAssignmentNode::GenerateCode() {
+  AssemblyBlock *a = rValue->GenerateCode();
+
+  a->MOV( scope->GeneratePayloadOperand(Content()), eax );
+  a->MOV( scope->GenerateTypeHashOperand(Content()), ecx );
+  a->MOV( scope->GenerateDispatchOperand(Content()), edx );
+
+  return a;
+}

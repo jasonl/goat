@@ -7,6 +7,7 @@ public:
   void Analyse( Scope* );
   void SetRValue( ASTNode* );
   ASTIterator ChildNodes();
+  AssemblyBlock *GenerateCode();
 private:
   ASTNode *rValue;
 };

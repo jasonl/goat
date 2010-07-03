@@ -6,6 +6,7 @@ public:
   ASTMutableAssignmentNode( TokenIterator& );
   void Analyse( Scope* );
   void SetRValue( ASTNode* );
+  AssemblyBlock *GenerateCode();
 private:
   ASTNode *rValue;
 };

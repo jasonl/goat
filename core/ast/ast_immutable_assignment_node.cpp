@@ -26,3 +26,13 @@ void ASTImmutableAssignmentNode::SetRValue( ASTNode* _rValue ) {
 ASTIterator ASTImmutableAssignmentNode::ChildNodes() {
   return ASTIterator(rValue);
 }
+
+AssemblyBlock *ASTImmutableAssignmentNode::GenerateCode() {
+  AssemblyBlock *a = rValue->GenerateCode();
+
+  a->MOV( scope->GeneratePayloadOperand(Content()), eax );
+  a->MOV( scope->GenerateTypeHashOperand(Content()), ecx );
+  a->MOV( scope->GenerateDispatchOperand(Content()), edx );
+
+  return a;
+}
