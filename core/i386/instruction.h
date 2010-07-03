@@ -4,9 +4,7 @@
 #include <string>
 #include <iostream>
 #include "operand.h"
-
-
-class AsmLabel;
+#include "asm_label.h"
 
 class Instruction {
   friend class AssemblyBlock;
@@ -17,6 +15,7 @@ public:
   Instruction(std::string, Operand*, Operand*);
   Instruction(std::string, Operand*, Operand*, Operand*);
   friend std::ostream& operator<<( std::ostream&, const Instruction&);
+  void SetLabel( std::string );
   ~Instruction();
 private:
   AsmLabel *label;
