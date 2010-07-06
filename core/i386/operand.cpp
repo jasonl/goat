@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <iostream>
+#include <sstream>
 #include "instructions.h"
 #include "operand.h"
 
@@ -288,20 +289,18 @@ std::string RegisterName( const Register reg ) {
 // Generates a string suitable for the assembler representing
 // an indirect operand.
 std::string BuildIndirectOperand( const Operand &op ) {
-  std::string output = "[";
-  if( op.base ) output += RegisterName( op.base );
+  std::stringstream output;
+  output << '[';
+  if( op.base ) output << RegisterName( op.base );
   if( op.offset ) {
-    output += "+";
-    output += RegisterName( op.offset );
+    output << "+" << RegisterName( op.offset );
     if( op.scale ) {
-      output+= "*";
-      output+= op.scale;
+      output <<  "*" << op.scale;
     }
   }
   if( op.displacement ) {
-    output += "+";
-    output += op.displacement;
+    output << "+" << std::hex << op.displacement;
   }
-  output += "]";
-  return output;
+  output << "]";
+  return output.str();;
 }
