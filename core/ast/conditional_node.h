@@ -11,6 +11,7 @@ public:
   ASTNode *Expression() { return expression; }
   BlockNode *IfBlock() { return ifBlock; }
   BlockNode *ElseBlock() { return elseBlock; }
+  AssemblyBlock *GenerateCode();
 private:
   ASTNode *expression;
   BlockNode *elseBlock, *ifBlock;

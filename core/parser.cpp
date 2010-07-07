@@ -496,7 +496,7 @@ ConditionalNode *Parser::MatchConditional() {
     goatError(CurrentSourcePosition(), "Unexpected token %s found after if keyword.", TOKEN_TYPES[currentToken->Type()]);
     return NULL;
   }
-  thisNode->append(exprChild);
+  thisNode->AddExpression(exprChild);
 
   if (TokenIsNot( Newline )) {
     delete thisNode;

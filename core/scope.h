@@ -45,12 +45,14 @@ class Scope {
   void AddClassVariable( std::string );
   bool HasVariable( std::string );
   bool HasParameterVariable( std::string );
+  std::string GenerateUniqueLabel( std::string );
   Operand &GenerateTypeHashOperand( std::string );
   Operand &GeneratePayloadOperand( std::string );
   Operand &GenerateDispatchOperand( std::string );
  private:
   Scope *enclosingScope;
   Variable *firstVariable;
+  int uniqueVal;
 };
 
 #endif

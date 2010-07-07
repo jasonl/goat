@@ -855,3 +855,21 @@ void AssemblyBlock::AppendInstruction( Instruction *i ) {
   }
   last = i;
 }
+
+void AssemblyBlock::LabelFirstInstruction( std::string _label ) {
+  if( first ) {
+    first->SetLabel( _label );
+  }
+}
+
+void AssemblyBlock::LabelLastInstruction( std::string _label ) {
+  if( last ) {
+    last->SetLabel( _label );
+  }
+}
+
+void AssemblyBlock::AddHangingLabel( std::string _label ) {
+  // TODO: Add support for genuinely empty instructions, and remove the NOP
+  NOP();
+  last->SetLabel( _label );
+}

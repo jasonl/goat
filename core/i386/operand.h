@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <stdint.h>
+#include "asm_label.h"
 
 typedef uint32_t Register;
 
@@ -22,6 +23,7 @@ public:
 
   Operand( OperandType );
   Operand( uint32_t, OperandSize ); // For immediate operands
+  Operand( std::string ); // For label immediate/relative operands
   static Operand& Prototype(const Register);
   Operand& operator[](Operand&) const;
   Operand& operator+(Operand&);
@@ -33,6 +35,7 @@ public:
   friend std::ostream& operator<<( std::ostream&, const Operand& );
   friend std::string BuildIndirectOperand( const Operand& );
  private:
+  AsmLabel *label;
   OperandType type;
   OperandSize size;
   Register base;

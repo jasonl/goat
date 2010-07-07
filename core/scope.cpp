@@ -1,4 +1,5 @@
 #include <string>
+#include <sstream>
 #include "scope.h"
 #include "variable.h"
 
@@ -21,6 +22,7 @@ Scope::Scope( Scope* parent ) {
   // scope around a method.
   enclosingScope = parent;
   firstVariable = NULL;
+  uniqueVal = 0;
 }
 
 Scope::~Scope() {
@@ -99,4 +101,13 @@ Operand &Scope::GenerateTypeHashOperand( std::string _var ) {
 // dispatch function. Does not add an operand size specifier.
 Operand &Scope::GenerateDispatchOperand( std::string _var ) {
   return eax;
+}
+
+// Generates a string which is guaranteed to be unique across
+// all files.
+std::string Scope::GenerateUniqueLabel( std::string _base ) {
+  std::stringstream s;
+  s << (unsigned long) this << '_' << uniqueVal << '_' << _base;
+  uniqueVal++;
+  return s.str();
 }

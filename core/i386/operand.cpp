@@ -52,11 +52,24 @@ Operand::Operand( OperandType _type ):
   displacement = 0;
   prototype = false;
   size = None;
+  label = NULL;
 }
 
 // Immediate Operand Constructor
 Operand::Operand( uint32_t _value, OperandSize _size ):
   size(_size), value(_value) {
+  type = Immediate;
+  prototype = false;
+  scale = 0;
+  displacement = 0;
+  base = 0;
+  offset = 0;
+  label = NULL;
+}
+
+// Label immediate/relative Operand constructor
+Operand::Operand( std::string _label ) {
+  label = new AsmLabel( _label );
   type = Immediate;
   prototype = false;
   scale = 0;
@@ -244,7 +257,11 @@ std::ostream &operator<<(std::ostream& stream, const Operand& op) {
     stream << RegisterName( op.base );
     break;
   case Operand::Immediate:
-    stream << std::showbase << std::hex << op.value;
+    if( op.label ) {
+      stream << op.label->Name();
+    } else {
+      stream << std::showbase << std::hex << op.value;
+    }
     break;
   case Operand::Indirect:
     stream << BuildIndirectOperand( op );

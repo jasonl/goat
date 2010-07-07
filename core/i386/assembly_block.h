@@ -215,6 +215,9 @@ public:
   void AppendBlock( AssemblyBlock* );
   void AppendInstruction( Instruction* );
   InstructionIterator Instructions() { return InstructionIterator( first ); }
+  void LabelFirstInstruction( std::string );
+  void LabelLastInstruction( std::string );
+  void AddHangingLabel( std::string );
  private:
   Instruction *first;
   Instruction *last;
