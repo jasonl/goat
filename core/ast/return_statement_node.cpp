@@ -7,8 +7,8 @@ ReturnStatementNode::ReturnStatementNode() : ASTNode( ASTNode::ReturnStatement )
 }
 
 void ReturnStatementNode::SetReturnValue( ASTNode *_returnValue ) {
+  AppendChild(_returnValue);
   returnValue = _returnValue;
-  firstChild = _returnValue; // Required for tests
 }
 
 ASTIterator ReturnStatementNode::ChildNodes() {

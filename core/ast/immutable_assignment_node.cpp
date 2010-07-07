@@ -20,8 +20,8 @@ void ImmutableAssignmentNode::Analyse( Scope *_scope ) {
 }
 
 void ImmutableAssignmentNode::SetRValue( ASTNode* _rValue ) {
+  AppendChild( _rValue );
   rValue = _rValue;
-  firstChild = _rValue; // Required for tests
 }
 
 ASTIterator ImmutableAssignmentNode::ChildNodes() {

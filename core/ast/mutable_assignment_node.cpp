@@ -16,8 +16,8 @@ void MutableAssignmentNode::Analyse( Scope *_scope ) {
 }
 
 void MutableAssignmentNode::SetRValue( ASTNode *_rValue ) {
+  AppendChild( _rValue );
   rValue = _rValue;
-  firstChild = _rValue;
 }
 
 AssemblyBlock *MutableAssignmentNode::GenerateCode() {
