@@ -67,8 +67,8 @@ class ASTNode {
   virtual ASTIterator ChildNodes();
 
   virtual void Analyse( Scope* );
-  virtual AssemblyBlock* GenerateCode() { return NULL; }
-  virtual AssemblyBlock* PushOntoStack() { return NULL; }
+  virtual AssemblyBlock* GenerateCode() { return new AssemblyBlock(); }
+  virtual AssemblyBlock* PushOntoStack() { return new AssemblyBlock(); }
 
   void print(int, int, char*);
   std::string Content() { return token->Content(); }
