@@ -20,6 +20,10 @@ ASTIterator FunctionDefNode::ParameterDefs() {
   return ASTIterator( firstChild );
 }
 
+ASTIterator FunctionDefNode::BodyNodes() {
+  return ASTIterator( body );
+}
+
 void FunctionDefNode::AddBody( ASTNode* _body ) {
   append( _body );
   body = _body;
@@ -50,3 +54,24 @@ void FunctionDefNode::Analyse( Scope *_scope ) {
   // Now analyse the function body
   body->Analyse( scope );
 }
+
+AssemblyBlock *FunctionDefNode::GenerateCode() {
+  AssemblyBlock *a = new AssemblyBlock;
+  ASTIterator end( NULL );
+
+  a->PUSH( ebp );
+  
+  for( ASTIterator i = BodyNodes(); i != end; i++ ) {
+    a->AppendBlock( i->GenerateCode() );
+  }
+
+  // Return a default null if code execution reaches here
+  a->MOV( eax, Dword(0) );
+  a->MOV( ecx, Dword(goatHash("Null")));
+  a->MOV( edx, Dword(0) ); //TODO: This needs to reference a label
+
+  a->POP(ebp);
+  a->RET();
+
+  return a;
+} 

@@ -7,8 +7,10 @@ public:
   ~FunctionDefNode();
   void Analyse( Scope * );
   ASTIterator ParameterDefs();
+  ASTIterator BodyNodes();
   void AddBody( ASTNode* );
   void AddParameterDef( ASTNode* );
+  AssemblyBlock *GenerateCode();
 private:
   ASTNode *body;
 };
