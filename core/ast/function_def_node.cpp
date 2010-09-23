@@ -60,6 +60,7 @@ AssemblyBlock *FunctionDefNode::GenerateCode() {
   ASTIterator end( NULL );
 
   a->PUSH( ebp );
+  a->LabelFirstInstruction( parent->Content() );
   
   for( ASTIterator i = BodyNodes(); i != end; i++ ) {
     a->AppendBlock( i->GenerateCode() );
