@@ -12,6 +12,7 @@
 #define __SCOPE_H
 
 #include <string>
+#include <list>
 #include "i386/operand.h"
 
 typedef signed long offset;
@@ -43,6 +44,7 @@ class Scope {
   void AddLocalVariable( std::string );
   void AddParameterVariable( std::string );
   void AddClassVariable( std::string );
+  void RegisterChildScope( Scope* );
   bool HasVariable( std::string );
   bool HasParameterVariable( std::string );
   std::string GenerateUniqueLabel( std::string );
@@ -50,7 +52,7 @@ class Scope {
   Operand &GeneratePayloadOperand( std::string );
   Operand &GenerateDispatchOperand( std::string );
  private:
-  Scope *enclosingScope;
+  Scope *enclosingScope, *firstChildScope, *nextScope;
   Variable *firstVariable;
   int uniqueVal;
 };

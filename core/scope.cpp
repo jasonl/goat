@@ -23,15 +23,39 @@ Scope::Scope( Scope* parent ) {
   enclosingScope = parent;
   firstVariable = NULL;
   uniqueVal = 0;
+  nextScope = NULL;
+  firstChildScope = NULL;
+
+  if( parent ) {
+    parent->RegisterChildScope( this );
+  }
 }
 
 Scope::~Scope() {
   Variable *lastVariable = firstVariable, *tempVariable = NULL;
+  Scope *lastScope = firstChildScope, *tempScope = NULL;
 
   while(lastVariable) {
     tempVariable = lastVariable->next;
     delete lastVariable;
     lastVariable = tempVariable;
+  }
+
+  while(lastScope) {
+    tempScope = lastScope->nextScope;
+    delete lastScope;
+    lastScope = tempScope;
+  }
+}
+
+void Scope::RegisterChildScope( Scope *newChild ) {
+  Scope *lastChild = firstChildScope;
+
+  if (firstChildScope) {
+    while(lastChild->nextScope) {lastChild = lastChild->nextScope; }
+    lastChild->nextScope = newChild;
+  } else {
+    firstChildScope = newChild;
   }
 }
 
