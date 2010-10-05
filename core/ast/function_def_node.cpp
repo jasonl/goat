@@ -1,4 +1,5 @@
 #include <string>
+#include <list>
 #include "../ast_node.h"
 #include "../lexer.h"
 /*
@@ -37,12 +38,19 @@ void FunctionDefNode::AddParameterDef( ASTNode *_param ) {
 
 void FunctionDefNode::Analyse( Scope *_scope ) {
   ASTIterator endParams( body ); // body is first node after last ParameterDef
+  
+  // Reverse the list of params
+  std::list<ASTNode> paramsList;
+  
+  for(ASTIterator i = ParameterDefs(); i != endParams; i++) {
+    paramsList.push_front( *i );
+  }
 
   // Create a new lexical scope for the function body
   scope = new Scope( _scope );
 
   // Add the parameters to the scope
-  for(ASTIterator i = ParameterDefs(); i != endParams; i++) {
+  for(std::list<ASTNode>::iterator i = paramsList.begin(); i != paramsList.end(); i++) {
     if( scope->HasVariable( i->Content() )) {
       // TODO: Raise an error/warning when we find a name collision between the parameter name
       // and anything else. Warning where the name is found not in the exact same scope, (e.g.

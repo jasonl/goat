@@ -60,7 +60,18 @@ void Scope::RegisterChildScope( Scope *newChild ) {
 }
 
 void Scope::AddParameterVariable( std::string name ) {
-  // TODO
+  Variable *lastVar = NULL, *newVar = new Variable( name );
+  
+  if(firstVariable == NULL) {
+    newVar->ebpOffset = 0;
+    firstVariable = newVar;
+  } else {
+    lastVar = firstVariable;
+    while( lastVar->next ) { lastVar = lastVar->next; }
+    lastVar->next = newVar;
+    
+    newVar->ebpOffset = lastVar->ebpOffset + OBJECT_SIZE;
+  }  
 }
 
 void Scope::AddClassVariable( std::string name ) {
@@ -71,7 +82,7 @@ void Scope::AddLocalVariable( std::string name ) {
   Variable *lastVar = NULL, *newVar = new Variable( name ), *cursorVar;
   
   if (firstVariable == NULL) {
-    newVar->ebpOffset = 0;
+    newVar->ebpOffset = -4 - OBJECT_SIZE; // As EBP is pushed onto the stack
     firstVariable = newVar;
   } else {    
     cursorVar = firstVariable;
@@ -88,18 +99,21 @@ void Scope::AddLocalVariable( std::string name ) {
 }
 
 bool Scope::HasVariable( std::string name ) {
+  return (FindVariable(name) ? true : false); 
+}
+
+Variable *Scope::FindVariable( std::string name ) {
   Variable *lastVar = firstVariable;
 
   while (lastVar) {
-    if (lastVar->name == name) return true;
+    if (lastVar->name == name) return lastVar;
     lastVar = lastVar->next;
   }
   
-  if (enclosingScope) {
-    return enclosingScope->HasVariable( name );
-  }
+  // TODO: Work out how access to variables in higher scopes,
+  // for closures.
 
-  return false;
+  return NULL;
 }
 
 bool Scope::HasParameterVariable( std::string name ) {
@@ -111,20 +125,38 @@ bool Scope::HasParameterVariable( std::string name ) {
 // payload. Note this does not add a size specifier to the 
 // Operand, so this must be done by the caller, for example
 // when pushing an operand's value onto the stack.
-Operand &Scope::GeneratePayloadOperand( std::string _var ) {
-  return eax;
+Operand &Scope::GeneratePayloadOperand( std::string name ) {  
+  Variable *var = FindVariable(name);
+    
+  if(var) {
+    return _[ebp + (var->ebpOffset + PAYLOAD_OFFSET)];
+  } else {
+    return eax;
+  }
 }
 
 // Generates the assembly operand pointing to the variable's
 // type hash. Does not add an operand size specifier
-Operand &Scope::GenerateTypeHashOperand( std::string _var ) {
-  return _[ebp+4];
+Operand &Scope::GenerateTypeHashOperand( std::string name ) {
+  Variable *var = FindVariable(name);
+    
+  if(var) {
+    return _[ebp + (var->ebpOffset + TYPE_HASH_OFFSET)];
+  } else {
+    return eax;
+  }
 }
 
 // Generates the assembly operand pointing to the variable's
 // dispatch function. Does not add an operand size specifier.
-Operand &Scope::GenerateDispatchOperand( std::string _var ) {
-  return eax;
+Operand &Scope::GenerateDispatchOperand( std::string name ) {
+  Variable *var = FindVariable(name);
+    
+  if(var) {
+    return _[ebp + (var->ebpOffset + DISPATCH_OFFSET)];
+  } else {
+    return eax;
+  }
 }
 
 // Generates a string which is guaranteed to be unique across

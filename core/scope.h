@@ -28,9 +28,9 @@ class Variable;
 #define OBJECT_SIZE 12
 
 // Within each object, we have offsets for the various pieces of information
-#define TYPE_HASH_OFFSET 0
+#define TYPE_HASH_OFFSET 8
 #define DISPATCH_OFFSET 4
-#define PAYLOAD_OFFSET 8
+#define PAYLOAD_OFFSET 0
 
 // A Scope is a lexical scope, in which variables
 // are allocated. It is a spaghetti stack type of structure,
@@ -52,6 +52,7 @@ class Scope {
   Operand &GeneratePayloadOperand( std::string );
   Operand &GenerateDispatchOperand( std::string );
  private:
+  Variable *FindVariable( std::string );
   Scope *enclosingScope, *firstChildScope, *nextScope;
   Variable *firstVariable;
   int uniqueVal;

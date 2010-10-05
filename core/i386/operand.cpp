@@ -316,7 +316,11 @@ std::string BuildIndirectOperand( const Operand &op ) {
     }
   }
   if( op.displacement ) {
-    output << "+" << std::hex << op.displacement;
+    if (op.displacement >= 0) {
+      output << "+" << std::dec << op.displacement;
+    } else {
+      output << "-" << std::dec << (-1 * op.displacement);
+    }
   }
   output << "]";
   return output.str();;
