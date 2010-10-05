@@ -79,6 +79,7 @@ void SourceFile::Analyse() {
 void SourceFile::GenerateCode() {
   if( astRoot ) {
     assembly = astRoot->GenerateCode();
+    assembly->AppendBlock(astRoot->GetAuxiliaryCode());
   } else {
     std::cerr << "No Abstract Syntax Tree was built from this source file";
   }

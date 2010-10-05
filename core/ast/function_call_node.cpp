@@ -19,6 +19,7 @@ void FunctionCallNode::Analyse(Scope *_scope) {
     ASTThisNode *_this = new ASTThisNode();
     AddReceiver( _this );
   }
+  
 
   for( ASTIterator i = ChildNodes(); i != end; ++i ) {
     i->Analyse( scope );

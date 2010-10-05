@@ -28,6 +28,17 @@ ASTNode::~ASTNode() {
 void ASTNode::Analyse( Scope* ) {
 }
 
+AssemblyBlock* ASTNode::GetAuxiliaryCode() {
+  ASTIterator end(NULL);
+  AssemblyBlock *a = new AssemblyBlock;
+  
+  for( ASTIterator i = ChildNodes(); i != end; i++) {
+    a->AppendBlock( i->GetAuxiliaryCode() );
+  }
+
+  return a;
+}
+
 void ASTNode::append( ASTNode *child ) {
   ASTNode *lastSibling = this->firstChild;
 

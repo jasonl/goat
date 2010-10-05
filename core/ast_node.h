@@ -68,6 +68,7 @@ class ASTNode {
 
   virtual void Analyse( Scope* );
   virtual AssemblyBlock* GenerateCode() { return new AssemblyBlock(); }
+  virtual AssemblyBlock* GetAuxiliaryCode();
   virtual AssemblyBlock* PushOntoStack() { return new AssemblyBlock(); }
 
   void print(int, int, char*);

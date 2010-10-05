@@ -11,7 +11,9 @@ public:
   void AddBody( ASTNode* );
   void AddParameterDef( ASTNode* );
   AssemblyBlock *GenerateCode();
+  AssemblyBlock *GetAuxiliaryCode();
 private:
+  AssemblyBlock *bodyAsm;
   ASTNode *body;
 };
 
