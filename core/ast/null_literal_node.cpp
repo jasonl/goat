@@ -15,6 +15,8 @@ AssemblyBlock *NullLiteralNode::GenerateCode() {
   a->MOV( ecx, Dword(goatHash("Null")));
   a->MOV( edx, Dword(0) ); //TODO: This needs to reference a label
 
+  a->CommentLastInstruction("Move Null into eax/ecx/edx");
+
   return a;
 }
 
@@ -24,6 +26,8 @@ AssemblyBlock *NullLiteralNode::PushOntoStack() {
   a->PUSH( Dword(goatHash("Null")));
   a->PUSH( Dword(0) ); //TODO: This needs to reference a label
   a->PUSH( Dword(0) );
+
+  a->CommentLastInstruction("Push Null onto stack");
 
   return a;
 }

@@ -23,6 +23,8 @@ AssemblyBlock *IntegerLiteralNode::GenerateCode() {
   a->MOV( ecx, Dword(goatHash("Integer")));
   a->MOV( edx, Dword(0)); // TODO: This needs to reference a label
 
+  a->CommentLastInstruction("Move Integer " + Content() + " into eax/ecx/edx");
+
   return a;
 }
 
@@ -38,6 +40,8 @@ AssemblyBlock *IntegerLiteralNode::PushOntoStack() {
   a->PUSH( Dword(goatHash("Integer")) );
   a->PUSH( Dword(0) ); // TODO: Label for dispatch function
   a->PUSH( Dword(val) );
+
+  a->CommentLastInstruction("Push Integer " + Content() + " onto stack");
 
   return a;
 }
