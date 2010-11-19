@@ -1,5 +1,7 @@
 goat
+goatc
 goat.dSYM/*
+goatc.dSYM/*
 goat-test
 *.o
 *.cpp~
