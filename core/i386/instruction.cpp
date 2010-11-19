@@ -48,7 +48,7 @@ void Instruction::SetComment( std::string _comment ) {
 
 std::ostream& operator<<( std::ostream &stream, const Instruction &ins ) {
   if( ins.label ) {
-    stream << ins.label->Name() << "\n";
+    stream << ins.label->Name() << ":\n";
   }
 
   stream << "    " << ins.mnemonic;
