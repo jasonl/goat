@@ -67,11 +67,18 @@ void FunctionDefNode::Analyse( Scope *_scope ) {
 
 AssemblyBlock *FunctionDefNode::GenerateCode() {
   ASTIterator end( NULL );
+  std::string functionName;
 
   bodyAsm->PUSH( ebp );
-  // TODO: Handle anonymous functions
-  bodyAsm->LabelFirstInstruction( parent->Content() );
-  
+
+  if(parent->HasContent()) {
+    functionName = parent->Content();
+  } else {
+    functionName = scope->GenerateUniqueLabel("anonymous_fn");
+  }
+
+  bodyAsm->LabelFirstInstruction( functionName );
+
   for( ASTIterator i = BodyNodes(); i != end; i++ ) {
     bodyAsm->AppendBlock( i->GenerateCode() );
   }
@@ -84,9 +91,24 @@ AssemblyBlock *FunctionDefNode::GenerateCode() {
   bodyAsm->POP(ebp);
   bodyAsm->RET();
 
-  return new AssemblyBlock;
+  // Generate code for the actual function object
+  AssemblyBlock *a = new AssemblyBlock;
+
+  a->MOV( eax, *new Operand(functionName));
+  a->MOV( ecx, Dword(goatHash("Function")));
+  a->MOV( edx, Dword(0) ); //TODO This needs to reference a label
+  
+  a->CommentLastInstruction("Function object for " + functionName);
+
+  return a;
 } 
 
 AssemblyBlock *FunctionDefNode::GetAuxiliaryCode() {
+  ASTIterator end(NULL);
+  
+  for( ASTIterator i = ChildNodes(); i != end; i++) {
+    bodyAsm->AppendBlock( i->GetAuxiliaryCode() );
+  }
+
   return bodyAsm;
 }

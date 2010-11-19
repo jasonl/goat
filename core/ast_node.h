@@ -73,6 +73,7 @@ class ASTNode {
 
   void print(int, int, char*);
   std::string Content() { return token->Content(); }
+  bool HasContent() { return( token != NULL ); }
   enum NODE_TYPE Type() { return type; }
 
   protected:
