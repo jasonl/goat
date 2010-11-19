@@ -81,6 +81,10 @@ a_h.write <<-PROTOTYPES
   void AppendBlock( AssemblyBlock* );
   void AppendInstruction( Instruction* );
   InstructionIterator Instructions() { return InstructionIterator( first ); }
+  void LabelFirstInstruction( std::string );
+  void LabelLastInstruction( std::string );
+  void CommentLastInstruction( std::string );
+  void AddHangingLabel( std::string );
  private:
   Instruction *first;
   Instruction *last;
@@ -114,6 +118,31 @@ void AssemblyBlock::AppendInstruction( Instruction *i ) {
   }
   last = i;
 }
+
+void AssemblyBlock::LabelFirstInstruction( std::string _label ) {
+  if( first ) {
+    first->SetLabel( _label );
+  }
+}
+
+void AssemblyBlock::LabelLastInstruction( std::string _label ) {
+  if( last ) {
+    last->SetLabel( _label );
+  }
+}
+
+void AssemblyBlock::CommentLastInstruction( std::string _comment ) {
+  if( last ) {
+    last->SetComment( _comment );
+  }
+}
+
+void AssemblyBlock::AddHangingLabel( std::string _label ) {
+  // TODO: Add support for genuinely empty instructions, and remove the NOP
+  NOP();
+  last->SetLabel( _label );
+}
+
 DEFINITIONS
 
 a_h.write "};\n"

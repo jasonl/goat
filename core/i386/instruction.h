@@ -16,6 +16,7 @@ public:
   Instruction(std::string, Operand*, Operand*, Operand*);
   friend std::ostream& operator<<( std::ostream&, const Instruction&);
   void SetLabel( std::string );
+  void SetComment( std::string );
   ~Instruction();
 private:
   AsmLabel *label;
@@ -23,6 +24,7 @@ private:
   Operand *operand1;
   Operand *operand2;
   Operand *operand3;
+  std::string comment;
   Instruction *next;
 };
 

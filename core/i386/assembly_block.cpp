@@ -868,6 +868,12 @@ void AssemblyBlock::LabelLastInstruction( std::string _label ) {
   }
 }
 
+void AssemblyBlock::CommentLastInstruction( std::string _comment ) {
+  if( last ) {
+    last->SetComment( _comment );
+  }
+}
+
 void AssemblyBlock::AddHangingLabel( std::string _label ) {
   // TODO: Add support for genuinely empty instructions, and remove the NOP
   NOP();

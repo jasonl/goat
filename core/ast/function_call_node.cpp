@@ -47,7 +47,8 @@ AssemblyBlock *FunctionCallNode::GenerateCode() {
   }
   a->MOV( ecx, Dword(goatHash( Content() )));
   a->CALL( edx );
-
+  
+  a->CommentLastInstruction( "Function Call: " + Content() );
   return a;
 }
 

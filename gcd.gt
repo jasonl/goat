@@ -13,3 +13,4 @@ gcd: λ( a, b )
   else
     return gcd( b, a % b )
 
+greatest_common_divisor( 6,3)

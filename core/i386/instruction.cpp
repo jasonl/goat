@@ -42,6 +42,10 @@ void Instruction::SetLabel( std::string _label ) {
   label = new AsmLabel( _label );
 }
 
+void Instruction::SetComment( std::string _comment ) {
+  comment = _comment;
+}
+
 std::ostream& operator<<( std::ostream &stream, const Instruction &ins ) {
   if( ins.label ) {
     stream << ins.label->Name() << "\n";
@@ -51,6 +55,7 @@ std::ostream& operator<<( std::ostream &stream, const Instruction &ins ) {
   if( ins.operand1 ) stream << " " << *ins.operand1;
   if( ins.operand2 ) stream << ", " << *ins.operand2;
   if( ins.operand3 ) stream << ", " << *ins.operand3;
+  if( ins.comment.length() > 0 ) stream << "\t\t\t\t; " << ins.comment;
   return stream;
 } 
 
