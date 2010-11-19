@@ -36,6 +36,8 @@ AssemblyBlock *VariableNode::GenerateCode() {
   a->MOV( ecx, scope->GenerateTypeHashOperand(varName) );
   a->MOV( edx, scope->GenerateDispatchOperand(varName) );
 
+  a->CommentLastInstruction("Move " + varName + " into eax/ecx/edx");
+
   return a;
 }
 
@@ -46,6 +48,8 @@ AssemblyBlock *VariableNode::PushOntoStack() {
   a->PUSH( Dword(scope->GenerateTypeHashOperand(varName)) );
   a->PUSH( Dword(scope->GenerateDispatchOperand(varName)) );
   a->PUSH( Dword(scope->GeneratePayloadOperand(varName)) );
+
+  a->CommentLastInstruction("Push " + varName + " on to stack");
 
   return a;
 }
