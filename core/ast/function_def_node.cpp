@@ -70,6 +70,7 @@ AssemblyBlock *FunctionDefNode::GenerateCode() {
   std::string functionName;
 
   bodyAsm->PUSH( ebp );
+  bodyAsm->MOV( ebp, esp );
 
   if(parent->HasContent()) {
     functionName = parent->Content();

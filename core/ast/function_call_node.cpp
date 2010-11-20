@@ -36,7 +36,7 @@ AssemblyBlock *FunctionCallNode::GenerateCode() {
   AssemblyBlock *a = new AssemblyBlock;
   ASTIterator end(NULL);
 
-  // Put the receiver (i.e. this ) into EAX/ECX/EDX
+  // Put the receiver (i.e. this ) onto eax/ecx/edx
   a->AppendBlock( receiver->GenerateCode() );
 
   // Push the parameters onto the stack
