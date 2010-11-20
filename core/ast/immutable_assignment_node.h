@@ -8,8 +8,6 @@ public:
   void SetRValue( ASTNode* );
   ASTIterator ChildNodes();
   AssemblyBlock *GenerateCode();
-private:
-  ASTNode *rValue;
 };
 
 #endif

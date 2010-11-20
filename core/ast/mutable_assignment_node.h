@@ -7,8 +7,6 @@ public:
   void Analyse( Scope* );
   void SetRValue( ASTNode* );
   AssemblyBlock *GenerateCode();
-private:
-  ASTNode *rValue;
 };
 
 #endif

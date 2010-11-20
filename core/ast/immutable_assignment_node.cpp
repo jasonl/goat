@@ -16,20 +16,19 @@ void ImmutableAssignmentNode::Analyse( Scope *_scope ) {
 
   scope->AddLocalVariable( Content() );
   
-  rValue->Analyse( scope );  
+  firstChild->Analyse( scope );  
 }
 
 void ImmutableAssignmentNode::SetRValue( ASTNode* _rValue ) {
   AppendChild( _rValue );
-  rValue = _rValue;
 }
 
 ASTIterator ImmutableAssignmentNode::ChildNodes() {
-  return ASTIterator(rValue);
+  return ASTIterator(firstChild);
 }
 
 AssemblyBlock *ImmutableAssignmentNode::GenerateCode() {
-  AssemblyBlock *a = rValue->GenerateCode();
+  AssemblyBlock *a = firstChild->GenerateCode();
 
   a->MOV( scope->GeneratePayloadOperand(Content()), eax );
   a->MOV( scope->GenerateTypeHashOperand(Content()), ecx );

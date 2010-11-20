@@ -12,20 +12,21 @@ void MutableAssignmentNode::Analyse( Scope *_scope ) {
     scope->AddLocalVariable( Content() );
   }
   
-  rValue->Analyse( scope );  
+  firstChild->Analyse( scope );  
 }
 
 void MutableAssignmentNode::SetRValue( ASTNode *_rValue ) {
   AppendChild( _rValue );
-  rValue = _rValue;
 }
 
 AssemblyBlock *MutableAssignmentNode::GenerateCode() {
-  AssemblyBlock *a = rValue->GenerateCode();
+  AssemblyBlock *a = firstChild->GenerateCode();
 
   a->MOV( scope->GeneratePayloadOperand(Content()), eax );
   a->MOV( scope->GenerateTypeHashOperand(Content()), ecx );
   a->MOV( scope->GenerateDispatchOperand(Content()), edx );
+  
+  a->CommentLastInstruction("Assignment to " + Content());
 
   return a;
 }

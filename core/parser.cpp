@@ -293,13 +293,13 @@ FunctionCallNode *Parser::MatchFunctionCall() {
     return NULL;
   }
 
-  if( receiver ) {
-    thisNode->AddReceiver( receiver );
-  }
-
   while((newParent = MATCH( MethodInvocation ))) {    
     newParent->InsertFirstChild( thisNode );
     thisNode = newParent;
+  }
+
+  if( receiver ) {
+    thisNode->AddReceiver( receiver );
   }
 
   return thisNode;
