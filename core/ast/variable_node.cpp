@@ -20,8 +20,8 @@ void VariableNode::Analyse( Scope *_scope ) {
   // and deal with it at runtime.
   if( !scope->HasVariable(Content()) ) {
     FunctionCallNode *fc = new FunctionCallNode( token );
-    ASTThisNode *tn = new ASTThisNode();
-    fc->AddReceiver( tn );
+    SelfNode *sn = new SelfNode();
+    fc->AddReceiver( sn );
     parent->ReplaceChild( this, fc );
     delete this;
     return;

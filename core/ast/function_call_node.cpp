@@ -16,8 +16,8 @@ void FunctionCallNode::Analyse(Scope *_scope) {
 
   // Add the implicit this receiver if it doesn't exist
   if( Receiver() == NULL ) {
-    ASTThisNode *_this = new ASTThisNode();
-    AddReceiver( _this );
+    SelfNode *self = new SelfNode();
+    AddReceiver( self );
   }
   
 

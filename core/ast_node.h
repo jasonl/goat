@@ -21,7 +21,7 @@ const std::string NODE_TYPES[] = {
   "StatementGroup", "Statement", "ClassStatement", "My",
   "\x1b[0;36mMutableAssignment\x1b[0;37;00m", "\x1b[0;36mImmutableAssignment\x1b[0;37;00m",
   "\x1b[1;35mConditional\x1b[0;37;00m",
-  "ClassDefinition", "This",
+  "ClassDefinition", "Self",
   "\x1b[1;31mFunctionDef\x1b[0;37;00m", "OneLineFunctionDef", "BlockFunctionDef",
   "ParameterDef",
   "\x1b[1;34mFunctionCall\x1b[0;37;00m", "Parameter", "NamedParameter",
@@ -43,7 +43,7 @@ class ASTNode {
     StatementGroup, Statement, ClassStatement, My,
     MutableAssignment, ImmutableAssignment,
     Conditional,
-    ClassDefinition, This,
+    ClassDefinition, Self,
     FunctionDef, OneLineFunctionDef, BlockFunctionDef,
     ParameterDef,
     FunctionCall, Parameter, NamedParameter,
@@ -125,9 +125,9 @@ typedef std::list<Token>::iterator TokenIterator;
 #include "ast/parameter_node.h"
 #include "ast/parameter_def_node.h"
 #include "ast/return_statement_node.h"
+#include "ast/self_node.h"
 #include "ast/source_file_node.h"
 #include "ast/ast_string_literal_node.hpp"
-#include "ast/ast_this_node.hpp"
 #include "ast/variable_node.h"
 
 #endif
