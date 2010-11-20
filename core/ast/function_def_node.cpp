@@ -61,6 +61,10 @@ void FunctionDefNode::Analyse( Scope *_scope ) {
     }
   }
 
+  // Add the self variable - passed in registers, but we'll usually need to move it
+  // to the locals.
+  scope->AddLocalVariable( "self" );
+
   // Now analyse the function body
   body->Analyse( scope );
 }
@@ -71,6 +75,14 @@ AssemblyBlock *FunctionDefNode::GenerateCode() {
 
   bodyAsm->PUSH( ebp );
   bodyAsm->MOV( ebp, esp );
+
+  // Move self into the locals from the registers, so we're free to nuke eax/ecx/edx
+  // TODO: Don't generate this if self isn't referenced in the code.
+  bodyAsm->MOV( scope->GeneratePayloadOperand("self"), eax );
+  bodyAsm->MOV( scope->GenerateTypeHashOperand("self"), ecx );
+  bodyAsm->MOV( scope->GenerateDispatchOperand("self"), edx );
+
+  bodyAsm->CommentLastInstruction("Move self passed in registers to locals");
 
   if(parent->HasContent()) {
     functionName = parent->Content();
