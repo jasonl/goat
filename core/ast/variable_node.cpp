@@ -23,6 +23,8 @@ void VariableNode::Analyse( Scope *_scope ) {
     SelfNode *sn = new SelfNode();
     fc->AddReceiver( sn );
     parent->ReplaceChild( this, fc );
+    fc->Analyse(scope);
+
     delete this;
     return;
   }

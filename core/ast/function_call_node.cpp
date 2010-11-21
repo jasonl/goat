@@ -3,11 +3,13 @@
 FunctionCallNode::FunctionCallNode( TokenIterator &_token ): 
   ASTNode( ASTNode::FunctionCall ) {
   token = &(*_token);
+  receiver = NULL;
 }
 
 FunctionCallNode::FunctionCallNode( Token *_token ):
   ASTNode( ASTNode::FunctionCall ) {
   token = _token;
+  receiver = NULL;
 }
 
 void FunctionCallNode::Analyse(Scope *_scope) {
