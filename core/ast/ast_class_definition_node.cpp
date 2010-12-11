@@ -1,6 +1,8 @@
 #include "../ast_node.h"
 #include "../lexer.h"
 
+std::string GenerateFunctionLabel( ASTNode*, std::string );
+
 ASTClassDefinitionNode::ASTClassDefinitionNode( TokenIterator &_token ) : ASTNode( ASTNode::ClassDefinition ) {
   token = &(*_token);
 }
@@ -23,4 +25,37 @@ void ASTClassDefinitionNode::Analyse( Scope *_scope ) {
     i->Analyse( scope );
     
   }
+}
+
+AssemblyBlock *ASTClassDefinitionNode::GenerateCode() {
+  ASTIterator end(NULL);
+  AssemblyBlock *a = new AssemblyBlock;
+  AssemblyBlock *fn;
+  AssemblyBlock *dispatch = new AssemblyBlock;
+
+  for(ASTIterator i = ChildNodes(); i != end; i++) {
+    // As we are guaranteed by the parser to only have AssignmentNodes,
+    // we don't generate the actual code for them, but merely use the names
+    i->GenerateCode();
+    fn = i->GetAuxiliaryCode();
+    fn->LabelFirstInstruction(GenerateFunctionLabel( &(*i), this->Content() ));
+
+    dispatch->CMP(ecx, Dword(goatHash(i->Content())));
+    dispatch->JE(*new Operand(GenerateFunctionLabel( &(*i), this->Content())));
+
+    a->AppendBlock(fn);
+  }
+
+  // TODO: Write error code for when a non-existant method is called
+
+  dispatch->AppendBlock(a);
+  return dispatch;
+}
+
+AssemblyBlock *ASTClassDefinitionNode::GetAuxiliaryCode() {
+  return new AssemblyBlock;
+}
+
+std::string GenerateFunctionLabel( ASTNode* assignmentNode, std::string className ) {
+  return("__" + assignmentNode->Content() + "_" + className);
 }

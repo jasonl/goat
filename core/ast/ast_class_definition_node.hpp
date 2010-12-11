@@ -4,6 +4,8 @@
 class ASTClassDefinitionNode : public ASTNode {
 public:
   ASTClassDefinitionNode( TokenIterator& );
+  AssemblyBlock *GenerateCode();
+  AssemblyBlock *GetAuxiliaryCode();
   void Analyse( Scope* );
 };
 
