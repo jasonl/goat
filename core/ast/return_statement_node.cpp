@@ -22,7 +22,7 @@ void ReturnStatementNode::Analyse( Scope *_scope ) {
 
 AssemblyBlock *ReturnStatementNode::GenerateCode() {
   AssemblyBlock *a = returnValue->GenerateCode();
-  a->POP(ebp);
+  a->LEAVE();
   a->RET();
   return a;
 }

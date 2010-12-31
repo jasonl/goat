@@ -101,7 +101,7 @@ AssemblyBlock *FunctionDefNode::GenerateCode() {
   bodyAsm->MOV( ecx, Dword(goatHash("Null")));
   bodyAsm->MOV( edx, Dword(0) ); //TODO: This needs to reference a label
 
-  bodyAsm->POP(ebp);
+  bodyAsm->LEAVE();
   bodyAsm->RET();
 
   // Generate code for the actual function object
