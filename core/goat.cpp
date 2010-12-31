@@ -76,8 +76,9 @@ std::string parseCommandLine( int argc, char *argv[], int *verbose) {
     std::cerr << "goat <options> input_file.gt\n\n";
     std::cerr << "options:\n";
     std::cerr << "-vlex              Print token stream.\n";
-    std::cerr << "-vast              Print AST.\n";
-    exit(0);
+    std::cerr << "-vtree             Print AST.\n";
+    std::cerr << "-vasm              Print generated assembly.\n";
+    exit(1);
   }
   
   for ( i=1; i <= (argc - 1); ++i) {
@@ -88,21 +89,22 @@ std::string parseCommandLine( int argc, char *argv[], int *verbose) {
       case 'V':
       case 'v':
 	switch( argv[i][2] ){
-	  // -vAST - print the AST
-	  case 'a':
-	  case 'A':
-	    *verbose |= VERBOSE_AST;
-	    break;
-	  // -vLex - print lexical token stream
-	  case 'l':
-	  case 'L':
-	    *verbose |= VERBOSE_TOKENS;
-	    break;
-	  // -vScope - print scopes
-	  case 'S':
-	  case 's':
-	    *verbose |= VERBOSE_SCOPES;
-	    break;
+	// -vTree - print the AST
+	case 't':
+	case 'T':
+	  *verbose |= VERBOSE_AST;
+	  break;
+	// -vLex - print lexical token stream
+	case 'l':
+	case 'L':
+	  *verbose |= VERBOSE_TOKENS;
+	  break;
+	// -vScope - print scopes
+	case 'S':
+	case 's':
+	  *verbose |= VERBOSE_SCOPES;
+	  break;
+	  // -vAsm - print assembly
 	case 'm':
 	case 'M':
 	  *verbose |= VERBOSE_ASM;
