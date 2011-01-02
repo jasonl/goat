@@ -37,6 +37,7 @@ void FunctionCallNode::AddReceiver( ASTNode *_receiver ) {
 AssemblyBlock *FunctionCallNode::GenerateCode() {
   AssemblyBlock *a = new AssemblyBlock;
   ASTIterator end(NULL);
+  uint32_t paramCount = 0;
 
   // Put the receiver (i.e. this ) onto eax/ecx/edx
   a->AppendBlock( receiver->GenerateCode() );
@@ -45,12 +46,17 @@ AssemblyBlock *FunctionCallNode::GenerateCode() {
   for( ASTIterator i = ChildNodes(); i != end; i++ ) {
     if( i->Type() == ASTNode::Parameter ) {
       a->AppendBlock( i->PushOntoStack() );
+      paramCount++;
     }
   }
   a->MOV( ecx, Dword(goatHash( Content() )));
-  a->CALL( edx );
-  
+  a->CALL( edx );  
   a->CommentLastInstruction( "Function Call: " + Content() );
+
+  // If we've passed any parameters on the stack, release the space on return
+  if(paramCount > 0) {
+    a->ADD(esp, *new Operand(paramCount * 12));
+  }
   return a;
 }
 
