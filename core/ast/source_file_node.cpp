@@ -19,5 +19,13 @@ AssemblyBlock *SourceFileNode::GenerateCode() {
     a->AppendBlock( i->GenerateCode() );
   }
 
+  // Default exit code
+  a->PUSH( Dword(0) ); // Return exit code of 0
+  a->MOV(eax, *new Operand(0x01)); // System call number 1 - exit program
+  a->SUB(esp, *new Operand(0x04)); // OSX / BSD requires extra space on stack
+  a->INT(*new Operand(0x80));  // Make the system call
+  
+  a->CommentLastInstruction("Default exit back to system");
+
   return a;
 }
