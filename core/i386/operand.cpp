@@ -56,7 +56,7 @@ Operand::Operand( OperandType _type ):
 }
 
 // Immediate Operand Constructor
-Operand::Operand( uint32_t _value, OperandSize _size ):
+Operand::Operand( uint32_t _value, OperandSize _size):
   size(_size), value(_value) {
   type = Immediate;
   prototype = false;

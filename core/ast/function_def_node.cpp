@@ -72,10 +72,14 @@ void FunctionDefNode::Analyse( Scope *_scope ) {
 AssemblyBlock *FunctionDefNode::GenerateCode() {
   ASTIterator end( NULL );
   std::string functionName;
+  uint32_t bytesForLocals;
 
   bodyAsm->PUSH( ebp );
   bodyAsm->MOV( ebp, esp );
 
+  bytesForLocals = scope->GetVariableCount() * 12;
+  bodyAsm->SUB( esp, *new Operand(bytesForLocals) );
+  
   // Move self into the locals from the registers, so we're free to nuke eax/ecx/edx
   // TODO: Don't generate this if self isn't referenced in the code.
   bodyAsm->MOV( scope->GeneratePayloadOperand("self"), eax );

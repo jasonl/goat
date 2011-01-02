@@ -23,6 +23,7 @@ Scope::Scope( Scope* parent ) {
   enclosingScope = parent;
   firstVariable = NULL;
   uniqueVal = 0;
+  variableCount = 0;
   nextScope = NULL;
   firstChildScope = NULL;
 
@@ -71,7 +72,9 @@ void Scope::AddParameterVariable( std::string name ) {
     lastVar->next = newVar;
     
     newVar->ebpOffset = lastVar->ebpOffset + OBJECT_SIZE;
-  }  
+  }
+
+  variableCount++;
 }
 
 void Scope::AddClassVariable( std::string name ) {
@@ -96,6 +99,8 @@ void Scope::AddLocalVariable( std::string name ) {
     //TODO: Abstract stack growth direction out of this.
     newVar->ebpOffset = lastVar->ebpOffset - OBJECT_SIZE;
   }
+
+  variableCount++;
 }
 
 bool Scope::HasVariable( std::string name ) {

@@ -22,7 +22,7 @@ public:
     Dword };
 
   Operand( OperandType );
-  Operand( uint32_t, OperandSize ); // For immediate operands
+  Operand( uint32_t, OperandSize = None ); // For immediate operands
   Operand( std::string ); // For label immediate/relative operands
   static Operand& Prototype(const Register);
   Operand& operator[](Operand&) const;

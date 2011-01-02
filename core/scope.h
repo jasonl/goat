@@ -47,6 +47,7 @@ class Scope {
   void RegisterChildScope( Scope* );
   bool HasVariable( std::string );
   bool HasParameterVariable( std::string );
+  int GetVariableCount() { return variableCount; }
   std::string GenerateUniqueLabel( std::string );
   Operand &GenerateTypeHashOperand( std::string );
   Operand &GeneratePayloadOperand( std::string );
@@ -56,6 +57,7 @@ class Scope {
   Scope *enclosingScope, *firstChildScope, *nextScope;
   Variable *firstVariable;
   int uniqueVal;
+  int variableCount;
 };
 
 #endif
