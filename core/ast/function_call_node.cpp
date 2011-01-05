@@ -39,9 +39,6 @@ AssemblyBlock *FunctionCallNode::GenerateCode() {
   ASTIterator end(NULL);
   uint32_t paramCount = 0;
 
-  // Put the receiver (i.e. this ) onto eax/ecx/edx
-  a->AppendBlock( receiver->GenerateCode() );
-
   // Push the parameters onto the stack
   for( ASTIterator i = ChildNodes(); i != end; i++ ) {
     if( i->Type() == ASTNode::Parameter ) {
@@ -49,6 +46,10 @@ AssemblyBlock *FunctionCallNode::GenerateCode() {
       paramCount++;
     }
   }
+
+  // Put the receiver (i.e. this ) onto eax/ecx/edx
+  a->AppendBlock( receiver->GenerateCode() );
+
   a->MOV( ecx, Dword(goatHash( Content() )));
   a->CALL( edx );  
   a->CommentLastInstruction( "Function Call: " + Content() );
