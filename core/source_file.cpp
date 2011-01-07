@@ -152,10 +152,10 @@ void SourceFile::PrintAST() {
 }
 
 void SourceFile::PrintAsm() {
-  InstructionIterator end(NULL);
+  AssemblerItemIterator end(NULL);
 
   if( assembly ) {
-    for(InstructionIterator i = assembly->Instructions(); i != end; i++) {
+    for(AssemblerItemIterator i = assembly->Instructions(); i != end; i++) {
       std::cout << *i << "\n";
     }
   }

@@ -1,7 +1,9 @@
 #ifndef __ASSEMBLY_BLOCK_H
 #define __ASSEMBLY_BLOCK_H
 #include "operand.h"
+#include "assembler_item.h"
 #include "instruction.h"
+
 class AssemblyBlock {
 public:
   void AAA();
@@ -214,13 +216,13 @@ public:
   AssemblyBlock();
   void AppendBlock( AssemblyBlock* );
   void AppendInstruction( Instruction* );
-  InstructionIterator Instructions() { return InstructionIterator( first ); }
+  AssemblerItemIterator Instructions() { return AssemblerItemIterator( first ); }
   void LabelFirstInstruction( std::string );
   void LabelLastInstruction( std::string );
   void CommentLastInstruction( std::string );
   void AddHangingLabel( std::string );
  private:
-  Instruction *first;
-  Instruction *last;
+  AssemblerItem *first;
+  AssemblerItem *last;
 };
 #endif
