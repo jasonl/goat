@@ -15,6 +15,8 @@ AssemblyBlock *SourceFileNode::GenerateCode() {
   AssemblyBlock *a = new AssemblyBlock;
   ASTIterator end(NULL);
 
+  a->SetSegment(".text");
+
   for( ASTIterator i = ChildNodes(); i != end; i++ ) {
     a->AppendBlock( i->GenerateCode() );
   }

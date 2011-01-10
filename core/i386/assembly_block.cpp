@@ -829,13 +829,13 @@ void AssemblyBlock::XOR( Operand &op1, Operand &op2 ) {
 }
 
 AssemblyBlock::AssemblyBlock() {
-  last = NULL;
   first = NULL;
+  last = NULL;
 }
 
 void AssemblyBlock::AppendBlock( AssemblyBlock *ab ) {
   if( ab == NULL || ab->first == NULL || ab->last == NULL ) return; 
-  
+
   if( last ) {
     last->next = ab->first;
     last = ab->last;
@@ -843,11 +843,15 @@ void AssemblyBlock::AppendBlock( AssemblyBlock *ab ) {
     first = ab->first;
     last = ab->last;
   }
-  
+
   delete ab;
 }
 
 void AssemblyBlock::AppendInstruction( Instruction *i ) {
+  AppendItem(i);
+}
+
+void AssemblyBlock::AppendItem( AssemblerItem *i ) {  
   if(first == NULL ) {
     first = i;
   } else {
@@ -879,3 +883,8 @@ void AssemblyBlock::AddHangingLabel( std::string _label ) {
   NOP();
   last->SetLabel( _label );
 }
+
+void AssemblyBlock::SetSegment( std::string _segment ) {
+  AppendItem( new SegmentDeclaration(_segment) );
+}  
+

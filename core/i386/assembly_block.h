@@ -3,7 +3,7 @@
 #include "operand.h"
 #include "assembler_item.h"
 #include "instruction.h"
-
+#include "segment_declaration.h"
 class AssemblyBlock {
 public:
   void AAA();
@@ -215,12 +215,14 @@ public:
   void XOR( Operand&, Operand& );
   AssemblyBlock();
   void AppendBlock( AssemblyBlock* );
+  void AppendItem( AssemblerItem* );
   void AppendInstruction( Instruction* );
   AssemblerItemIterator Instructions() { return AssemblerItemIterator( first ); }
   void LabelFirstInstruction( std::string );
   void LabelLastInstruction( std::string );
   void CommentLastInstruction( std::string );
   void AddHangingLabel( std::string );
+  void SetSegment( std::string );
  private:
   AssemblerItem *first;
   AssemblerItem *last;

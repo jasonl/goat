@@ -19,7 +19,9 @@ a_h.write '#define __ASSEMBLY_BLOCK_H'
 a_h.write "\n"
 
 a_h.write "\#include \"operand.h\"\n"
+a_h.write "\#include \"assembler_item.h\"\n"
 a_h.write "\#include \"instruction.h\"\n"
+a_h.write "\#include \"segment_declaration.h\"\n"
 a_c.write "\#include \"assembly_block.h\"\n\n"
 
 a_h.write "class AssemblyBlock \{\n"
@@ -79,15 +81,17 @@ end
 a_h.write <<-PROTOTYPES
   AssemblyBlock();
   void AppendBlock( AssemblyBlock* );
+  void AppendItem( AssemblerItem* );
   void AppendInstruction( Instruction* );
-  InstructionIterator Instructions() { return InstructionIterator( first ); }
+  AssemblerItemIterator Instructions() { return AssemblerItemIterator( first ); }
   void LabelFirstInstruction( std::string );
   void LabelLastInstruction( std::string );
   void CommentLastInstruction( std::string );
   void AddHangingLabel( std::string );
+  void SetSegment( std::string );
  private:
-  Instruction *first;
-  Instruction *last;
+  AssemblerItem *first;
+  AssemblerItem *last;
 PROTOTYPES
 
 a_c.write <<-DEFINITIONS
@@ -111,6 +115,10 @@ void AssemblyBlock::AppendBlock( AssemblyBlock *ab ) {
 }
 
 void AssemblyBlock::AppendInstruction( Instruction *i ) {
+  AppendItem(i);
+}
+
+void AssemblyBlock::AppendItem( AssemblerItem *i ) {  
   if(first == NULL ) {
     first = i;
   } else {
@@ -142,6 +150,10 @@ void AssemblyBlock::AddHangingLabel( std::string _label ) {
   NOP();
   last->SetLabel( _label );
 }
+
+void AssemblyBlock::SetSegment( std::string _segment ) {
+  AppendItem( new SegmentDeclaration(_segment) );
+}  
 
 DEFINITIONS
 
