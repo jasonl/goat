@@ -22,9 +22,9 @@ void MutableAssignmentNode::SetRValue( ASTNode *_rValue ) {
 AssemblyBlock *MutableAssignmentNode::GenerateCode() {
   AssemblyBlock *a = firstChild->GenerateCode();
 
-  a->MOV( scope->GeneratePayloadOperand(Content()), eax );
-  a->MOV( scope->GenerateTypeHashOperand(Content()), ecx );
-  a->MOV( scope->GenerateDispatchOperand(Content()), edx );
+  a->mov( scope->GeneratePayloadOperand(Content()), eax );
+  a->mov( scope->GenerateTypeHashOperand(Content()), ecx );
+  a->mov( scope->GenerateDispatchOperand(Content()), edx );
   
   a->CommentLastInstruction("Assignment to " + Content());
 

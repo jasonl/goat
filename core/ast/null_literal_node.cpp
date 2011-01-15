@@ -11,9 +11,9 @@ void NullLiteralNode::Analyse( Scope *_scope ) {
 AssemblyBlock *NullLiteralNode::GenerateCode() {
   AssemblyBlock *a = new AssemblyBlock();
 
-  a->MOV( eax, Dword(0) );
-  a->MOV( ecx, Dword(goatHash("Null")));
-  a->MOV( edx, Dword(0) ); //TODO: This needs to reference a label
+  a->mov( eax, Dword(0) );
+  a->mov( ecx, Dword(goatHash("Null")));
+  a->mov( edx, Dword(0) ); //TODO: This needs to reference a label
 
   a->CommentLastInstruction("Move Null into eax/ecx/edx");
 
@@ -23,9 +23,9 @@ AssemblyBlock *NullLiteralNode::GenerateCode() {
 AssemblyBlock *NullLiteralNode::PushOntoStack() {
   AssemblyBlock *a = new AssemblyBlock();
 
-  a->PUSH( Dword(goatHash("Null")));
-  a->PUSH( Dword(0) ); //TODO: This needs to reference a label
-  a->PUSH( Dword(0) );
+  a->push( Dword(goatHash("Null")));
+  a->push( Dword(0) ); //TODO: This needs to reference a label
+  a->push( Dword(0) );
 
   a->CommentLastInstruction("Push Null onto stack");
 

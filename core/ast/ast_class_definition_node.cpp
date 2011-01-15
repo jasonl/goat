@@ -40,8 +40,8 @@ AssemblyBlock *ASTClassDefinitionNode::GenerateCode() {
     fn = i->GetAuxiliaryCode();
     fn->LabelFirstInstruction(GenerateFunctionLabel( &(*i), this->Content() ));
 
-    dispatch->CMP(ecx, Dword(goatHash(i->Content())));
-    dispatch->JE(*new Operand(GenerateFunctionLabel( &(*i), this->Content())));
+    dispatch->cmp(ecx, Dword(goatHash(i->Content())));
+    dispatch->je(*new Operand(GenerateFunctionLabel( &(*i), this->Content())));
 
     a->AppendBlock(fn);
   }

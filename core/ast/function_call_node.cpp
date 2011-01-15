@@ -50,13 +50,13 @@ AssemblyBlock *FunctionCallNode::GenerateCode() {
   // Put the receiver (i.e. this ) onto eax/ecx/edx
   a->AppendBlock( receiver->GenerateCode() );
 
-  a->MOV( ecx, Dword(goatHash( Content() )));
-  a->CALL( edx );  
+  a->mov( ecx, Dword(goatHash( Content() )));
+  a->call( edx );  
   a->CommentLastInstruction( "Function Call: " + Content() );
 
   // If we've passed any parameters on the stack, release the space on return
   if(paramCount > 0) {
-    a->ADD(esp, *new Operand(paramCount * 12));
+    a->add(esp, *new Operand(paramCount * 12));
   }
   return a;
 }
@@ -64,9 +64,9 @@ AssemblyBlock *FunctionCallNode::GenerateCode() {
 AssemblyBlock *FunctionCallNode::PushOntoStack() {
   AssemblyBlock *a = GenerateCode();
 
-  a->PUSH( ecx );   // Type Hash of the object
-  a->PUSH( edx );   // Dispatch Fnof the object
-  a->PUSH( eax );   // Object payload
+  a->push( ecx );   // Type Hash of the object
+  a->push( edx );   // Dispatch Fnof the object
+  a->push( eax );   // Object payload
 
   return a;
 }

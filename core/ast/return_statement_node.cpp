@@ -22,8 +22,8 @@ void ReturnStatementNode::Analyse( Scope *_scope ) {
 
 AssemblyBlock *ReturnStatementNode::GenerateCode() {
   AssemblyBlock *a = returnValue->GenerateCode();
-  a->LEAVE();
-  a->RET();
+  a->leave();
+  a->ret();
   return a;
 }
 

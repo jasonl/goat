@@ -74,17 +74,17 @@ AssemblyBlock *FunctionDefNode::GenerateCode() {
   std::string functionName;
   uint32_t bytesForLocals;
 
-  bodyAsm->PUSH( ebp );
-  bodyAsm->MOV( ebp, esp );
+  bodyAsm->push( ebp );
+  bodyAsm->mov( ebp, esp );
 
   bytesForLocals = scope->GetVariableCount() * 12;
-  bodyAsm->SUB( esp, *new Operand(bytesForLocals) );
+  bodyAsm->sub( esp, *new Operand(bytesForLocals) );
   
   // Move self into the locals from the registers, so we're free to nuke eax/ecx/edx
   // TODO: Don't generate this if self isn't referenced in the code.
-  bodyAsm->MOV( scope->GeneratePayloadOperand("self"), eax );
-  bodyAsm->MOV( scope->GenerateTypeHashOperand("self"), ecx );
-  bodyAsm->MOV( scope->GenerateDispatchOperand("self"), edx );
+  bodyAsm->mov( scope->GeneratePayloadOperand("self"), eax );
+  bodyAsm->mov( scope->GenerateTypeHashOperand("self"), ecx );
+  bodyAsm->mov( scope->GenerateDispatchOperand("self"), edx );
 
   bodyAsm->CommentLastInstruction("Move self passed in registers to locals");
 
@@ -101,19 +101,19 @@ AssemblyBlock *FunctionDefNode::GenerateCode() {
   }
 
   // Return a default null if code execution reaches here
-  bodyAsm->MOV( eax, Dword(0) );
-  bodyAsm->MOV( ecx, Dword(goatHash("Null")));
-  bodyAsm->MOV( edx, Dword(0) ); //TODO: This needs to reference a label
+  bodyAsm->mov( eax, Dword(0) );
+  bodyAsm->mov( ecx, Dword(goatHash("Null")));
+  bodyAsm->mov( edx, Dword(0) ); //TODO: This needs to reference a label
 
-  bodyAsm->LEAVE();
-  bodyAsm->RET();
+  bodyAsm->leave();
+  bodyAsm->ret();
 
   // Generate code for the actual function object
   AssemblyBlock *a = new AssemblyBlock;
 
-  a->MOV( eax, *new Operand(functionName));
-  a->MOV( ecx, Dword(goatHash("Function")));
-  a->MOV( edx, Dword(0) ); //TODO This needs to reference a label
+  a->mov( eax, *new Operand(functionName));
+  a->mov( ecx, Dword(goatHash("Function")));
+  a->mov( edx, Dword(0) ); //TODO This needs to reference a label
   
   a->CommentLastInstruction("Function object for " + functionName);
 

@@ -34,9 +34,9 @@ AssemblyBlock *VariableNode::GenerateCode() {
   AssemblyBlock *a = new AssemblyBlock();
   std::string varName = Content();
   
-  a->MOV( eax, scope->GeneratePayloadOperand(varName) );
-  a->MOV( ecx, scope->GenerateTypeHashOperand(varName) );
-  a->MOV( edx, scope->GenerateDispatchOperand(varName) );
+  a->mov( eax, scope->GeneratePayloadOperand(varName) );
+  a->mov( ecx, scope->GenerateTypeHashOperand(varName) );
+  a->mov( edx, scope->GenerateDispatchOperand(varName) );
 
   a->CommentLastInstruction("Move " + varName + " into eax/ecx/edx");
 
@@ -47,9 +47,9 @@ AssemblyBlock *VariableNode::PushOntoStack() {
   AssemblyBlock *a = new AssemblyBlock();
   std::string varName = Content();
 
-  a->PUSH( Dword(scope->GenerateTypeHashOperand(varName)) );
-  a->PUSH( Dword(scope->GenerateDispatchOperand(varName)) );
-  a->PUSH( Dword(scope->GeneratePayloadOperand(varName)) );
+  a->push( Dword(scope->GenerateTypeHashOperand(varName)) );
+  a->push( Dword(scope->GenerateDispatchOperand(varName)) );
+  a->push( Dword(scope->GeneratePayloadOperand(varName)) );
 
   a->CommentLastInstruction("Push " + varName + " on to stack");
 

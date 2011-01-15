@@ -19,9 +19,9 @@ AssemblyBlock *IntegerLiteralNode::GenerateCode() {
   int32_t val = atol( Content().c_str() );
 
 
-  a->MOV( eax, Dword(val) );
-  a->MOV( ecx, Dword(goatHash("Integer")));
-  a->MOV( edx, Dword(0)); // TODO: This needs to reference a label
+  a->mov( eax, Dword(val) );
+  a->mov( ecx, Dword(goatHash("Integer")));
+  a->mov( edx, Dword(0)); // TODO: This needs to reference a label
 
   a->CommentLastInstruction("Move Integer " + Content() + " into eax/ecx/edx");
 
@@ -37,9 +37,9 @@ AssemblyBlock *IntegerLiteralNode::PushOntoStack() {
   // All integer values are 32-bit signed values
   int32_t val = atol( Content().c_str() );
 
-  a->PUSH( Dword(goatHash("Integer")) );
-  a->PUSH( Dword(0) ); // TODO: Label for dispatch function
-  a->PUSH( Dword(val) );
+  a->push( Dword(goatHash("Integer")) );
+  a->push( Dword(0) ); // TODO: Label for dispatch function
+  a->push( Dword(val) );
 
   a->CommentLastInstruction("Push Integer " + Content() + " onto stack");
 

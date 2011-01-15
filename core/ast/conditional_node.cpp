@@ -38,19 +38,19 @@ AssemblyBlock *ConditionalNode::GenerateCode() {
   std::string elseLabel = scope->GenerateUniqueLabel("else_clause");
 
   // If the expression isn't a boolean, try to convert it
-  a->CMP( ecx, Dword(goatHash("Boolean")));
-  a->JNE( *new Operand(isBoolean) );
-  a->MOV( ecx, Dword(goatHash("asBoolean")));
-  a->CALL( edx );
+  a->cmp( ecx, Dword(goatHash("Boolean")));
+  a->jne( *new Operand(isBoolean) );
+  a->mov( ecx, Dword(goatHash("asBoolean")));
+  a->call( edx );
 
   // eax/ecx/edx now has a boolean in it.
-  a->TEST( eax, eax );
+  a->test( eax, eax );
   a->LabelLastInstruction( isBoolean );
 
   if( elseBlock ) {
-    a->JZ( *new Operand(elseLabel) );
+    a->jz( *new Operand(elseLabel) );
     a->AppendBlock( ifBlock->GenerateCode() );
-    a->JMP( *new Operand(endConditional) );
+    a->jmp( *new Operand(endConditional) );
 
     elseClauseAsm = elseBlock->GenerateCode();
     elseClauseAsm->LabelFirstInstruction( elseLabel );
@@ -58,7 +58,7 @@ AssemblyBlock *ConditionalNode::GenerateCode() {
 
     a->AddHangingLabel( endConditional );
   } else {
-    a->JZ( *new Operand(endConditional) );
+    a->jz( *new Operand(endConditional) );
     a->AppendBlock( ifBlock->GenerateCode() );
     a->AddHangingLabel( endConditional );
     }

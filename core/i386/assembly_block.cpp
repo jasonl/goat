@@ -1,831 +1,831 @@
 #include "assembly_block.h"
 
-void AssemblyBlock::AAA() {
-  AppendInstruction( new Instruction("AAA") );
+void AssemblyBlock::aaa() {
+  AppendInstruction( new Instruction("aaa") );
 }
 
-void AssemblyBlock::AAD() {
-  AppendInstruction( new Instruction("AAD") );
+void AssemblyBlock::aad() {
+  AppendInstruction( new Instruction("aad") );
 }
 
-void AssemblyBlock::AAM() {
-  AppendInstruction( new Instruction("AAM") );
+void AssemblyBlock::aam() {
+  AppendInstruction( new Instruction("aam") );
 }
 
-void AssemblyBlock::AAS() {
-  AppendInstruction( new Instruction("AAS") );
+void AssemblyBlock::aas() {
+  AppendInstruction( new Instruction("aas") );
 }
 
-void AssemblyBlock::ADC( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("ADC", &op1, &op2) );
+void AssemblyBlock::adc( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("adc", &op1, &op2) );
 }
 
-void AssemblyBlock::ADD( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("ADD", &op1, &op2) );
+void AssemblyBlock::add( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("add", &op1, &op2) );
 }
 
-void AssemblyBlock::AND( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("AND", &op1, &op2) );
+void AssemblyBlock::_and( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("and", &op1, &op2) );
 }
 
-void AssemblyBlock::ARPL( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("ARPL", &op1, &op2) );
+void AssemblyBlock::arpl( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("arpl", &op1, &op2) );
 }
 
-void AssemblyBlock::BOUND( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("BOUND", &op1, &op2) );
+void AssemblyBlock::bound( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("bound", &op1, &op2) );
 }
 
-void AssemblyBlock::BSF( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("BSF", &op1, &op2) );
+void AssemblyBlock::bsf( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("bsf", &op1, &op2) );
 }
 
-void AssemblyBlock::BSR( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("BSR", &op1, &op2) );
+void AssemblyBlock::bsr( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("bsr", &op1, &op2) );
 }
 
-void AssemblyBlock::BSWAP( Operand &op1 ) {
-  AppendInstruction( new Instruction("BSWAP", &op1) );
+void AssemblyBlock::bswap( Operand &op1 ) {
+  AppendInstruction( new Instruction("bswap", &op1) );
 }
 
-void AssemblyBlock::BT( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("BT", &op1, &op2) );
+void AssemblyBlock::bt( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("bt", &op1, &op2) );
 }
 
-void AssemblyBlock::BTC( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("BTC", &op1, &op2) );
+void AssemblyBlock::btc( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("btc", &op1, &op2) );
 }
 
-void AssemblyBlock::BTR( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("BTR", &op1, &op2) );
+void AssemblyBlock::btr( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("btr", &op1, &op2) );
 }
 
-void AssemblyBlock::BTS( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("BTS", &op1, &op2) );
+void AssemblyBlock::bts( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("bts", &op1, &op2) );
 }
 
-void AssemblyBlock::CALL( Operand &op1 ) {
-  AppendInstruction( new Instruction("CALL", &op1) );
+void AssemblyBlock::call( Operand &op1 ) {
+  AppendInstruction( new Instruction("call", &op1) );
 }
 
-void AssemblyBlock::CALL_FAR( Operand &op1 ) {
-  AppendInstruction( new Instruction("CALL_FAR", &op1) );
+void AssemblyBlock::call_far( Operand &op1 ) {
+  AppendInstruction( new Instruction("call_far", &op1) );
 }
 
-void AssemblyBlock::CBW() {
-  AppendInstruction( new Instruction("CBW") );
+void AssemblyBlock::cbw() {
+  AppendInstruction( new Instruction("cbw") );
 }
 
-void AssemblyBlock::CWD() {
-  AppendInstruction( new Instruction("CWD") );
+void AssemblyBlock::cwd() {
+  AppendInstruction( new Instruction("cwd") );
 }
 
-void AssemblyBlock::CDW() {
-  AppendInstruction( new Instruction("CDW") );
+void AssemblyBlock::cdw() {
+  AppendInstruction( new Instruction("cdw") );
 }
 
-void AssemblyBlock::CWDE() {
-  AppendInstruction( new Instruction("CWDE") );
+void AssemblyBlock::cwde() {
+  AppendInstruction( new Instruction("cwde") );
 }
 
-void AssemblyBlock::CLC() {
-  AppendInstruction( new Instruction("CLC") );
+void AssemblyBlock::clc() {
+  AppendInstruction( new Instruction("clc") );
 }
 
-void AssemblyBlock::CLD() {
-  AppendInstruction( new Instruction("CLD") );
+void AssemblyBlock::cld() {
+  AppendInstruction( new Instruction("cld") );
 }
 
-void AssemblyBlock::CLI() {
-  AppendInstruction( new Instruction("CLI") );
+void AssemblyBlock::cli() {
+  AppendInstruction( new Instruction("cli") );
 }
 
-void AssemblyBlock::CLTS() {
-  AppendInstruction( new Instruction("CLTS") );
+void AssemblyBlock::clts() {
+  AppendInstruction( new Instruction("clts") );
 }
 
-void AssemblyBlock::CMC() {
-  AppendInstruction( new Instruction("CMC") );
+void AssemblyBlock::cmc() {
+  AppendInstruction( new Instruction("cmc") );
 }
 
-void AssemblyBlock::CMP( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("CMP", &op1, &op2) );
+void AssemblyBlock::cmp( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("cmp", &op1, &op2) );
 }
 
-void AssemblyBlock::CMPSB() {
-  AppendInstruction( new Instruction("CMPSB") );
+void AssemblyBlock::cmpsb() {
+  AppendInstruction( new Instruction("cmpsb") );
 }
 
-void AssemblyBlock::CMPSW() {
-  AppendInstruction( new Instruction("CMPSW") );
+void AssemblyBlock::cmpsw() {
+  AppendInstruction( new Instruction("cmpsw") );
 }
 
-void AssemblyBlock::CMPSD() {
-  AppendInstruction( new Instruction("CMPSD") );
+void AssemblyBlock::cmpsd() {
+  AppendInstruction( new Instruction("cmpsd") );
 }
 
-void AssemblyBlock::DAA() {
-  AppendInstruction( new Instruction("DAA") );
+void AssemblyBlock::daa() {
+  AppendInstruction( new Instruction("daa") );
 }
 
-void AssemblyBlock::DAS() {
-  AppendInstruction( new Instruction("DAS") );
+void AssemblyBlock::das() {
+  AppendInstruction( new Instruction("das") );
 }
 
-void AssemblyBlock::DEC( Operand &op1 ) {
-  AppendInstruction( new Instruction("DEC", &op1) );
+void AssemblyBlock::dec( Operand &op1 ) {
+  AppendInstruction( new Instruction("dec", &op1) );
 }
 
-void AssemblyBlock::DIV( Operand &op1 ) {
-  AppendInstruction( new Instruction("DIV", &op1) );
+void AssemblyBlock::div( Operand &op1 ) {
+  AppendInstruction( new Instruction("div", &op1) );
 }
 
-void AssemblyBlock::ENTER( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("ENTER", &op1, &op2) );
+void AssemblyBlock::enter( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("enter", &op1, &op2) );
 }
 
-void AssemblyBlock::HLT() {
-  AppendInstruction( new Instruction("HLT") );
+void AssemblyBlock::hlt() {
+  AppendInstruction( new Instruction("hlt") );
 }
 
-void AssemblyBlock::IDIV( Operand &op1 ) {
-  AppendInstruction( new Instruction("IDIV", &op1) );
+void AssemblyBlock::idiv( Operand &op1 ) {
+  AppendInstruction( new Instruction("idiv", &op1) );
 }
 
-void AssemblyBlock::IMUL( Operand &op1 ) {
-  AppendInstruction( new Instruction("IMUL", &op1) );
+void AssemblyBlock::imul( Operand &op1 ) {
+  AppendInstruction( new Instruction("imul", &op1) );
 }
 
-void AssemblyBlock::IMUL( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("IMUL", &op1, &op2) );
+void AssemblyBlock::imul( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("imul", &op1, &op2) );
 }
 
-void AssemblyBlock::IMUL( Operand &op1, Operand &op2, Operand &op3 ) {
-  AppendInstruction( new Instruction("IMUL", &op1, &op2, &op3) );
+void AssemblyBlock::imul( Operand &op1, Operand &op2, Operand &op3 ) {
+  AppendInstruction( new Instruction("imul", &op1, &op2, &op3) );
 }
 
-void AssemblyBlock::IN( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("IN", &op1, &op2) );
+void AssemblyBlock::in( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("in", &op1, &op2) );
 }
 
-void AssemblyBlock::INC( Operand &op1 ) {
-  AppendInstruction( new Instruction("INC", &op1) );
+void AssemblyBlock::inc( Operand &op1 ) {
+  AppendInstruction( new Instruction("inc", &op1) );
 }
 
-void AssemblyBlock::INSB() {
-  AppendInstruction( new Instruction("INSB") );
+void AssemblyBlock::insb() {
+  AppendInstruction( new Instruction("insb") );
 }
 
-void AssemblyBlock::INSW() {
-  AppendInstruction( new Instruction("INSW") );
+void AssemblyBlock::insw() {
+  AppendInstruction( new Instruction("insw") );
 }
 
-void AssemblyBlock::INSD() {
-  AppendInstruction( new Instruction("INSD") );
+void AssemblyBlock::insd() {
+  AppendInstruction( new Instruction("insd") );
 }
 
-void AssemblyBlock::INT( Operand &op1 ) {
-  AppendInstruction( new Instruction("INT", &op1) );
+void AssemblyBlock::_int( Operand &op1 ) {
+  AppendInstruction( new Instruction("int", &op1) );
 }
 
-void AssemblyBlock::INT3() {
-  AppendInstruction( new Instruction("INT3") );
+void AssemblyBlock::int3() {
+  AppendInstruction( new Instruction("int3") );
 }
 
-void AssemblyBlock::INTO() {
-  AppendInstruction( new Instruction("INTO") );
+void AssemblyBlock::into() {
+  AppendInstruction( new Instruction("into") );
 }
 
-void AssemblyBlock::INVTLB( Operand &op1 ) {
-  AppendInstruction( new Instruction("INVTLB", &op1) );
+void AssemblyBlock::invtlb( Operand &op1 ) {
+  AppendInstruction( new Instruction("invtlb", &op1) );
 }
 
-void AssemblyBlock::IRET() {
-  AppendInstruction( new Instruction("IRET") );
+void AssemblyBlock::iret() {
+  AppendInstruction( new Instruction("iret") );
 }
 
-void AssemblyBlock::IRETW() {
-  AppendInstruction( new Instruction("IRETW") );
+void AssemblyBlock::iretw() {
+  AppendInstruction( new Instruction("iretw") );
 }
 
-void AssemblyBlock::IRETD() {
-  AppendInstruction( new Instruction("IRETD") );
+void AssemblyBlock::iretd() {
+  AppendInstruction( new Instruction("iretd") );
 }
 
-void AssemblyBlock::JA( Operand &op1 ) {
-  AppendInstruction( new Instruction("JA", &op1) );
+void AssemblyBlock::ja( Operand &op1 ) {
+  AppendInstruction( new Instruction("ja", &op1) );
 }
 
-void AssemblyBlock::JAE( Operand &op1 ) {
-  AppendInstruction( new Instruction("JAE", &op1) );
+void AssemblyBlock::jae( Operand &op1 ) {
+  AppendInstruction( new Instruction("jae", &op1) );
 }
 
-void AssemblyBlock::JB( Operand &op1 ) {
-  AppendInstruction( new Instruction("JB", &op1) );
+void AssemblyBlock::jb( Operand &op1 ) {
+  AppendInstruction( new Instruction("jb", &op1) );
 }
 
-void AssemblyBlock::JBE( Operand &op1 ) {
-  AppendInstruction( new Instruction("JBE", &op1) );
+void AssemblyBlock::jbe( Operand &op1 ) {
+  AppendInstruction( new Instruction("jbe", &op1) );
 }
 
-void AssemblyBlock::JC( Operand &op1 ) {
-  AppendInstruction( new Instruction("JC", &op1) );
+void AssemblyBlock::jc( Operand &op1 ) {
+  AppendInstruction( new Instruction("jc", &op1) );
 }
 
-void AssemblyBlock::JE( Operand &op1 ) {
-  AppendInstruction( new Instruction("JE", &op1) );
+void AssemblyBlock::je( Operand &op1 ) {
+  AppendInstruction( new Instruction("je", &op1) );
 }
 
-void AssemblyBlock::JG( Operand &op1 ) {
-  AppendInstruction( new Instruction("JG", &op1) );
+void AssemblyBlock::jg( Operand &op1 ) {
+  AppendInstruction( new Instruction("jg", &op1) );
 }
 
-void AssemblyBlock::JGE( Operand &op1 ) {
-  AppendInstruction( new Instruction("JGE", &op1) );
+void AssemblyBlock::jge( Operand &op1 ) {
+  AppendInstruction( new Instruction("jge", &op1) );
 }
 
-void AssemblyBlock::JL( Operand &op1 ) {
-  AppendInstruction( new Instruction("JL", &op1) );
+void AssemblyBlock::jl( Operand &op1 ) {
+  AppendInstruction( new Instruction("jl", &op1) );
 }
 
-void AssemblyBlock::JLE( Operand &op1 ) {
-  AppendInstruction( new Instruction("JLE", &op1) );
+void AssemblyBlock::jle( Operand &op1 ) {
+  AppendInstruction( new Instruction("jle", &op1) );
 }
 
-void AssemblyBlock::JNA( Operand &op1 ) {
-  AppendInstruction( new Instruction("JNA", &op1) );
+void AssemblyBlock::jna( Operand &op1 ) {
+  AppendInstruction( new Instruction("jna", &op1) );
 }
 
-void AssemblyBlock::JNAE( Operand &op1 ) {
-  AppendInstruction( new Instruction("JNAE", &op1) );
+void AssemblyBlock::jnae( Operand &op1 ) {
+  AppendInstruction( new Instruction("jnae", &op1) );
 }
 
-void AssemblyBlock::JNB( Operand &op1 ) {
-  AppendInstruction( new Instruction("JNB", &op1) );
+void AssemblyBlock::jnb( Operand &op1 ) {
+  AppendInstruction( new Instruction("jnb", &op1) );
 }
 
-void AssemblyBlock::JNBE( Operand &op1 ) {
-  AppendInstruction( new Instruction("JNBE", &op1) );
+void AssemblyBlock::jnbe( Operand &op1 ) {
+  AppendInstruction( new Instruction("jnbe", &op1) );
 }
 
-void AssemblyBlock::JNC( Operand &op1 ) {
-  AppendInstruction( new Instruction("JNC", &op1) );
+void AssemblyBlock::jnc( Operand &op1 ) {
+  AppendInstruction( new Instruction("jnc", &op1) );
 }
 
-void AssemblyBlock::JNE( Operand &op1 ) {
-  AppendInstruction( new Instruction("JNE", &op1) );
+void AssemblyBlock::jne( Operand &op1 ) {
+  AppendInstruction( new Instruction("jne", &op1) );
 }
 
-void AssemblyBlock::JNG( Operand &op1 ) {
-  AppendInstruction( new Instruction("JNG", &op1) );
+void AssemblyBlock::jng( Operand &op1 ) {
+  AppendInstruction( new Instruction("jng", &op1) );
 }
 
-void AssemblyBlock::JNGE( Operand &op1 ) {
-  AppendInstruction( new Instruction("JNGE", &op1) );
+void AssemblyBlock::jnge( Operand &op1 ) {
+  AppendInstruction( new Instruction("jnge", &op1) );
 }
 
-void AssemblyBlock::JNL( Operand &op1 ) {
-  AppendInstruction( new Instruction("JNL", &op1) );
+void AssemblyBlock::jnl( Operand &op1 ) {
+  AppendInstruction( new Instruction("jnl", &op1) );
 }
 
-void AssemblyBlock::JNLE( Operand &op1 ) {
-  AppendInstruction( new Instruction("JNLE", &op1) );
+void AssemblyBlock::jnle( Operand &op1 ) {
+  AppendInstruction( new Instruction("jnle", &op1) );
 }
 
-void AssemblyBlock::JNO( Operand &op1 ) {
-  AppendInstruction( new Instruction("JNO", &op1) );
+void AssemblyBlock::jno( Operand &op1 ) {
+  AppendInstruction( new Instruction("jno", &op1) );
 }
 
-void AssemblyBlock::JNP( Operand &op1 ) {
-  AppendInstruction( new Instruction("JNP", &op1) );
+void AssemblyBlock::jnp( Operand &op1 ) {
+  AppendInstruction( new Instruction("jnp", &op1) );
 }
 
-void AssemblyBlock::JNS( Operand &op1 ) {
-  AppendInstruction( new Instruction("JNS", &op1) );
+void AssemblyBlock::jns( Operand &op1 ) {
+  AppendInstruction( new Instruction("jns", &op1) );
 }
 
-void AssemblyBlock::JNZ( Operand &op1 ) {
-  AppendInstruction( new Instruction("JNZ", &op1) );
+void AssemblyBlock::jnz( Operand &op1 ) {
+  AppendInstruction( new Instruction("jnz", &op1) );
 }
 
-void AssemblyBlock::JO( Operand &op1 ) {
-  AppendInstruction( new Instruction("JO", &op1) );
+void AssemblyBlock::jo( Operand &op1 ) {
+  AppendInstruction( new Instruction("jo", &op1) );
 }
 
-void AssemblyBlock::JP( Operand &op1 ) {
-  AppendInstruction( new Instruction("JP", &op1) );
+void AssemblyBlock::jp( Operand &op1 ) {
+  AppendInstruction( new Instruction("jp", &op1) );
 }
 
-void AssemblyBlock::JPE( Operand &op1 ) {
-  AppendInstruction( new Instruction("JPE", &op1) );
+void AssemblyBlock::jpe( Operand &op1 ) {
+  AppendInstruction( new Instruction("jpe", &op1) );
 }
 
-void AssemblyBlock::JPO( Operand &op1 ) {
-  AppendInstruction( new Instruction("JPO", &op1) );
+void AssemblyBlock::jpo( Operand &op1 ) {
+  AppendInstruction( new Instruction("jpo", &op1) );
 }
 
-void AssemblyBlock::JS( Operand &op1 ) {
-  AppendInstruction( new Instruction("JS", &op1) );
+void AssemblyBlock::js( Operand &op1 ) {
+  AppendInstruction( new Instruction("js", &op1) );
 }
 
-void AssemblyBlock::JZ( Operand &op1 ) {
-  AppendInstruction( new Instruction("JZ", &op1) );
+void AssemblyBlock::jz( Operand &op1 ) {
+  AppendInstruction( new Instruction("jz", &op1) );
 }
 
-void AssemblyBlock::JMP( Operand &op1 ) {
-  AppendInstruction( new Instruction("JMP", &op1) );
+void AssemblyBlock::jmp( Operand &op1 ) {
+  AppendInstruction( new Instruction("jmp", &op1) );
 }
 
-void AssemblyBlock::JMP_FAR( Operand &op1 ) {
-  AppendInstruction( new Instruction("JMP_FAR", &op1) );
+void AssemblyBlock::jmp_far( Operand &op1 ) {
+  AppendInstruction( new Instruction("jmp_far", &op1) );
 }
 
-void AssemblyBlock::LAHF() {
-  AppendInstruction( new Instruction("LAHF") );
+void AssemblyBlock::lahf() {
+  AppendInstruction( new Instruction("lahf") );
 }
 
-void AssemblyBlock::LAR( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("LAR", &op1, &op2) );
+void AssemblyBlock::lar( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("lar", &op1, &op2) );
 }
 
-void AssemblyBlock::LDS( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("LDS", &op1, &op2) );
+void AssemblyBlock::lds( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("lds", &op1, &op2) );
 }
 
-void AssemblyBlock::LES( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("LES", &op1, &op2) );
+void AssemblyBlock::les( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("les", &op1, &op2) );
 }
 
-void AssemblyBlock::LFS( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("LFS", &op1, &op2) );
+void AssemblyBlock::lfs( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("lfs", &op1, &op2) );
 }
 
-void AssemblyBlock::LGS( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("LGS", &op1, &op2) );
+void AssemblyBlock::lgs( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("lgs", &op1, &op2) );
 }
 
-void AssemblyBlock::LSS( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("LSS", &op1, &op2) );
+void AssemblyBlock::lss( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("lss", &op1, &op2) );
 }
 
-void AssemblyBlock::LEA( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("LEA", &op1, &op2) );
+void AssemblyBlock::lea( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("lea", &op1, &op2) );
 }
 
-void AssemblyBlock::LEAVE() {
-  AppendInstruction( new Instruction("LEAVE") );
+void AssemblyBlock::leave() {
+  AppendInstruction( new Instruction("leave") );
 }
 
-void AssemblyBlock::LGDT( Operand &op1 ) {
-  AppendInstruction( new Instruction("LGDT", &op1) );
+void AssemblyBlock::lgdt( Operand &op1 ) {
+  AppendInstruction( new Instruction("lgdt", &op1) );
 }
 
-void AssemblyBlock::LIDT( Operand &op1 ) {
-  AppendInstruction( new Instruction("LIDT", &op1) );
+void AssemblyBlock::lidt( Operand &op1 ) {
+  AppendInstruction( new Instruction("lidt", &op1) );
 }
 
-void AssemblyBlock::LLDT( Operand &op1 ) {
-  AppendInstruction( new Instruction("LLDT", &op1) );
+void AssemblyBlock::lldt( Operand &op1 ) {
+  AppendInstruction( new Instruction("lldt", &op1) );
 }
 
-void AssemblyBlock::LOCK() {
-  AppendInstruction( new Instruction("LOCK") );
+void AssemblyBlock::lock() {
+  AppendInstruction( new Instruction("lock") );
 }
 
-void AssemblyBlock::LODSB() {
-  AppendInstruction( new Instruction("LODSB") );
+void AssemblyBlock::lodsb() {
+  AppendInstruction( new Instruction("lodsb") );
 }
 
-void AssemblyBlock::LODSW() {
-  AppendInstruction( new Instruction("LODSW") );
+void AssemblyBlock::lodsw() {
+  AppendInstruction( new Instruction("lodsw") );
 }
 
-void AssemblyBlock::LODSD() {
-  AppendInstruction( new Instruction("LODSD") );
+void AssemblyBlock::lodsd() {
+  AppendInstruction( new Instruction("lodsd") );
 }
 
-void AssemblyBlock::LOOP( Operand &op1 ) {
-  AppendInstruction( new Instruction("LOOP", &op1) );
+void AssemblyBlock::loop( Operand &op1 ) {
+  AppendInstruction( new Instruction("loop", &op1) );
 }
 
-void AssemblyBlock::LOOPE( Operand &op1 ) {
-  AppendInstruction( new Instruction("LOOPE", &op1) );
+void AssemblyBlock::loope( Operand &op1 ) {
+  AppendInstruction( new Instruction("loope", &op1) );
 }
 
-void AssemblyBlock::LOOPNE( Operand &op1 ) {
-  AppendInstruction( new Instruction("LOOPNE", &op1) );
+void AssemblyBlock::loopne( Operand &op1 ) {
+  AppendInstruction( new Instruction("loopne", &op1) );
 }
 
-void AssemblyBlock::LSL( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("LSL", &op1, &op2) );
+void AssemblyBlock::lsl( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("lsl", &op1, &op2) );
 }
 
-void AssemblyBlock::LTR( Operand &op1 ) {
-  AppendInstruction( new Instruction("LTR", &op1) );
+void AssemblyBlock::ltr( Operand &op1 ) {
+  AppendInstruction( new Instruction("ltr", &op1) );
 }
 
-void AssemblyBlock::MOV( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("MOV", &op1, &op2) );
+void AssemblyBlock::mov( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("mov", &op1, &op2) );
 }
 
-void AssemblyBlock::MOVSB() {
-  AppendInstruction( new Instruction("MOVSB") );
+void AssemblyBlock::movsb() {
+  AppendInstruction( new Instruction("movsb") );
 }
 
-void AssemblyBlock::MOVSW() {
-  AppendInstruction( new Instruction("MOVSW") );
+void AssemblyBlock::movsw() {
+  AppendInstruction( new Instruction("movsw") );
 }
 
-void AssemblyBlock::MOVSD() {
-  AppendInstruction( new Instruction("MOVSD") );
+void AssemblyBlock::movsd() {
+  AppendInstruction( new Instruction("movsd") );
 }
 
-void AssemblyBlock::MOVSX( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("MOVSX", &op1, &op2) );
+void AssemblyBlock::movsx( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("movsx", &op1, &op2) );
 }
 
-void AssemblyBlock::MOVZX( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("MOVZX", &op1, &op2) );
+void AssemblyBlock::movzx( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("movzx", &op1, &op2) );
 }
 
-void AssemblyBlock::MUL( Operand &op1 ) {
-  AppendInstruction( new Instruction("MUL", &op1) );
+void AssemblyBlock::mul( Operand &op1 ) {
+  AppendInstruction( new Instruction("mul", &op1) );
 }
 
-void AssemblyBlock::NEG( Operand &op1 ) {
-  AppendInstruction( new Instruction("NEG", &op1) );
+void AssemblyBlock::neg( Operand &op1 ) {
+  AppendInstruction( new Instruction("neg", &op1) );
 }
 
-void AssemblyBlock::NOP() {
-  AppendInstruction( new Instruction("NOP") );
+void AssemblyBlock::nop() {
+  AppendInstruction( new Instruction("nop") );
 }
 
-void AssemblyBlock::OR( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("OR", &op1, &op2) );
+void AssemblyBlock::_or( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("or", &op1, &op2) );
 }
 
-void AssemblyBlock::OUT( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("OUT", &op1, &op2) );
+void AssemblyBlock::out( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("out", &op1, &op2) );
 }
 
-void AssemblyBlock::OUTSB() {
-  AppendInstruction( new Instruction("OUTSB") );
+void AssemblyBlock::outsb() {
+  AppendInstruction( new Instruction("outsb") );
 }
 
-void AssemblyBlock::OUTSW() {
-  AppendInstruction( new Instruction("OUTSW") );
+void AssemblyBlock::outsw() {
+  AppendInstruction( new Instruction("outsw") );
 }
 
-void AssemblyBlock::OUTSD() {
-  AppendInstruction( new Instruction("OUTSD") );
+void AssemblyBlock::outsd() {
+  AppendInstruction( new Instruction("outsd") );
 }
 
-void AssemblyBlock::POP( Operand &op1 ) {
-  AppendInstruction( new Instruction("POP", &op1) );
+void AssemblyBlock::pop( Operand &op1 ) {
+  AppendInstruction( new Instruction("pop", &op1) );
 }
 
-void AssemblyBlock::POPA() {
-  AppendInstruction( new Instruction("POPA") );
+void AssemblyBlock::popa() {
+  AppendInstruction( new Instruction("popa") );
 }
 
-void AssemblyBlock::POPAD() {
-  AppendInstruction( new Instruction("POPAD") );
+void AssemblyBlock::popad() {
+  AppendInstruction( new Instruction("popad") );
 }
 
-void AssemblyBlock::POPF() {
-  AppendInstruction( new Instruction("POPF") );
+void AssemblyBlock::popf() {
+  AppendInstruction( new Instruction("popf") );
 }
 
-void AssemblyBlock::POPFD() {
-  AppendInstruction( new Instruction("POPFD") );
+void AssemblyBlock::popfd() {
+  AppendInstruction( new Instruction("popfd") );
 }
 
-void AssemblyBlock::PUSH( Operand &op1 ) {
-  AppendInstruction( new Instruction("PUSH", &op1) );
+void AssemblyBlock::push( Operand &op1 ) {
+  AppendInstruction( new Instruction("push", &op1) );
 }
 
-void AssemblyBlock::PUSHA() {
-  AppendInstruction( new Instruction("PUSHA") );
+void AssemblyBlock::pusha() {
+  AppendInstruction( new Instruction("pusha") );
 }
 
-void AssemblyBlock::PUSHAD() {
-  AppendInstruction( new Instruction("PUSHAD") );
+void AssemblyBlock::pushad() {
+  AppendInstruction( new Instruction("pushad") );
 }
 
-void AssemblyBlock::PUSHF() {
-  AppendInstruction( new Instruction("PUSHF") );
+void AssemblyBlock::pushf() {
+  AppendInstruction( new Instruction("pushf") );
 }
 
-void AssemblyBlock::PUSHFD() {
-  AppendInstruction( new Instruction("PUSHFD") );
+void AssemblyBlock::pushfd() {
+  AppendInstruction( new Instruction("pushfd") );
 }
 
-void AssemblyBlock::RCL( Operand &op1 ) {
-  AppendInstruction( new Instruction("RCL", &op1) );
+void AssemblyBlock::rcl( Operand &op1 ) {
+  AppendInstruction( new Instruction("rcl", &op1) );
 }
 
-void AssemblyBlock::RCL( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("RCL", &op1, &op2) );
+void AssemblyBlock::rcl( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("rcl", &op1, &op2) );
 }
 
-void AssemblyBlock::RCR( Operand &op1 ) {
-  AppendInstruction( new Instruction("RCR", &op1) );
+void AssemblyBlock::rcr( Operand &op1 ) {
+  AppendInstruction( new Instruction("rcr", &op1) );
 }
 
-void AssemblyBlock::RCR( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("RCR", &op1, &op2) );
+void AssemblyBlock::rcr( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("rcr", &op1, &op2) );
 }
 
-void AssemblyBlock::REP() {
-  AppendInstruction( new Instruction("REP") );
+void AssemblyBlock::rep() {
+  AppendInstruction( new Instruction("rep") );
 }
 
-void AssemblyBlock::REPE() {
-  AppendInstruction( new Instruction("REPE") );
+void AssemblyBlock::repe() {
+  AppendInstruction( new Instruction("repe") );
 }
 
-void AssemblyBlock::REPNE() {
-  AppendInstruction( new Instruction("REPNE") );
+void AssemblyBlock::repne() {
+  AppendInstruction( new Instruction("repne") );
 }
 
-void AssemblyBlock::RET() {
-  AppendInstruction( new Instruction("RET") );
+void AssemblyBlock::ret() {
+  AppendInstruction( new Instruction("ret") );
 }
 
-void AssemblyBlock::RET( Operand &op1 ) {
-  AppendInstruction( new Instruction("RET", &op1) );
+void AssemblyBlock::ret( Operand &op1 ) {
+  AppendInstruction( new Instruction("ret", &op1) );
 }
 
-void AssemblyBlock::RETF() {
-  AppendInstruction( new Instruction("RETF") );
+void AssemblyBlock::retf() {
+  AppendInstruction( new Instruction("retf") );
 }
 
-void AssemblyBlock::RETF( Operand &op1 ) {
-  AppendInstruction( new Instruction("RETF", &op1) );
+void AssemblyBlock::retf( Operand &op1 ) {
+  AppendInstruction( new Instruction("retf", &op1) );
 }
 
-void AssemblyBlock::ROL( Operand &op1 ) {
-  AppendInstruction( new Instruction("ROL", &op1) );
+void AssemblyBlock::rol( Operand &op1 ) {
+  AppendInstruction( new Instruction("rol", &op1) );
 }
 
-void AssemblyBlock::ROL( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("ROL", &op1, &op2) );
+void AssemblyBlock::rol( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("rol", &op1, &op2) );
 }
 
-void AssemblyBlock::ROR( Operand &op1 ) {
-  AppendInstruction( new Instruction("ROR", &op1) );
+void AssemblyBlock::ror( Operand &op1 ) {
+  AppendInstruction( new Instruction("ror", &op1) );
 }
 
-void AssemblyBlock::ROR( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("ROR", &op1, &op2) );
+void AssemblyBlock::ror( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("ror", &op1, &op2) );
 }
 
-void AssemblyBlock::SAHF() {
-  AppendInstruction( new Instruction("SAHF") );
+void AssemblyBlock::sahf() {
+  AppendInstruction( new Instruction("sahf") );
 }
 
-void AssemblyBlock::SAL( Operand &op1 ) {
-  AppendInstruction( new Instruction("SAL", &op1) );
+void AssemblyBlock::sal( Operand &op1 ) {
+  AppendInstruction( new Instruction("sal", &op1) );
 }
 
-void AssemblyBlock::SAL( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("SAL", &op1, &op2) );
+void AssemblyBlock::sal( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("sal", &op1, &op2) );
 }
 
-void AssemblyBlock::SAR( Operand &op1 ) {
-  AppendInstruction( new Instruction("SAR", &op1) );
+void AssemblyBlock::sar( Operand &op1 ) {
+  AppendInstruction( new Instruction("sar", &op1) );
 }
 
-void AssemblyBlock::SAR( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("SAR", &op1, &op2) );
+void AssemblyBlock::sar( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("sar", &op1, &op2) );
 }
 
-void AssemblyBlock::SBB( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("SBB", &op1, &op2) );
+void AssemblyBlock::sbb( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("sbb", &op1, &op2) );
 }
 
-void AssemblyBlock::SCASB() {
-  AppendInstruction( new Instruction("SCASB") );
+void AssemblyBlock::scasb() {
+  AppendInstruction( new Instruction("scasb") );
 }
 
-void AssemblyBlock::SCASW() {
-  AppendInstruction( new Instruction("SCASW") );
+void AssemblyBlock::scasw() {
+  AppendInstruction( new Instruction("scasw") );
 }
 
-void AssemblyBlock::SCASD() {
-  AppendInstruction( new Instruction("SCASD") );
+void AssemblyBlock::scasd() {
+  AppendInstruction( new Instruction("scasd") );
 }
 
-void AssemblyBlock::SETA( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETA", &op1) );
+void AssemblyBlock::seta( Operand &op1 ) {
+  AppendInstruction( new Instruction("seta", &op1) );
 }
 
-void AssemblyBlock::SETAE( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETAE", &op1) );
+void AssemblyBlock::setae( Operand &op1 ) {
+  AppendInstruction( new Instruction("setae", &op1) );
 }
 
-void AssemblyBlock::SETB( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETB", &op1) );
+void AssemblyBlock::setb( Operand &op1 ) {
+  AppendInstruction( new Instruction("setb", &op1) );
 }
 
-void AssemblyBlock::SETBE( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETBE", &op1) );
+void AssemblyBlock::setbe( Operand &op1 ) {
+  AppendInstruction( new Instruction("setbe", &op1) );
 }
 
-void AssemblyBlock::SETC( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETC", &op1) );
+void AssemblyBlock::setc( Operand &op1 ) {
+  AppendInstruction( new Instruction("setc", &op1) );
 }
 
-void AssemblyBlock::SETE( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETE", &op1) );
+void AssemblyBlock::sete( Operand &op1 ) {
+  AppendInstruction( new Instruction("sete", &op1) );
 }
 
-void AssemblyBlock::SETG( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETG", &op1) );
+void AssemblyBlock::setg( Operand &op1 ) {
+  AppendInstruction( new Instruction("setg", &op1) );
 }
 
-void AssemblyBlock::SETGE( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETGE", &op1) );
+void AssemblyBlock::setge( Operand &op1 ) {
+  AppendInstruction( new Instruction("setge", &op1) );
 }
 
-void AssemblyBlock::SETL( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETL", &op1) );
+void AssemblyBlock::setl( Operand &op1 ) {
+  AppendInstruction( new Instruction("setl", &op1) );
 }
 
-void AssemblyBlock::SETLE( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETLE", &op1) );
+void AssemblyBlock::setle( Operand &op1 ) {
+  AppendInstruction( new Instruction("setle", &op1) );
 }
 
-void AssemblyBlock::SETNA( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETNA", &op1) );
+void AssemblyBlock::setna( Operand &op1 ) {
+  AppendInstruction( new Instruction("setna", &op1) );
 }
 
-void AssemblyBlock::SETNAE( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETNAE", &op1) );
+void AssemblyBlock::setnae( Operand &op1 ) {
+  AppendInstruction( new Instruction("setnae", &op1) );
 }
 
-void AssemblyBlock::SETNB( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETNB", &op1) );
+void AssemblyBlock::setnb( Operand &op1 ) {
+  AppendInstruction( new Instruction("setnb", &op1) );
 }
 
-void AssemblyBlock::SETNBE( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETNBE", &op1) );
+void AssemblyBlock::setnbe( Operand &op1 ) {
+  AppendInstruction( new Instruction("setnbe", &op1) );
 }
 
-void AssemblyBlock::SETNE( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETNE", &op1) );
+void AssemblyBlock::setne( Operand &op1 ) {
+  AppendInstruction( new Instruction("setne", &op1) );
 }
 
-void AssemblyBlock::SETNG( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETNG", &op1) );
+void AssemblyBlock::setng( Operand &op1 ) {
+  AppendInstruction( new Instruction("setng", &op1) );
 }
 
-void AssemblyBlock::SETNGE( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETNGE", &op1) );
+void AssemblyBlock::setnge( Operand &op1 ) {
+  AppendInstruction( new Instruction("setnge", &op1) );
 }
 
-void AssemblyBlock::SETNL( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETNL", &op1) );
+void AssemblyBlock::setnl( Operand &op1 ) {
+  AppendInstruction( new Instruction("setnl", &op1) );
 }
 
-void AssemblyBlock::SETNLE( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETNLE", &op1) );
+void AssemblyBlock::setnle( Operand &op1 ) {
+  AppendInstruction( new Instruction("setnle", &op1) );
 }
 
-void AssemblyBlock::SETNO( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETNO", &op1) );
+void AssemblyBlock::setno( Operand &op1 ) {
+  AppendInstruction( new Instruction("setno", &op1) );
 }
 
-void AssemblyBlock::SETNP( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETNP", &op1) );
+void AssemblyBlock::setnp( Operand &op1 ) {
+  AppendInstruction( new Instruction("setnp", &op1) );
 }
 
-void AssemblyBlock::SETNS( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETNS", &op1) );
+void AssemblyBlock::setns( Operand &op1 ) {
+  AppendInstruction( new Instruction("setns", &op1) );
 }
 
-void AssemblyBlock::SETNZ( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETNZ", &op1) );
+void AssemblyBlock::setnz( Operand &op1 ) {
+  AppendInstruction( new Instruction("setnz", &op1) );
 }
 
-void AssemblyBlock::SETO( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETO", &op1) );
+void AssemblyBlock::seto( Operand &op1 ) {
+  AppendInstruction( new Instruction("seto", &op1) );
 }
 
-void AssemblyBlock::SETP( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETP", &op1) );
+void AssemblyBlock::setp( Operand &op1 ) {
+  AppendInstruction( new Instruction("setp", &op1) );
 }
 
-void AssemblyBlock::SETPE( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETPE", &op1) );
+void AssemblyBlock::setpe( Operand &op1 ) {
+  AppendInstruction( new Instruction("setpe", &op1) );
 }
 
-void AssemblyBlock::SETPO( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETPO", &op1) );
+void AssemblyBlock::setpo( Operand &op1 ) {
+  AppendInstruction( new Instruction("setpo", &op1) );
 }
 
-void AssemblyBlock::SETS( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETS", &op1) );
+void AssemblyBlock::sets( Operand &op1 ) {
+  AppendInstruction( new Instruction("sets", &op1) );
 }
 
-void AssemblyBlock::SETZ( Operand &op1 ) {
-  AppendInstruction( new Instruction("SETZ", &op1) );
+void AssemblyBlock::setz( Operand &op1 ) {
+  AppendInstruction( new Instruction("setz", &op1) );
 }
 
-void AssemblyBlock::SGDT( Operand &op1 ) {
-  AppendInstruction( new Instruction("SGDT", &op1) );
+void AssemblyBlock::sgdt( Operand &op1 ) {
+  AppendInstruction( new Instruction("sgdt", &op1) );
 }
 
-void AssemblyBlock::SHDL( Operand &op1, Operand &op2, Operand &op3 ) {
-  AppendInstruction( new Instruction("SHDL", &op1, &op2, &op3) );
+void AssemblyBlock::shdl( Operand &op1, Operand &op2, Operand &op3 ) {
+  AppendInstruction( new Instruction("shdl", &op1, &op2, &op3) );
 }
 
-void AssemblyBlock::SHDR( Operand &op1, Operand &op2, Operand &op3 ) {
-  AppendInstruction( new Instruction("SHDR", &op1, &op2, &op3) );
+void AssemblyBlock::shdr( Operand &op1, Operand &op2, Operand &op3 ) {
+  AppendInstruction( new Instruction("shdr", &op1, &op2, &op3) );
 }
 
-void AssemblyBlock::SIDT( Operand &op1 ) {
-  AppendInstruction( new Instruction("SIDT", &op1) );
+void AssemblyBlock::sidt( Operand &op1 ) {
+  AppendInstruction( new Instruction("sidt", &op1) );
 }
 
-void AssemblyBlock::SLDT( Operand &op1 ) {
-  AppendInstruction( new Instruction("SLDT", &op1) );
+void AssemblyBlock::sldt( Operand &op1 ) {
+  AppendInstruction( new Instruction("sldt", &op1) );
 }
 
-void AssemblyBlock::SHL( Operand &op1 ) {
-  AppendInstruction( new Instruction("SHL", &op1) );
+void AssemblyBlock::shl( Operand &op1 ) {
+  AppendInstruction( new Instruction("shl", &op1) );
 }
 
-void AssemblyBlock::SHL( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("SHL", &op1, &op2) );
+void AssemblyBlock::shl( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("shl", &op1, &op2) );
 }
 
-void AssemblyBlock::SHR( Operand &op1 ) {
-  AppendInstruction( new Instruction("SHR", &op1) );
+void AssemblyBlock::shr( Operand &op1 ) {
+  AppendInstruction( new Instruction("shr", &op1) );
 }
 
-void AssemblyBlock::SHR( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("SHR", &op1, &op2) );
+void AssemblyBlock::shr( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("shr", &op1, &op2) );
 }
 
-void AssemblyBlock::STC() {
-  AppendInstruction( new Instruction("STC") );
+void AssemblyBlock::stc() {
+  AppendInstruction( new Instruction("stc") );
 }
 
-void AssemblyBlock::STD() {
-  AppendInstruction( new Instruction("STD") );
+void AssemblyBlock::std() {
+  AppendInstruction( new Instruction("std") );
 }
 
-void AssemblyBlock::STI() {
-  AppendInstruction( new Instruction("STI") );
+void AssemblyBlock::sti() {
+  AppendInstruction( new Instruction("sti") );
 }
 
-void AssemblyBlock::STOSB() {
-  AppendInstruction( new Instruction("STOSB") );
+void AssemblyBlock::stosb() {
+  AppendInstruction( new Instruction("stosb") );
 }
 
-void AssemblyBlock::STOSW() {
-  AppendInstruction( new Instruction("STOSW") );
+void AssemblyBlock::stosw() {
+  AppendInstruction( new Instruction("stosw") );
 }
 
-void AssemblyBlock::STOSD() {
-  AppendInstruction( new Instruction("STOSD") );
+void AssemblyBlock::stosd() {
+  AppendInstruction( new Instruction("stosd") );
 }
 
-void AssemblyBlock::STR( Operand &op1 ) {
-  AppendInstruction( new Instruction("STR", &op1) );
+void AssemblyBlock::str( Operand &op1 ) {
+  AppendInstruction( new Instruction("str", &op1) );
 }
 
-void AssemblyBlock::SUB( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("SUB", &op1, &op2) );
+void AssemblyBlock::sub( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("sub", &op1, &op2) );
 }
 
-void AssemblyBlock::TEST( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("TEST", &op1, &op2) );
+void AssemblyBlock::test( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("test", &op1, &op2) );
 }
 
-void AssemblyBlock::VERR( Operand &op1 ) {
-  AppendInstruction( new Instruction("VERR", &op1) );
+void AssemblyBlock::verr( Operand &op1 ) {
+  AppendInstruction( new Instruction("verr", &op1) );
 }
 
-void AssemblyBlock::VERW( Operand &op1 ) {
-  AppendInstruction( new Instruction("VERW", &op1) );
+void AssemblyBlock::verw( Operand &op1 ) {
+  AppendInstruction( new Instruction("verw", &op1) );
 }
 
-void AssemblyBlock::WAIT() {
-  AppendInstruction( new Instruction("WAIT") );
+void AssemblyBlock::wait() {
+  AppendInstruction( new Instruction("wait") );
 }
 
-void AssemblyBlock::XCHG( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("XCHG", &op1, &op2) );
+void AssemblyBlock::xchg( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("xchg", &op1, &op2) );
 }
 
-void AssemblyBlock::XLAT() {
-  AppendInstruction( new Instruction("XLAT") );
+void AssemblyBlock::xlat() {
+  AppendInstruction( new Instruction("xlat") );
 }
 
-void AssemblyBlock::XOR( Operand &op1, Operand &op2 ) {
-  AppendInstruction( new Instruction("XOR", &op1, &op2) );
+void AssemblyBlock::_xor( Operand &op1, Operand &op2 ) {
+  AppendInstruction( new Instruction("xor", &op1, &op2) );
 }
 
 AssemblyBlock::AssemblyBlock() {
@@ -880,7 +880,7 @@ void AssemblyBlock::CommentLastInstruction( std::string _comment ) {
 
 void AssemblyBlock::AddHangingLabel( std::string _label ) {
   // TODO: Add support for genuinely empty instructions, and remove the NOP
-  NOP();
+  nop();
   last->SetLabel( _label );
 }
 
