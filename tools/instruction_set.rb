@@ -47,7 +47,7 @@ File.open( ins_h, "r" ).each_line do |l|
   method_cache[[operand_name, num_operands]] = true
   # Write the prototype
   a_h.write "  void "
-  a_h.write operand_name + "("
+  a_h.write operand_name.downcase + "("
   a_h.write " " unless num_operands == 0
   num_operands.times do |n|
     a_h.write "Operand&"
@@ -58,7 +58,7 @@ File.open( ins_h, "r" ).each_line do |l|
 
   # Write the method body
   a_c.write "void AssemblyBlock::"
-  a_c.write operand_name + "("
+  a_c.write operand_name.downcase + "("
   a_c.write " " unless num_operands == 0
   num_operands.times do |n|
     a_c.write "Operand &op" + (n+1).to_s
@@ -67,7 +67,7 @@ File.open( ins_h, "r" ).each_line do |l|
   a_c.write " " unless num_operands == 0
   a_c.write ") \{\n"
   a_c.write "  AppendInstruction( new Instruction(\""
-  a_c.write operand_name
+  a_c.write operand_name.downcase
   a_c.write "\""
   a_c.write ", " unless num_operands == 0
   num_operands.times do |n|
