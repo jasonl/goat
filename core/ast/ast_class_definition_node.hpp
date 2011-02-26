@@ -3,7 +3,7 @@
 
 class ASTClassDefinitionNode : public ASTNode {
 public:
-  ASTClassDefinitionNode( TokenIterator& );
+  ASTClassDefinitionNode( Token& );
   AssemblyBlock *GenerateCode();
   AssemblyBlock *GetAuxiliaryCode();
   void Analyse( Scope* );

@@ -4,11 +4,28 @@ SourceFileNode::SourceFileNode() : ASTNode( ASTNode::SourceFile ) {
 }
 
 void SourceFileNode::Analyse( Scope *scope ) {
+  ASTNode *nextNode;
   ASTIterator end(NULL);
 
-  for( ASTIterator i = ChildNodes(); i != end; i++ ) {
-    i->Analyse( scope );
-  } 
+  Token *globalName = new Token(Identifier, "__GLOBAL__");
+  globalObject = new ASTClassDefinitionNode(*globalName);
+
+  InsertFirstChild(globalObject);
+
+  ASTIterator i = ChildNodes();
+
+  while( i != end ) {
+    if( i->Type() == MutableAssignment || i->Type() == ImmutableAssignment ) {
+      nextNode = i->MoveNodeTo(globalObject);
+      i = ASTIterator(nextNode);
+    } else {
+      i++;
+    }
+  }
+
+  for(ASTIterator i = ChildNodes(); i != end; i++)
+    i->Analyse(scope);
+
 }
 
 AssemblyBlock *SourceFileNode::GenerateCode() {
@@ -16,6 +33,11 @@ AssemblyBlock *SourceFileNode::GenerateCode() {
   ASTIterator end(NULL);
 
   a->SetSegment(".text");
+
+  // Call __Global__#main to start things
+  a->mov(ecx, Dword(goatHash("main")));
+  a->mov(edx, *new Operand("__GLOBAL___dispatch")); 
+  a->call(edx);
 
   for( ASTIterator i = ChildNodes(); i != end; i++ ) {
     a->AppendBlock( i->GenerateCode() );

@@ -3,8 +3,8 @@
 
 std::string GenerateFunctionLabel( ASTNode*, std::string );
 
-ASTClassDefinitionNode::ASTClassDefinitionNode( TokenIterator &_token ) : ASTNode( ASTNode::ClassDefinition ) {
-  token = &(*_token);
+ASTClassDefinitionNode::ASTClassDefinitionNode( Token &_token ) : ASTNode( ASTNode::ClassDefinition ) {
+  token = &_token;
 }
 
 void ASTClassDefinitionNode::Analyse( Scope *_scope ) {
@@ -47,6 +47,8 @@ AssemblyBlock *ASTClassDefinitionNode::GenerateCode() {
   }
 
   // TODO: Write error code for when a non-existant method is called
+  
+  dispatch->LabelFirstInstruction(this->Content() + "_dispatch"); 
 
   dispatch->AppendBlock(a);
   return dispatch;

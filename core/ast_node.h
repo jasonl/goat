@@ -64,6 +64,8 @@ class ASTNode {
   void AppendChild( ASTNode *_a ) { append(_a); }
   void InsertFirstChild( ASTNode* );
   void ReplaceChild( ASTNode*, ASTNode* );
+  void DetachChild( ASTNode* );
+  ASTNode *MoveNodeTo( ASTNode* );
   virtual ASTIterator ChildNodes();
 
   virtual void Analyse( Scope* );
@@ -76,7 +78,7 @@ class ASTNode {
   bool HasContent() { return( token != NULL ); }
   enum NODE_TYPE Type() { return type; }
 
-  protected:
+ protected:
   enum NODE_TYPE type;
   Token *token;
   Scope *scope;

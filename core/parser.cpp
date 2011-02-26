@@ -632,7 +632,7 @@ MATCHER_FOR( ClassDefinition ) {
   ConsumeToken();
 
   if( TokenIs( Identifier )) {
-    thisNode = new ASTClassDefinitionNode( currentToken );
+    thisNode = new ASTClassDefinitionNode( *currentToken );
   } else {
     goatError(CurrentSourcePosition(), "Unexpected token %s found after class keyword. Identifier expected", TOKEN_TYPES[currentToken->Type()]);
     ResetTokenPosition( savedCurr );
