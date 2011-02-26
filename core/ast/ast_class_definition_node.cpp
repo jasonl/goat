@@ -48,7 +48,7 @@ AssemblyBlock *ASTClassDefinitionNode::GenerateCode() {
 
   // TODO: Write error code for when a non-existant method is called
   
-  dispatch->LabelFirstInstruction(this->Content() + "_dispatch"); 
+  dispatch->LabelFirstInstruction(DispatchLabelNameFor(this->Content())); 
 
   dispatch->AppendBlock(a);
   return dispatch;

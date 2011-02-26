@@ -36,7 +36,7 @@ AssemblyBlock *SourceFileNode::GenerateCode() {
 
   // Call __Global__#main to start things
   a->mov(ecx, Dword(goatHash("main")));
-  a->mov(edx, *new Operand("__GLOBAL___dispatch")); 
+  a->mov(edx, *DispatchOperandFor("__GLOBAL__")); 
   a->call(edx);
 
   for( ASTIterator i = ChildNodes(); i != end; i++ ) {
