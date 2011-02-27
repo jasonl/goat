@@ -35,14 +35,10 @@ AssemblyBlock *SourceFileNode::GenerateCode() {
   a->SetSegment(".text");
 
   // Call __Global__#main to start things
+  a->mov(eax, Dword(0));
   a->mov(ecx, Dword(goatHash("main")));
   a->mov(edx, *DispatchOperandFor("__GLOBAL__")); 
   a->call(edx);
-
-  for( ASTIterator i = ChildNodes(); i != end; i++ ) {
-    a->AppendBlock( i->GenerateCode() );
-  }
-
   // Default exit code
   a->push( Dword(0) ); // Return exit code of 0
   a->mov(eax, *new Operand(0x01)); // System call number 1 - exit program
@@ -50,6 +46,9 @@ AssemblyBlock *SourceFileNode::GenerateCode() {
   a->_int(*new Operand(0x80));  // Make the system call
   
   a->CommentLastInstruction("Default exit back to system");
+  for( ASTIterator i = ChildNodes(); i != end; i++ ) {
+    a->AppendBlock( i->GenerateCode() );
+  }
 
   return a;
 }

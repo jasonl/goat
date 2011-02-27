@@ -103,7 +103,7 @@ AssemblyBlock *FunctionDefNode::GenerateCode() {
   // Return a default null if code execution reaches here
   bodyAsm->mov( eax, Dword(0) );
   bodyAsm->mov( ecx, Dword(goatHash("Null")));
-  bodyAsm->mov( edx, Dword(0) ); //TODO: This needs to reference a label
+  bodyAsm->mov( edx, *DispatchOperandFor("Null"));
 
   bodyAsm->leave();
   bodyAsm->ret();
