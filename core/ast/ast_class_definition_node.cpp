@@ -47,8 +47,9 @@ AssemblyBlock *ASTClassDefinitionNode::GenerateCode() {
   }
 
   // TODO: Write error code for when a non-existant method is called
-  
+
   dispatch->LabelFirstInstruction(DispatchLabelNameFor(this->Content())); 
+  dispatch->PrependItem(new GlobalSymbol(DispatchLabelNameFor(this->Content())));
 
   dispatch->AppendBlock(a);
   return dispatch;

@@ -888,3 +888,11 @@ void AssemblyBlock::SetSegment( std::string _segment ) {
   AppendItem( new SegmentDeclaration(_segment) );
 }  
 
+void AssemblyBlock::PrependItem( AssemblerItem *item ) {
+  if(first == NULL) {
+    first = item;
+  } else {
+    item->next = first;
+    first = item;
+  }
+}

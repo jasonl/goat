@@ -5,6 +5,7 @@
 #include "instruction.h"
 #include "segment_declaration.h"
 #include "extern_symbol.h"
+#include "global_symbol.h"
 
 class AssemblyBlock {
 public:
@@ -218,6 +219,7 @@ public:
   AssemblyBlock();
   void AppendBlock( AssemblyBlock* );
   void AppendItem( AssemblerItem* );
+  void PrependItem( AssemblerItem* );
   void AppendInstruction( Instruction* );
   AssemblerItemIterator Instructions() { return AssemblerItemIterator( first ); }
   void LabelFirstInstruction( std::string );
