@@ -168,7 +168,7 @@ Operand &Scope::GenerateDispatchOperand( std::string name ) {
 // all files.
 std::string Scope::GenerateUniqueLabel( std::string _base ) {
   std::stringstream s;
-  s << (unsigned long) this << '_' << uniqueVal << '_' << _base;
+  s << _base << '_' << (unsigned long) this << '_' << uniqueVal;
   uniqueVal++;
   return s.str();
 }
