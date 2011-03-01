@@ -67,7 +67,7 @@ void SourceFile::Parse() {
 }
 
 void SourceFile::Analyse() {
-  lobby = new Scope( NULL );
+  lobby = new Scope( this );
 
   if( astRoot ) {
     astRoot->Analyse( lobby );

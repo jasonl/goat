@@ -21,6 +21,7 @@ Scope::Scope( Scope* parent ) {
   // function around an anonymous lambda, or the class
   // scope around a method.
   enclosingScope = parent;
+  sourceFile = parent->sourceFile;
   firstVariable = NULL;
   uniqueVal = 0;
   variableCount = 0;
@@ -30,6 +31,16 @@ Scope::Scope( Scope* parent ) {
   if( parent ) {
     parent->RegisterChildScope( this );
   }
+}
+
+Scope::Scope( SourceFile* _sourceFile ) {
+  enclosingScope = NULL;
+  sourceFile = _sourceFile;
+  firstVariable = NULL;
+  uniqueVal = 0;
+  variableCount = 0;
+  nextScope = NULL;
+  firstChildScope = NULL;
 }
 
 Scope::~Scope() {

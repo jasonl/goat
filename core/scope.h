@@ -19,6 +19,7 @@ typedef signed long offset;
 
 // A variable allocated in any given scope.
 class Variable;
+class SourceFile;
 
 // Object size is the number of bytes we allocate for an object itself,
 // excluding its payload. In our case, this is 12 bytes:
@@ -40,6 +41,7 @@ class Variable;
 class Scope {
  public:
   Scope( Scope* );
+  Scope( SourceFile* );
   ~Scope();
   void AddLocalVariable( std::string );
   void AddParameterVariable( std::string );
@@ -58,6 +60,7 @@ class Scope {
   Variable *firstVariable;
   int uniqueVal;
   int variableCount;
+  SourceFile *sourceFile;
 };
 
 #endif
