@@ -3,6 +3,7 @@
 
 #include <string>
 
+class SourceFile;
 class Operand;
 
 class AsmLabel {
@@ -14,6 +15,6 @@ class AsmLabel {
 };
 
 std::string DispatchLabelNameFor(std::string);
-Operand *DispatchOperandFor(std::string);
+Operand *DispatchOperandFor(std::string, SourceFile*);
 
 #endif

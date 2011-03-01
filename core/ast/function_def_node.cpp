@@ -103,7 +103,7 @@ AssemblyBlock *FunctionDefNode::GenerateCode() {
   // Return a default null if code execution reaches here
   bodyAsm->mov( eax, Dword(0) );
   bodyAsm->mov( ecx, Dword(goatHash("Null")));
-  bodyAsm->mov( edx, *DispatchOperandFor("Null"));
+  bodyAsm->mov( edx, *DispatchOperandFor("Null", scope->GetSourceFile()));
 
   bodyAsm->leave();
   bodyAsm->ret();
@@ -113,7 +113,7 @@ AssemblyBlock *FunctionDefNode::GenerateCode() {
 
   a->mov( eax, *new Operand(functionName));
   a->mov( ecx, Dword(goatHash("Function")));
-  a->mov( edx, Dword(0) ); //TODO This needs to reference a label
+  a->mov( edx, *DispatchOperandFor("Null", scope->GetSourceFile())); //TODO This needs to reference a label
   
   a->CommentLastInstruction("Function object for " + functionName);
 

@@ -80,6 +80,10 @@ void SourceFile::GenerateCode() {
   if( astRoot ) {
     assembly = astRoot->GenerateCode();
     assembly->AppendBlock(astRoot->GetAuxiliaryCode());
+
+    for( SymbolTable::iterator i = externSymbols.begin(); i != externSymbols.end(); i++) {
+      assembly->AppendItem(new ExternSymbol(*i));
+    }
   } else {
     std::cerr << "No Abstract Syntax Tree was built from this source file";
   }
@@ -159,4 +163,8 @@ void SourceFile::PrintAsm() {
       std::cout << *i << "\n";
     }
   }
+}
+
+void SourceFile::AddExternSymbol( std::string symbol) {
+  externSymbols.insert(symbol);
 }

@@ -21,7 +21,7 @@ AssemblyBlock *IntegerLiteralNode::GenerateCode() {
 
   a->mov( eax, Dword(val) );
   a->mov( ecx, Dword(goatHash("Integer")));
-  a->mov( edx, *DispatchOperandFor("Integer"));
+  a->mov( edx, *DispatchOperandFor("Integer", scope->GetSourceFile()));
 
   a->CommentLastInstruction("Move Integer " + Content() + " into eax/ecx/edx");
 
@@ -38,7 +38,7 @@ AssemblyBlock *IntegerLiteralNode::PushOntoStack() {
   int32_t val = atol( Content().c_str() );
 
   a->push( Dword(goatHash("Integer")) );
-  a->push( *DispatchOperandFor("Integer"));
+  a->push( *DispatchOperandFor("Integer", scope->GetSourceFile()));
   a->push( Dword(val) );
 
   a->CommentLastInstruction("Push Integer " + Content() + " onto stack");

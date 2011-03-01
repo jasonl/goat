@@ -50,6 +50,7 @@ class Scope {
   bool HasVariable( std::string );
   bool HasParameterVariable( std::string );
   int GetVariableCount() { return variableCount; }
+  SourceFile *GetSourceFile() { return sourceFile; }
   std::string GenerateUniqueLabel( std::string );
   Operand &GenerateTypeHashOperand( std::string );
   Operand &GeneratePayloadOperand( std::string );

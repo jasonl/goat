@@ -3,9 +3,11 @@
 SourceFileNode::SourceFileNode() : ASTNode( ASTNode::SourceFile ) {
 }
 
-void SourceFileNode::Analyse( Scope *scope ) {
+void SourceFileNode::Analyse( Scope *_scope ) {
   ASTNode *nextNode;
   ASTIterator end(NULL);
+
+  scope = _scope;
 
   Token *globalName = new Token(Identifier, "__GLOBAL__");
   globalObject = new ASTClassDefinitionNode(*globalName);
@@ -37,7 +39,7 @@ AssemblyBlock *SourceFileNode::GenerateCode() {
   // Call __Global__#main to start things
   a->mov(eax, Dword(0));
   a->mov(ecx, Dword(goatHash("main")));
-  a->mov(edx, *DispatchOperandFor("__GLOBAL__")); 
+  a->mov(edx, *new Operand(DispatchLabelNameFor("__GLOBAL__"))); 
   a->call(edx);
   // Default exit code
   a->push( Dword(0) ); // Return exit code of 0

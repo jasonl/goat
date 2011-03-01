@@ -4,6 +4,8 @@
 #include "assembler_item.h"
 #include "instruction.h"
 #include "segment_declaration.h"
+#include "extern_symbol.h"
+
 class AssemblyBlock {
 public:
   void aaa();
