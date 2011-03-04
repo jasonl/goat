@@ -109,7 +109,8 @@ InstructionNode *Parser::MatchInstruction() {
 
 OperandNode *Parser::MatchOperand() {
   OperandNode *thisNode = NULL;
-  if((thisNode = MATCH(DirectOperand)) ||
+  if((thisNode = MatchObjectOperand()) ||
+     (thisNode = MATCH(DirectOperand)) ||
      (thisNode = MATCH(IndirectOperand)) ||
      (thisNode = MatchImmediateOperand())) {
     return thisNode;
@@ -133,6 +134,36 @@ ImmediateOperandNode *Parser::MatchImmediateOperand() {
     ConsumeToken();
   }
   return thisNode;
+}
+
+ObjectOperandNode *Parser::MatchObjectOperand() {
+  ObjectOperandNode *thisNode = NULL;
+  TokenIterator savedCurr = currentToken;
+
+  if(TokenIs(Identifier)) {
+    thisNode = new ObjectOperandNode(currentToken);
+    ConsumeToken();
+  } else {
+    return NULL;
+  }
+
+  if(TokenIs(Period)) {
+    ConsumeToken();
+  } else {
+    ResetTokenPosition(savedCurr);
+    delete thisNode;
+    return NULL;
+  }
+
+  if(TokenIs(Identifier)) {
+    thisNode->SetPropertyName(currentToken->Content());
+    ConsumeToken();
+    return thisNode;
+  } else {
+    ResetTokenPosition(savedCurr);
+    delete thisNode;
+    return NULL;
+  }
 }
 
 MATCHER_FOR( IndirectOperand ) {

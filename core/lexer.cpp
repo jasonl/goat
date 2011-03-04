@@ -24,6 +24,11 @@ void Lexer::StartThunk( CodePoint &cp ) {
   thunkEnd = sourceCurr + cp.bytes -1;
 }
 
+void Lexer::StartThunkAtNext() {
+  thunkStart = sourceNext;
+  thunkEnd = sourceNext;
+}
+
 void Lexer::PushIndentToken() {
   if( !sourceFile->indentStack.empty() && sourceFile->indentStack.top() != indent ) {
     if( !sourceFile->indentStack.empty() && sourceFile->indentStack.top() < indent) {
@@ -84,10 +89,9 @@ void Lexer::DefaultStateTransitions( CodePoint &cp ) {
     {
     case '(': lexerState = LeftParen; break;
     case ')': lexerState = RightParen; break;
-    case '"': 
+    case '"':
+      StartThunkAtNext();
       lexerState = String; 
-      thunkStart = sourceNext; 
-      thunkEnd = sourceNext; 
       break;
     case '.': lexerState = Period; break;
     case 0x03bb: lexerState = Lambda; break;

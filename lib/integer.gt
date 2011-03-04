@@ -32,10 +32,10 @@ class Integer
     ; push ebp
     ; mov ebp, esp
     asm
-      mov ecx, #addend      ; Load type hash of first argument into ECX
+      mov ecx, addend.type      ; Load type hash of first argument into ECX
       cmp ecx, #Integer     ; test that divisor is an Integer
       jne incorrect_type
-      add eax, ^addend
+      add eax, addend.payload
       mov edx, &Integer
       mov ecx, #Integer
       pop ebp

@@ -45,6 +45,7 @@ class Parser {
   OperandNode *MatchOperand();
   DirectOperandNode *MatchDirectOperand();
   ImmediateOperandNode *MatchImmediateOperand();
+  ObjectOperandNode *MatchObjectOperand();
   MATCHER_PROTOTYPE_FOR( IndirectOperand );
   MATCHER_PROTOTYPE_FOR( IndirectOperandTerm );
   void ConsumeToken() { currentToken++; }

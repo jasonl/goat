@@ -31,7 +31,8 @@ const std::string NODE_TYPES[] = {
   "Instruction",
   "Label",
   "DirectOperand", "ImmediateOperand",
-  "IndirectOperand", "IndirectOperandTerm"
+  "IndirectOperand", "IndirectOperandTerm",
+  "ObjectOperand"
 };
 
 class ASTNode {
@@ -53,7 +54,8 @@ class ASTNode {
     Instruction,
     Label,
     DirectOperand, ImmediateOperand,
-    IndirectOperand, IndirectOperandTerm
+    IndirectOperand, IndirectOperandTerm,
+    ObjectOperand
   };
 
   ASTNode( enum NODE_TYPE );
@@ -124,6 +126,7 @@ typedef std::list<Token>::iterator TokenIterator;
 #include "ast/ast_label_node.hpp"
 #include "ast/mutable_assignment_node.h"
 #include "ast/null_literal_node.h"
+#include "ast/object_operand_node.h"
 #include "ast/parameter_node.h"
 #include "ast/parameter_def_node.h"
 #include "ast/return_statement_node.h"
