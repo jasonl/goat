@@ -110,6 +110,7 @@ InstructionNode *Parser::MatchInstruction() {
 OperandNode *Parser::MatchOperand() {
   OperandNode *thisNode = NULL;
   if((thisNode = MatchObjectOperand()) ||
+     (thisNode = MatchHashOperand()) ||
      (thisNode = MATCH(DirectOperand)) ||
      (thisNode = MATCH(IndirectOperand)) ||
      (thisNode = MatchImmediateOperand())) {
@@ -164,6 +165,14 @@ ObjectOperandNode *Parser::MatchObjectOperand() {
     delete thisNode;
     return NULL;
   }
+}
+
+HashOperandNode *Parser::MatchHashOperand() {
+  if(TokenIs(HashString)) {
+    ConsumeToken();
+    return new HashOperandNode( *currentToken );
+  }
+  return NULL;
 }
 
 MATCHER_FOR( IndirectOperand ) {

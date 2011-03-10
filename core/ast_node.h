@@ -118,6 +118,7 @@ typedef std::list<Token>::iterator TokenIterator;
 #include "ast/direct_operand_node.h"
 #include "ast/function_call_node.h"
 #include "ast/function_def_node.h"
+#include "ast/hash_operand_node.h"
 #include "ast/immediate_operand_node.h"
 #include "ast/immutable_assignment_node.h"
 #include "ast/ast_indirect_operand_node.hpp"
