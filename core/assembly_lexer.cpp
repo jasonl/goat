@@ -13,8 +13,8 @@ void AssemblyLexer::AssemblyStateTransitions( CodePoint &cp ) {
   case ';':  lexerState = Comment; break;
   case ',':  lexerState = Comma; break;
   case '.':  lexerState = Period; break;
-  case '#':  StartThunkAtNext(); lexerState = HashString; break;
-  case '&':  StartThunkAtNext(); lexerState = AddressString; break;  
+  case '#':  StartThunkAtNext(cp); lexerState = HashString; break;
+  case '&':  StartThunkAtNext(cp); lexerState = AddressString; break;  
   case '+':  StartThunk(cp); lexerState = Plus; break;
   case '-':  StartThunk(cp); lexerState = Minus; break;
   case '*':  StartThunk(cp); lexerState = Multiply; break;
@@ -143,6 +143,23 @@ void AssemblyLexer::Lex() {
 
     case HashString:
     case AddressString:
+      switch(cp.wchar) {
+      case ' ':  thunkEnd--; PushToken(); lexerState = Whitespace; break;
+      case '[':  thunkEnd--; PushToken(); lexerState = LeftSquare; break;
+      case ']':  thunkEnd--; PushToken(); lexerState = RightSquare; break;
+      case ',':  thunkEnd--; PushToken(); lexerState = Comma; break;
+      case '.':  thunkEnd--; PushToken(); lexerState = Period; break;
+      case '+':  thunkEnd--; PushToken(); StartThunk( cp ); lexerState = Plus; break;
+      case '-':  thunkEnd--; PushToken(); StartThunk( cp ); lexerState = Minus; break;
+      case '*':  thunkEnd--; PushToken(); StartThunk( cp ); lexerState = Multiply; break;
+      case '\n': thunkEnd--; PushToken(); lexerState = Newline; break;
+      case ':':  lexerState = Label; thunkEnd += cp.bytes; break;
+      default:
+	thunkEnd += cp.bytes;
+	break;
+      }
+      break;
+
     case Identifier:
       switch(cp.wchar) {
       case ' ':  PushToken(); lexerState = Whitespace; break;

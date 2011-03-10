@@ -32,6 +32,7 @@ const std::string NODE_TYPES[] = {
   "Label",
   "DirectOperand", "ImmediateOperand",
   "IndirectOperand", "IndirectOperandTerm",
+  "HashOperand", "AddressOperand",
   "ObjectOperand"
 };
 
@@ -55,6 +56,7 @@ class ASTNode {
     Label,
     DirectOperand, ImmediateOperand,
     IndirectOperand, IndirectOperandTerm,
+    HashOperand, AddressOperand,
     ObjectOperand
   };
 

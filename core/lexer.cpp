@@ -21,12 +21,12 @@ Lexer::Lexer( char* _start, char* _end, SourceFile *_sourceFile ):
 
 void Lexer::StartThunk( CodePoint &cp ) {
   thunkStart = sourceCurr;
-  thunkEnd = sourceCurr + cp.bytes -1;
+  thunkEnd = sourceCurr + cp.bytes - 1;
 }
 
-void Lexer::StartThunkAtNext() {
+void Lexer::StartThunkAtNext( CodePoint &cp ) {
   thunkStart = sourceNext;
-  thunkEnd = sourceNext;
+  thunkEnd = sourceNext + cp.bytes - 1;
 }
 
 void Lexer::PushIndentToken() {
@@ -90,7 +90,7 @@ void Lexer::DefaultStateTransitions( CodePoint &cp ) {
     case '(': lexerState = LeftParen; break;
     case ')': lexerState = RightParen; break;
     case '"':
-      StartThunkAtNext();
+      StartThunkAtNext(cp);
       lexerState = String; 
       break;
     case '.': lexerState = Period; break;

@@ -1,3 +1,5 @@
 asm
   label: mov eax, 32
+  mov &Integer, #Integer
+
 

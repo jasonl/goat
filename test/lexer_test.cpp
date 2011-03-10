@@ -115,7 +115,13 @@ namespace {
     EXPECT_EQ( Integer, (++i)->Type() );
     EXPECT_EQ( "32", i->Content() );
     EXPECT_EQ( Newline, (++i)->Type() );
-
+    EXPECT_EQ( Identifier, (++i)->Type());
+    EXPECT_EQ( "mov", i->Content());
+    EXPECT_EQ( AddressString, (++i)->Type());
+    EXPECT_EQ( "Integer", i->Content());
+    EXPECT_EQ( Comma, (++i)->Type() );
+    EXPECT_EQ( HashString, (++i)->Type());
+    EXPECT_EQ( "Integer", i->Content());
   }
 
 

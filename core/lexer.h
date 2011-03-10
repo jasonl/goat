@@ -32,7 +32,7 @@ class Lexer {
   char *sourceCurr, *sourceNext, *sourceEnd;
   SourceFile *sourceFile;
   void StartThunk( CodePoint& );
-  void StartThunkAtNext();
+  void StartThunkAtNext( CodePoint& );
   void PushIndentToken();
   TokenType PushToken();
   void PushEmptyToken();

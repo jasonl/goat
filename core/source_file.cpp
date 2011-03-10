@@ -125,6 +125,8 @@ void SourceFile::PrintTokens() {
       case Minus:             std::cout << "Minus          "; break;
       case Multiply:          std::cout << "Multiply       "; break;
       case Label:             std::cout << "Label          "; break;
+      case HashString:        std::cout << "HashString     "; break;
+      case AddressString:     std::cout << "AddressString  "; break;
       default:                std::cout << curr->Type();        break;
       }
       
@@ -134,6 +136,8 @@ void SourceFile::PrintTokens() {
       case String:
       case Identifier:
       case Label:
+      case HashString:
+      case AddressString:
 	std::cout << curr->Content();
 	break;
       default:
