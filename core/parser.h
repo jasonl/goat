@@ -47,6 +47,7 @@ class Parser {
   ImmediateOperandNode *MatchImmediateOperand();
   ObjectOperandNode *MatchObjectOperand();
   HashOperandNode *MatchHashOperand();
+  AddressOperandNode *MatchAddressOperand();
   MATCHER_PROTOTYPE_FOR( IndirectOperand );
   MATCHER_PROTOTYPE_FOR( IndirectOperandTerm );
   void ConsumeToken() { currentToken++; }

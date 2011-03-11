@@ -25,7 +25,12 @@ ASTNode::~ASTNode() {
   }
 }
 
-void ASTNode::Analyse( Scope* ) {
+void ASTNode::Analyse( Scope* _scope) {
+  ASTIterator end(NULL);
+  scope = _scope;
+
+  for( ASTIterator i = ChildNodes(); i != end; i++)
+    i->Analyse(_scope);
 }
 
 AssemblyBlock* ASTNode::GetAuxiliaryCode() {

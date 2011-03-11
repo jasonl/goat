@@ -111,6 +111,7 @@ OperandNode *Parser::MatchOperand() {
   OperandNode *thisNode = NULL;
   if((thisNode = MatchObjectOperand()) ||
      (thisNode = MatchHashOperand()) ||
+     (thisNode = MatchAddressOperand()) ||
      (thisNode = MATCH(DirectOperand)) ||
      (thisNode = MATCH(IndirectOperand)) ||
      (thisNode = MatchImmediateOperand())) {
@@ -168,11 +169,21 @@ ObjectOperandNode *Parser::MatchObjectOperand() {
 }
 
 HashOperandNode *Parser::MatchHashOperand() {
+  HashOperandNode *thisNode = NULL;
   if(TokenIs(HashString)) {
+    thisNode = new HashOperandNode( *currentToken );
     ConsumeToken();
-    return new HashOperandNode( *currentToken );
   }
-  return NULL;
+  return thisNode;
+}
+
+AddressOperandNode *Parser::MatchAddressOperand() {
+  AddressOperandNode *thisNode = NULL;
+  if(TokenIs(AddressString)) {
+    thisNode = new AddressOperandNode( *currentToken );
+    ConsumeToken();
+  }
+  return thisNode;
 }
 
 MATCHER_FOR( IndirectOperand ) {
