@@ -22,12 +22,13 @@
 #ifndef GOATTEST
 int main(int argc, char** argv) {
   int verbose = 0;
+  bool library = false;
   std::string sourceFileName;
   SourceFile *sourceFile = NULL;
 
-  sourceFileName = parseCommandLine( argc, argv, &verbose );
+  sourceFileName = parseCommandLine( argc, argv, &verbose, &library );
 
-  sourceFile = new SourceFile( sourceFileName );
+  sourceFile = new SourceFile( sourceFileName, library );
 
   sourceFile->Tokenize();
   if( verbose & VERBOSE_TOKENS ) sourceFile->PrintTokens();
@@ -65,7 +66,7 @@ void goatError( int lineNo, const std::string fmt, ... ) {
 
 #endif
 
-std::string parseCommandLine( int argc, char *argv[], int *verbose) {
+std::string parseCommandLine( int argc, char *argv[], int *verbose, bool *library) {
   int i;
   std::string fileName;
 
@@ -78,6 +79,7 @@ std::string parseCommandLine( int argc, char *argv[], int *verbose) {
     std::cerr << "-vlex              Print token stream.\n";
     std::cerr << "-vtree             Print AST.\n";
     std::cerr << "-vasm              Print generated assembly.\n";
+    std::cerr << "-l                 Compile as library.\n";
     exit(1);
   }
   
@@ -86,6 +88,10 @@ std::string parseCommandLine( int argc, char *argv[], int *verbose) {
     if(argv[i][0] == '-') {
       // Option switch
       switch( argv[i][1] ){
+      case 'L':
+      case 'l':
+	*library = true;
+	break;
       case 'V':
       case 'v':
 	switch( argv[i][2] ){

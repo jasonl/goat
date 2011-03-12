@@ -12,8 +12,9 @@
 #include "parser.h"
 #include "source_file.hpp"
 
-SourceFile::SourceFile( std::string _fileName ) {
+SourceFile::SourceFile( std::string _fileName, bool _isLibrary ) {
   fileName = _fileName;
+  isLibrary = _isLibrary;
   astRoot = NULL;
   lobby = NULL;
   assembly = NULL;

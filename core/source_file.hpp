@@ -16,7 +16,7 @@ typedef std::set<std::string> SymbolTable;
 class SourceFile {
   friend class Lexer;
 public:
-  SourceFile( std::string );
+  SourceFile( std::string, bool );
   ~SourceFile();
   void Tokenize();
   void Parse();
@@ -26,6 +26,7 @@ public:
   void PrintAST();
   void PrintAsm();
   void AddExternSymbol(std::string);
+  bool IsLibrary() { return isLibrary; }
   std::list<Token>& GetTokenStream() { return tokenStream; }
   std::stack<int> indentStack;
 private:
@@ -35,6 +36,7 @@ private:
   Scope *lobby;
   AssemblyBlock *assembly;
   SymbolTable externSymbols;
+  bool isLibrary;
 };
 
 #endif
