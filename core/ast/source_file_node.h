@@ -7,7 +7,7 @@ class SourceFileNode : public ASTNode {
   void Analyse( Scope* );
   AssemblyBlock *GenerateCode();
  private:
-  ASTClassDefinitionNode *globalObject;
+  ClassDefinitionNode *globalObject;
 };
 
 #endif

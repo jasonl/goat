@@ -621,8 +621,8 @@ ReturnStatementNode *Parser::MatchReturnStatement() {
   return thisNode;
 }
 
-MATCHER_FOR( ClassDefinition ) {
-  ASTClassDefinitionNode *thisNode;
+ClassDefinitionNode *Parser::MatchClassDefinition() {
+  ClassDefinitionNode *thisNode;
   ASTNode *newNode;
   TokenIterator savedCurr = currentToken;
 
@@ -632,7 +632,7 @@ MATCHER_FOR( ClassDefinition ) {
   ConsumeToken();
 
   if( TokenIs( Identifier )) {
-    thisNode = new ASTClassDefinitionNode( *currentToken );
+    thisNode = new ClassDefinitionNode( *currentToken );
   } else {
     goatError(CurrentSourcePosition(), "Unexpected token %s found after class keyword. Identifier expected", TOKEN_TYPES[currentToken->Type()]);
     ResetTokenPosition( savedCurr );

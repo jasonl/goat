@@ -3,11 +3,11 @@
 
 std::string GenerateFunctionLabel( ASTNode*, std::string );
 
-ASTClassDefinitionNode::ASTClassDefinitionNode( Token &_token ) : ASTNode( ASTNode::ClassDefinition ) {
+ClassDefinitionNode::ClassDefinitionNode( Token &_token ) : ASTNode( ASTNode::ClassDefinition ) {
   token = &_token;
 }
 
-void ASTClassDefinitionNode::Analyse( Scope *_scope ) {
+void ClassDefinitionNode::Analyse( Scope *_scope ) {
   ASTIterator end(NULL);
 
   scope = new Scope( _scope );
@@ -27,7 +27,7 @@ void ASTClassDefinitionNode::Analyse( Scope *_scope ) {
   }
 }
 
-AssemblyBlock *ASTClassDefinitionNode::GenerateCode() {
+AssemblyBlock *ClassDefinitionNode::GenerateCode() {
   ASTIterator end(NULL);
   AssemblyBlock *a = new AssemblyBlock;
   AssemblyBlock *fn;
@@ -55,7 +55,7 @@ AssemblyBlock *ASTClassDefinitionNode::GenerateCode() {
   return dispatch;
 }
 
-AssemblyBlock *ASTClassDefinitionNode::GetAuxiliaryCode() {
+AssemblyBlock *ClassDefinitionNode::GetAuxiliaryCode() {
   return new AssemblyBlock;
 }
 

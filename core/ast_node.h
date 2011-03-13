@@ -114,7 +114,7 @@ typedef std::list<Token>::iterator TokenIterator;
 // Include the derived classes here for convenience
 #include "ast/address_operand_node.h"
 #include "ast/block_node.h"
-#include "ast/ast_class_definition_node.hpp"
+#include "ast/class_definition_node.h"
 #include "ast/conditional_node.h"
 #include "ast/direct_operand_node.h"
 #include "ast/function_call_node.h"

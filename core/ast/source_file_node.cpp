@@ -11,7 +11,7 @@ void SourceFileNode::Analyse( Scope *_scope ) {
   scope = _scope;
 
   Token *globalName = new Token(Identifier, "__GLOBAL__");
-  globalObject = new ASTClassDefinitionNode(*globalName);
+  globalObject = new ClassDefinitionNode(*globalName);
 
   InsertFirstChild(globalObject);
 
