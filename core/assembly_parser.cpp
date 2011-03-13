@@ -143,7 +143,7 @@ ObjectOperandNode *Parser::MatchObjectOperand() {
   TokenIterator savedCurr = currentToken;
 
   if(TokenIs(Identifier)) {
-    thisNode = new ObjectOperandNode(currentToken);
+    thisNode = new ObjectOperandNode(*currentToken);
     ConsumeToken();
   } else {
     return NULL;

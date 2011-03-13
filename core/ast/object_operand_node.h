@@ -3,7 +3,7 @@
 
 class ObjectOperandNode : public OperandNode {
  public:
-  ObjectOperandNode( TokenIterator& );
+  ObjectOperandNode( Token& );
   void SetPropertyName( std::string );
   Operand *GenerateOperand();
  private:
