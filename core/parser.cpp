@@ -63,7 +63,7 @@
 #include "lexer.h"
 #include "ast_node.h"
 #include "parser.h"
-#include "goat.hpp"
+#include "goat.h"
 
 const char *TOKEN_TYPES[]={ "RightParen", "LeftParen", "Lambda", "Colon", "Period", 
 			    "Comma", "Equals", "Identifier", "Integer", "String",

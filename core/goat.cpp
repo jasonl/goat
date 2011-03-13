@@ -14,7 +14,7 @@
 #include "lexer.h"
 #include "ast_node.h"
 #include "parser.h"
-#include "goat.hpp"
+#include "goat.h"
 #include "scope.h"
 #include "source_file.hpp"
 

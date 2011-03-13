@@ -3,7 +3,7 @@
 #include "lexer.h"
 #include "ast_node.h"
 #include "parser.h"
-#include "goat.hpp"
+#include "goat.h"
 
 extern const char *TOKEN_TYPES[];
 

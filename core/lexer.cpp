@@ -5,7 +5,7 @@
 #include <cstring> // For memset
 
 
-#include "goat.hpp"
+#include "goat.h"
 #include "lexer.h"
 #include "assembly_lexer.hpp"
 
