@@ -49,7 +49,7 @@ class Parser {
   HashOperandNode *MatchHashOperand();
   AddressOperandNode *MatchAddressOperand();
   MATCHER_PROTOTYPE_FOR( IndirectOperand );
-  MATCHER_PROTOTYPE_FOR( IndirectOperandTerm );
+  IndirectOperandTermNode *MatchIndirectOperandTerm();
   void ConsumeToken() { currentToken++; }
   void ResetTokenPosition( TokenIterator savedCurr ) { currentToken = savedCurr; }
   int CurrentSourcePosition() { return currentToken->LineNumber(); }

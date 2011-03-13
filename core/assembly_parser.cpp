@@ -189,7 +189,7 @@ AddressOperandNode *Parser::MatchAddressOperand() {
 MATCHER_FOR( IndirectOperand ) {
   TokenIterator savedCurr = currentToken;
   ASTIndirectOperandNode *thisNode = NULL;
-  ASTIndirectOperandTermNode *termNode = NULL;
+  IndirectOperandTermNode *termNode = NULL;
 
   if( TokenIsNot(LeftSquare) ) return NULL;
   ConsumeToken();
@@ -218,9 +218,9 @@ MATCHER_FOR( IndirectOperand ) {
   return thisNode;
 }
 
-MATCHER_FOR( IndirectOperandTerm ) {
+IndirectOperandTermNode *Parser::MatchIndirectOperandTerm() {
   TokenIterator savedCurr = currentToken;
-  ASTIndirectOperandTermNode *thisNode = NULL;
+  IndirectOperandTermNode *thisNode = NULL;
   ASTNode *value = NULL;
 
   if( TokenIsNot( Plus ) &&
@@ -229,7 +229,7 @@ MATCHER_FOR( IndirectOperandTerm ) {
     return NULL;
   }
 
-  thisNode = new ASTIndirectOperandTermNode( currentToken );
+  thisNode = new IndirectOperandTermNode( *currentToken );
   ConsumeToken();
 
   if( TokenIs(Integer) ) {
