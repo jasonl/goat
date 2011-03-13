@@ -1,9 +1,9 @@
 #include "../ast_node.h"
 #include "../lexer.h"
 
-DirectOperandNode::DirectOperandNode( TokenIterator &_token ): 
+DirectOperandNode::DirectOperandNode( Token& _token ): 
   OperandNode( ASTNode::DirectOperand ) {
-  token = &(*_token);
+  token = &_token;
 }
 
 // Generate the operand from the source string. Note, only accepts

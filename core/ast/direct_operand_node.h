@@ -3,7 +3,7 @@
 
 class DirectOperandNode : public OperandNode {
 public:
-  DirectOperandNode( TokenIterator& );
+  DirectOperandNode( Token& );
   Operand *GenerateOperand();
 };
 
