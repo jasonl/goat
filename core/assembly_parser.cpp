@@ -113,7 +113,7 @@ OperandNode *Parser::MatchOperand() {
      (thisNode = MatchHashOperand()) ||
      (thisNode = MatchAddressOperand()) ||
      (thisNode = MATCH(DirectOperand)) ||
-     (thisNode = MATCH(IndirectOperand)) ||
+     (thisNode = MatchIndirectOperand()) ||
      (thisNode = MatchImmediateOperand())) {
     return thisNode;
   }
@@ -186,9 +186,9 @@ AddressOperandNode *Parser::MatchAddressOperand() {
   return thisNode;
 }
 
-MATCHER_FOR( IndirectOperand ) {
+IndirectOperandNode *Parser::MatchIndirectOperand() {
   TokenIterator savedCurr = currentToken;
-  ASTIndirectOperandNode *thisNode = NULL;
+  IndirectOperandNode *thisNode = NULL;
   IndirectOperandTermNode *termNode = NULL;
 
   if( TokenIsNot(LeftSquare) ) return NULL;
@@ -200,7 +200,7 @@ MATCHER_FOR( IndirectOperand ) {
     return NULL;
   }
 
-  thisNode = new ASTIndirectOperandNode( *currentToken );
+  thisNode = new IndirectOperandNode( *currentToken );
   ConsumeToken();
 
   while((termNode = MATCH(IndirectOperandTerm))) {

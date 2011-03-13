@@ -1,11 +1,11 @@
 #include "../ast_node.h"
 #include "../lexer.h"
 
-ASTIndirectOperandNode::ASTIndirectOperandNode( Token &_token ) : OperandNode( ASTNode::IndirectOperand ) {
+IndirectOperandNode::IndirectOperandNode( Token &_token ) : OperandNode( ASTNode::IndirectOperand ) {
   token = &_token;
 }
 
-Operand *ASTIndirectOperandNode::GenerateOperand() {
+Operand *IndirectOperandNode::GenerateOperand() {
   OperandIterator end(NULL);
   std::string reg = Content();
   
