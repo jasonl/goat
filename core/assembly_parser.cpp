@@ -200,7 +200,7 @@ MATCHER_FOR( IndirectOperand ) {
     return NULL;
   }
 
-  thisNode = new ASTIndirectOperandNode( currentToken );
+  thisNode = new ASTIndirectOperandNode( *currentToken );
   ConsumeToken();
 
   while((termNode = MATCH(IndirectOperandTerm))) {

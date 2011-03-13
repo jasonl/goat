@@ -3,7 +3,7 @@
 
 class ASTIndirectOperandNode : public OperandNode {
 public:
-  ASTIndirectOperandNode( TokenIterator& );
+  ASTIndirectOperandNode( Token& );
   Operand *GenerateOperand();
 };
 

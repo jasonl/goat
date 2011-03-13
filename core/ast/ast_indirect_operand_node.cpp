@@ -1,8 +1,8 @@
 #include "../ast_node.h"
 #include "../lexer.h"
 
-ASTIndirectOperandNode::ASTIndirectOperandNode( TokenIterator &_token ) : OperandNode( ASTNode::IndirectOperand ) {
-  token = &(*_token);
+ASTIndirectOperandNode::ASTIndirectOperandNode( Token &_token ) : OperandNode( ASTNode::IndirectOperand ) {
+  token = &_token;
 }
 
 Operand *ASTIndirectOperandNode::GenerateOperand() {
