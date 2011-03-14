@@ -3,7 +3,7 @@
 
 class IntegerLiteralNode : public ASTNode {
  public:
-  IntegerLiteralNode( TokenIterator& );
+  IntegerLiteralNode( Token& );
   void Analyse( Scope * );
   AssemblyBlock *GenerateCode();
   AssemblyBlock *PushOntoStack();

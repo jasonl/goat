@@ -1,9 +1,9 @@
 #include <cstdlib>
 #include "../ast_node.h"
 
-IntegerLiteralNode::IntegerLiteralNode( TokenIterator &_token ): 
+IntegerLiteralNode::IntegerLiteralNode( Token &_token ): 
   ASTNode( ASTNode::IntegerLiteral ) {
-  token = &(*_token);
+  token = &_token;
 }
 
 void IntegerLiteralNode::Analyse( Scope *_scope ) {

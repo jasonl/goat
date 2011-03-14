@@ -233,7 +233,7 @@ IndirectOperandTermNode *Parser::MatchIndirectOperandTerm() {
   ConsumeToken();
 
   if( TokenIs(Integer) ) {
-    value = new IntegerLiteralNode( currentToken );
+    value = new IntegerLiteralNode( *currentToken );
     ConsumeToken();
     thisNode->AppendChild( value );
     return thisNode;
