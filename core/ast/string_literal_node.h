@@ -3,7 +3,7 @@
 
 class StringLiteralNode : public ASTNode {
 public:
-  StringLiteralNode( TokenIterator& );
+  StringLiteralNode( Token& );
   void Analyse( Scope * );
 };
 
