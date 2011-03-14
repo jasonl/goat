@@ -136,7 +136,7 @@ typedef std::list<Token>::iterator TokenIterator;
 #include "ast/return_statement_node.h"
 #include "ast/self_node.h"
 #include "ast/source_file_node.h"
-#include "ast/ast_string_literal_node.hpp"
+#include "ast/string_literal_node.h"
 #include "ast/variable_node.h"
 
 #endif

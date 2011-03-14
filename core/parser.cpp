@@ -212,7 +212,7 @@ INT_MATCHER_FOR( Expression ) {
   }
   
   if( TokenIs( String ) ) {
-    thisNode = new ASTStringLiteralNode( currentToken );
+    thisNode = new StringLiteralNode( currentToken );
     ConsumeToken();
     return thisNode;
   }
@@ -265,7 +265,7 @@ INT_MATCHER_FOR( Receiver ) {
   }
 
   if (TokenIs( String ) ) {
-    thisNode = new ASTStringLiteralNode( currentToken );
+    thisNode = new StringLiteralNode( currentToken );
     ConsumeToken();
     return thisNode;
   }
