@@ -10,7 +10,7 @@
 #include "lexer.h"
 #include "scope.h"
 #include "parser.h"
-#include "source_file.hpp"
+#include "source_file.h"
 
 SourceFile::SourceFile( std::string _fileName, bool _isLibrary ) {
   fileName = _fileName;

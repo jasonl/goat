@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include "lexer.h"
-#include "source_file.hpp"
+#include "source_file.h"
 
 typedef std::list<Token>::iterator TokenIterator;
 

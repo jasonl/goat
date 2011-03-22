@@ -16,7 +16,7 @@
 #include "parser.h"
 #include "goat.h"
 #include "scope.h"
-#include "source_file.hpp"
+#include "source_file.h"
 
 
 #ifndef GOATTEST

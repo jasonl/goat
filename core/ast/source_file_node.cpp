@@ -1,5 +1,5 @@
 #include "../ast_node.h"
-#include "../source_file.hpp"
+#include "../source_file.h"
 
 SourceFileNode::SourceFileNode() : ASTNode( ASTNode::SourceFile ) {
 }

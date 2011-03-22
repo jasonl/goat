@@ -9,7 +9,7 @@
 #define	__LEXER_H
 
 #include <list>
-#include "source_file.hpp"
+#include "source_file.h"
 
 // 32-bit wide integer to hold the code-point value
 typedef unsigned long w_char;

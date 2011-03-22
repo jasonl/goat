@@ -1,6 +1,6 @@
 #include "asm_label.h"
 #include "operand.h"
-#include "../source_file.hpp"
+#include "../source_file.h"
 
 AsmLabel::AsmLabel( std::string _name ):
   name(_name) {}
