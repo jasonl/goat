@@ -60,5 +60,6 @@ AssemblyBlock *ClassDefinitionNode::GetAuxiliaryCode() {
 }
 
 std::string GenerateFunctionLabel( ASTNode* assignmentNode, std::string className ) {
-  return("__" + assignmentNode->Content() + "_" + className);
+  std::string fnName = "__" + assignmentNode->Content() + "_" + className;
+  return SanitizeLabel(fnName);
 }
