@@ -834,7 +834,12 @@ AssemblyBlock::AssemblyBlock() {
 }
 
 void AssemblyBlock::AppendBlock( AssemblyBlock *ab ) {
-  if( ab == NULL || ab->first == NULL || ab->last == NULL ) return; 
+  if( ab == NULL ) return; 
+
+  if( ab->first == NULL || ab->last == NULL ) {
+    delete ab;
+    return;
+  }
 
   if( last ) {
     last->next = ab->first;
