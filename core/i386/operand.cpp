@@ -52,6 +52,7 @@ Operand::Operand( OperandType _type ):
   displacement = 0;
   prototype = false;
   size = None;
+  offset = 0;
   label = NULL;
 }
 
@@ -76,6 +77,7 @@ Operand::Operand( std::string _label ) {
   displacement = 0;
   base = 0;
   offset = 0;
+  size = None;
 }
 
 
