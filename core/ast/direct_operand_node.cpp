@@ -1,7 +1,7 @@
 #include "../ast_node.h"
 #include "../lexer.h"
 
-DirectOperandNode::DirectOperandNode( Token& _token ): 
+DirectOperandNode::DirectOperandNode( Token& _token ):
   OperandNode( ASTNode::DirectOperand ) {
   token = &_token;
 }
@@ -10,7 +10,7 @@ DirectOperandNode::DirectOperandNode( Token& _token ):
 // lower case registers - eax not EAX
 Operand *DirectOperandNode::GenerateOperand() {
   std::string reg = Content();
-  
+
   if( tolower(reg[0]) == 'e' && reg.length() == 3) {
     if( reg == "eax" ) return &eax;
     if( reg == "ebx" ) return &ebx;
@@ -20,9 +20,7 @@ Operand *DirectOperandNode::GenerateOperand() {
     if( reg == "edi" ) return &edi;
     if( reg == "ebp" ) return &ebp;
     if( reg == "esp" ) return &esp;
-    // Invalid Register
-    return NULL;
-  } 
+  }
 
   if( reg.length() == 2 ) {
     if( reg == "ax" ) return &ax;
@@ -42,10 +40,8 @@ Operand *DirectOperandNode::GenerateOperand() {
     if( reg == "ch" ) return &ch;
     if( reg == "dl" ) return &dl;
     if( reg == "dh" ) return &dh;
-    // Invalid register
-    return NULL;
   }
-  
-  // Invalid register
-  return NULL;
+
+  // Assume its a label
+  return new Operand(reg);
 }
