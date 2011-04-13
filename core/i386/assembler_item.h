@@ -9,7 +9,7 @@ class AssemblerItem {
   friend class AssemblyBlock;
   friend class AssemblerItemIterator;
  public:
-  AssemblerItem() { label = NULL; }
+  AssemblerItem() { label = NULL; next = NULL; }
   void SetLabel( std::string _label) { label = new AsmLabel(_label); }
   void SetComment( std::string _comment) { comment = _comment; }
   friend std::ostream& operator<<( std::ostream&, const AssemblerItem& );
