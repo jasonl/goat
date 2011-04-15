@@ -1,0 +1,9 @@
+class Boolean
+  as_boolean: λ()
+    asm
+      mov eax, 0
+      mov ecx, #Boolean
+      mov edx, &Boolean
+      pop ebp
+      ret
+end
