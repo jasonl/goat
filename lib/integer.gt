@@ -38,6 +38,7 @@ class Integer
       add eax, addend.payload
       mov edx, &Integer
       mov ecx, #Integer
+      add esp, 12
       pop ebp
       ret
       Integer_u2b_incorrect_type:
@@ -53,6 +54,7 @@ class Integer
       sub eax, subtrahend.payload
       mov edx, &Integer
       mov ecx, #Integer
+      add esp, 12
       pop ebp
       ret
       Integer_u2d_incorrect_type:
@@ -68,6 +70,7 @@ class Integer
       imul factor.payload    ; This instance's value is already in eax
       mov edx, &Integer      ; dispatch function
       mov ecx, #Integer      ; Integer type hash
+      add esp, 12
       pop ebp
       ret                    ; and return
       Integer_u2a_incorrect_type:
@@ -87,6 +90,7 @@ class Integer
       mov eax, edx           ; remainder in edx, we want to return it in eax
       mov edx, &Integer      ; dispatch function
       mov ecx, #Integer      ; Integer type hash
+      add esp, 12
       pop ebp
       ret                    ; and return
       Integer_u25_incorrect_type:
@@ -103,12 +107,14 @@ class Integer
       mov eax, 0             ; False boolean value
       mov edx, &Boolean      ; Boolean object dispatch function
       mov ecx, #Boolean      ; Boolean object type hash
+      add esp, 12
       pop ebp
       ret                    ; and return
       Integer_u3e_true:
       mov eax, 1
       mov edx, &Boolean      ; Boolean object dispatch function
       mov ecx, #Boolean      ; Boolean object type hash
+      add esp, 12
       pop ebp
       ret                    ; and return
       Integer_u3e_incorrect_type:
@@ -124,12 +130,14 @@ class Integer
       mov eax, 0             ; False boolean value
       mov edx, &Boolean      ; Boolean object dispatch function
       mov ecx, #Boolean      ; Boolean object type hash
+      add esp, 12
       pop ebp
       ret                    ; and return
       Integer_u3c_true:
       mov eax, 1
       mov edx, &Boolean      ; Boolean object dispatch function
       mov ecx, #Boolean      ; Boolean object type hash
+      add esp, 12
       pop ebp
       ret                    ; and return
       Integer_u3c_incorrect_type:
@@ -145,12 +153,14 @@ class Integer
       mov eax, 0             ; False boolean value
       mov edx, &Boolean      ; Boolean object dispatch function
       mov ecx, #Boolean      ; Boolean object type hash
+      add esp, 12
       pop ebp
       ret                    ; and return
       Integer_u2265_true:
       mov eax, 1
       mov edx, &Boolean      ; Boolean object dispatch function
       mov ecx, #Boolean      ; Boolean object type hash
+      add esp, 12
       pop ebp
       ret                    ; and return
       Integer_u2265_incorrect_type:
@@ -166,12 +176,14 @@ class Integer
       mov eax, 0             ; False boolean value
       mov edx, &Boolean      ; Boolean object dispatch function
       mov ecx, #Boolean      ; Boolean object type hash
+      add esp, 12
       pop ebp
       ret                    ; and return
       Integer_u2264_true:
       mov eax, 1
       mov edx, &Boolean      ; Boolean object dispatch function
       mov ecx, #Boolean      ; Boolean object type hash
+      add esp, 12
       pop ebp
       ret                    ; and return
       Integer_u2264_incorrect_type:
@@ -186,6 +198,7 @@ class Integer
       mov eax, 1             ; return Boolean(true)
       mov edx, &Boolean
       mov ecx, #Boolean
+      add esp, 12
       pop ebp
       ret
       Integer_u2261_not_equal:
@@ -201,10 +214,11 @@ class Integer
       cmp ecx, #Integer
       jne Integer_u2262_not_equal          ; If it's not an Integer, then it cannot be equal
       cmp eax, term.payload  ; Do the comparison
-      jne not_equal
+      jne Integer_u2262_not_equal
       mov eax, 0             ; return Boolean(true)
       mov edx, &Boolean
       mov ecx, #Boolean
+      add esp, 12
       pop ebp
       ret
       Integer_u2262_not_equal:
