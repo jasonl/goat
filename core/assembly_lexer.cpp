@@ -14,7 +14,7 @@ void AssemblyLexer::AssemblyStateTransitions( CodePoint &cp ) {
   case ',':  lexerState = Comma; break;
   case '.':  lexerState = Period; break;
   case '#':  StartThunkAtNext(cp); lexerState = HashString; break;
-  case '&':  StartThunkAtNext(cp); lexerState = AddressString; break;  
+  case '&':  StartThunkAtNext(cp); lexerState = AddressString; break;
   case '+':  StartThunk(cp); lexerState = Plus; break;
   case '-':  StartThunk(cp); lexerState = Minus; break;
   case '*':  StartThunk(cp); lexerState = Multiply; break;
@@ -31,10 +31,10 @@ void AssemblyLexer::AssemblyStateTransitions( CodePoint &cp ) {
 }
 
 // AssemblyLexer::Lex()
-// 
-// The assembly lexer is instantiated, and begins scanning the input from the 
+//
+// The assembly lexer is instantiated, and begins scanning the input from the
 // character immediately after the "asm" keyword, and continues scanning
-// until the identing of the line is less than or equal to the base indent of 
+// until the identing of the line is less than or equal to the base indent of
 // the asm token.
 //
 //     asm
@@ -64,7 +64,7 @@ void AssemblyLexer::Lex() {
   }
 
   lexerState = Indent;
-  
+
   while( sourceNext < sourceEnd ){
     sourceCurr = sourceNext;
     GetNextCodePoint( &cp );
@@ -72,7 +72,7 @@ void AssemblyLexer::Lex() {
     if(cp.wchar == '\r') {
       continue;
     }
-    
+
     switch( lexerState ) {
     case Indent:
       if(cp.wchar == ' ') { indent++; break; }
@@ -92,7 +92,7 @@ void AssemblyLexer::Lex() {
 	sourceNext = sourceCurr;
 	return;
       }
-      
+
       AssemblyStateTransitions( cp );
       break;
 
@@ -106,19 +106,19 @@ void AssemblyLexer::Lex() {
       }
       AssemblyStateTransitions( cp );
       break;
-      
+
     case Whitespace:
       AssemblyStateTransitions( cp );
       break;
 
     case Comment:
-      while(cp.wchar != '\n' && sourceNext < sourceEnd) { 
-	GetNextCodePoint( &cp ); 
+      while(cp.wchar != '\n' && sourceNext < sourceEnd) {
+	GetNextCodePoint( &cp );
       }
       GetNextCodePoint( &cp );
       lexerState = Newline;
       break;
-      
+
     case Plus:
     case Minus:
     case Multiply:
@@ -171,16 +171,16 @@ void AssemblyLexer::Lex() {
       case '-':  PushToken(); StartThunk( cp ); lexerState = Minus; break;
       case '*':  PushToken(); StartThunk( cp ); lexerState = Multiply; break;
       case '\n': PushToken(); lexerState = Newline; break;
-      case ':':  lexerState = Label; thunkEnd += cp.bytes; break;
+      case ':':  lexerState = Label; break;
       default:
 	thunkEnd += cp.bytes;
 	break;
       }
-      
+
       break;
     default:
       std::cout << "Invalid lexer state identified in AssemblyLexer";
-    }    
+    }
   }
 
   // Handle the end of file if we encounter it
@@ -192,5 +192,5 @@ void AssemblyLexer::Lex() {
   default:
     break;
   }
-    
+
 }
