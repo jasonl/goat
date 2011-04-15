@@ -2,10 +2,10 @@
 // scope.h
 //
 // Class definition for a lexical scope, including
-// symbol table. 
+// symbol table.
 
 // An offset is relative to EBP, so in any given function
-// is positive for parameters passed to a function, and 
+// is positive for parameters passed to a function, and
 // negative for local variables allocated on the stack.
 
 #ifndef __SCOPE_H
@@ -36,7 +36,7 @@ class SourceFile;
 // A Scope is a lexical scope, in which variables
 // are allocated. It is a spaghetti stack type of structure,
 // where variable names are recursively searched up the stack
-// to be resolved. 
+// to be resolved.
 
 class Scope {
  public:
@@ -49,7 +49,7 @@ class Scope {
   void RegisterChildScope( Scope* );
   bool HasVariable( std::string );
   bool HasParameterVariable( std::string );
-  int GetVariableCount() { return variableCount; }
+  int GetLocalVariableCount() { return localVariableCount; }
   SourceFile *GetSourceFile() { return sourceFile; }
   std::string GenerateUniqueLabel( std::string );
   Operand &GenerateTypeHashOperand( std::string );
@@ -60,7 +60,7 @@ class Scope {
   Scope *enclosingScope, *firstChildScope, *nextScope;
   Variable *firstVariable;
   int uniqueVal;
-  int variableCount;
+  int localVariableCount;
   SourceFile *sourceFile;
 };
 

@@ -4,15 +4,13 @@
 #include "variable.h"
 
 /*
-  
+
   A scope object represents a lexical scope.
-  
+
   The four different types of variables are:
 
-  - Global Variables ( at a fixed address )
   - Parameter Variables ( relative to EBP with a positive offset )
   - Local Variables ( relative to EBP with a negative offset )
-  - Instance Variables ( relative to ECX with a positive offset )
 
 */
 
@@ -24,7 +22,7 @@ Scope::Scope( Scope* parent ) {
   sourceFile = parent->sourceFile;
   firstVariable = NULL;
   uniqueVal = 0;
-  variableCount = 0;
+  localVariableCount = 0;
   nextScope = NULL;
   firstChildScope = NULL;
 
@@ -38,7 +36,7 @@ Scope::Scope( SourceFile* _sourceFile ) {
   sourceFile = _sourceFile;
   firstVariable = NULL;
   uniqueVal = 0;
-  variableCount = 0;
+  localVariableCount = 0;
   nextScope = NULL;
   firstChildScope = NULL;
 }
@@ -73,19 +71,17 @@ void Scope::RegisterChildScope( Scope *newChild ) {
 
 void Scope::AddParameterVariable( std::string name ) {
   Variable *lastVar = NULL, *newVar = new Variable( name );
-  
+
   if(firstVariable == NULL) {
-    newVar->ebpOffset = 0;
+    newVar->ebpOffset = 8; // As ebp and eip are pushed onto the stack
     firstVariable = newVar;
   } else {
     lastVar = firstVariable;
     while( lastVar->next ) { lastVar = lastVar->next; }
     lastVar->next = newVar;
-    
+
     newVar->ebpOffset = lastVar->ebpOffset + OBJECT_SIZE;
   }
-
-  variableCount++;
 }
 
 void Scope::AddClassVariable( std::string name ) {
@@ -94,28 +90,28 @@ void Scope::AddClassVariable( std::string name ) {
 
 void Scope::AddLocalVariable( std::string name ) {
   Variable *lastVar = NULL, *newVar = new Variable( name ), *cursorVar;
-  
+
   if (firstVariable == NULL) {
-    newVar->ebpOffset = -4 - OBJECT_SIZE; // As EBP is pushed onto the stack
+    newVar->ebpOffset = 0 - OBJECT_SIZE;
     firstVariable = newVar;
-  } else {    
+  } else {
     cursorVar = firstVariable;
-    
+
     while( cursorVar ) {
       lastVar = cursorVar;
       cursorVar = cursorVar->next;
     }
-    
+
     lastVar->next = newVar;
     //TODO: Abstract stack growth direction out of this.
     newVar->ebpOffset = lastVar->ebpOffset - OBJECT_SIZE;
   }
 
-  variableCount++;
+  localVariableCount++;
 }
 
 bool Scope::HasVariable( std::string name ) {
-  return (FindVariable(name) ? true : false); 
+  return (FindVariable(name) ? true : false);
 }
 
 Variable *Scope::FindVariable( std::string name ) {
@@ -125,7 +121,7 @@ Variable *Scope::FindVariable( std::string name ) {
     if (lastVar->name == name) return lastVar;
     lastVar = lastVar->next;
   }
-  
+
   // TODO: Work out how access to variables in higher scopes,
   // for closures.
 
@@ -138,12 +134,12 @@ bool Scope::HasParameterVariable( std::string name ) {
 }
 
 // Generates the assembly operand pointing to the variable's
-// payload. Note this does not add a size specifier to the 
+// payload. Note this does not add a size specifier to the
 // Operand, so this must be done by the caller, for example
 // when pushing an operand's value onto the stack.
-Operand &Scope::GeneratePayloadOperand( std::string name ) {  
+Operand &Scope::GeneratePayloadOperand( std::string name ) {
   Variable *var = FindVariable(name);
-    
+
   if(var) {
     return _[ebp + (var->ebpOffset + PAYLOAD_OFFSET)];
   } else {
@@ -155,7 +151,7 @@ Operand &Scope::GeneratePayloadOperand( std::string name ) {
 // type hash. Does not add an operand size specifier
 Operand &Scope::GenerateTypeHashOperand( std::string name ) {
   Variable *var = FindVariable(name);
-    
+
   if(var) {
     return _[ebp + (var->ebpOffset + TYPE_HASH_OFFSET)];
   } else {
@@ -167,7 +163,7 @@ Operand &Scope::GenerateTypeHashOperand( std::string name ) {
 // dispatch function. Does not add an operand size specifier.
 Operand &Scope::GenerateDispatchOperand( std::string name ) {
   Variable *var = FindVariable(name);
-    
+
   if(var) {
     return _[ebp + (var->ebpOffset + DISPATCH_OFFSET)];
   } else {

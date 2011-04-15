@@ -38,10 +38,10 @@ void FunctionDefNode::AddParameterDef( ASTNode *_param ) {
 
 void FunctionDefNode::Analyse( Scope *_scope ) {
   ASTIterator endParams( body ); // body is first node after last ParameterDef
-  
+
   // Reverse the list of params
   std::list<ASTNode> paramsList;
-  
+
   for(ASTIterator i = ParameterDefs(); i != endParams; i++) {
     paramsList.push_front( *i );
   }
@@ -77,9 +77,9 @@ AssemblyBlock *FunctionDefNode::GenerateCode() {
   bodyAsm->push( ebp );
   bodyAsm->mov( ebp, esp );
 
-  bytesForLocals = scope->GetVariableCount() * 12;
+  bytesForLocals = scope->GetLocalVariableCount() * 12;
   bodyAsm->sub( esp, *new Operand(bytesForLocals) );
-  
+
   // Move self into the locals from the registers, so we're free to nuke eax/ecx/edx
   // TODO: Don't generate this if self isn't referenced in the code.
   bodyAsm->mov( scope->GeneratePayloadOperand("self"), eax );
@@ -114,15 +114,15 @@ AssemblyBlock *FunctionDefNode::GenerateCode() {
   a->mov( eax, *new Operand(functionName));
   a->mov( ecx, Dword(goatHash("Function")));
   a->mov( edx, *DispatchOperandFor("Null", scope->GetSourceFile())); //TODO This needs to reference a label
-  
+
   a->CommentLastInstruction("Function object for " + functionName);
 
   return a;
-} 
+}
 
 AssemblyBlock *FunctionDefNode::GetAuxiliaryCode() {
   ASTIterator end(NULL);
-  
+
   for( ASTIterator i = ChildNodes(); i != end; i++) {
     bodyAsm->AppendBlock( i->GetAuxiliaryCode() );
   }
