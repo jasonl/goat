@@ -1,8 +1,10 @@
 ; Null class
-class NullClass
+class Null
   as_boolean: λ()
-    return false
-
-  as_string: λ()
-    return "Null"
+    asm
+      mov eax, 0
+      mov ecx, #Boolean
+      mov edx, &Boolean
+      pop ebp
+      ret
 end
