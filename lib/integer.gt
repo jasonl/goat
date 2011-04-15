@@ -34,13 +34,13 @@ class Integer
     asm
       mov ecx, addend.type      ; Load type hash of first argument into ECX
       cmp ecx, #Integer     ; test that divisor is an Integer
-      jne incorrect_type
+      jne Integer_u2b_incorrect_type
       add eax, addend.payload
       mov edx, &Integer
       mov ecx, #Integer
       pop ebp
       ret
-      incorrect_type:
+      Integer_u2b_incorrect_type:
 
   ; Integer subtraction
   ; Subtracts the subtrahend from the value of this instance, and returns
@@ -49,13 +49,13 @@ class Integer
     asm
       mov ecx, subtrahend.type ; Load type hash of first argument into ECX
       cmp ecx, #Integer        ; test that divisor is an Integer
-      jne incorrect_type
+      jne Integer_u2d_incorrect_type
       sub eax, subtrahend.payload
       mov edx, &Integer
       mov ecx, #Integer
       pop ebp
       ret
-      incorrect_type:
+      Integer_u2d_incorrect_type:
 
   ; Integer multiplication
   ; Multiplies the two signed integers and returns the result. Any overflow
@@ -64,13 +64,13 @@ class Integer
     asm
       mov ecx, factor.type   ; Load type hash of first argument into ECX
       cmp ecx, #Integer      ; test that divisor is an Integer
-      jne incorrect_type
+      jne Integer_u2a_incorrect_type
       imul factor.payload    ; This instance's value is already in eax
       mov edx, &Integer      ; dispatch function
       mov ecx, #Integer      ; Integer type hash
       pop ebp
       ret                    ; and return
-      incorrect_type:
+      Integer_u2a_incorrect_type:
 
   ; Modulo operation. a % b returns the remainder when a is divided by
   ; b using integer division.
@@ -81,7 +81,7 @@ class Integer
     asm
       mov ecx, divisor.type  ; Load type hash of first argument into ECX
       cmp ecx, #Integer      ; test that divisor is an Integer
-      jne incorrect_type
+      jne Integer_u25_incorrect_type
       cdq                    ; sign extend EAX into EDX:EAX
       idiv divisor.payload
       mov eax, edx           ; remainder in edx, we want to return it in eax
@@ -89,7 +89,7 @@ class Integer
       mov ecx, #Integer      ; Integer type hash
       pop ebp
       ret                    ; and return
-      incorrect_type:
+      Integer_u25_incorrect_type:
       ; Do something?
 
   ; Greater than. Returns a boolean object
@@ -97,98 +97,98 @@ class Integer
     asm
       mov ecx, term.type     ; Load type has of the first argument into ecx
       cmp ecx, #Integer      ; Test that the term is an Integer
-      jne incorrect_type
+      jne Integer_u3e_incorrect_type
       cmp eax, term.payload  ; Test the two number
-      jg true
+      jg Integer_u3e_true
       mov eax, 0             ; False boolean value
       mov edx, &Boolean      ; Boolean object dispatch function
       mov ecx, #Boolean      ; Boolean object type hash
       pop ebp
       ret                    ; and return
-      true:
+      Integer_u3e_true:
       mov eax, 1
       mov edx, &Boolean      ; Boolean object dispatch function
       mov ecx, #Boolean      ; Boolean object type hash
       pop ebp
       ret                    ; and return
-      incorrect_type:
+      Integer_u3e_incorrect_type:
 
   ; Less than. Returns a boolean object
   <: λ( term )
     asm
       mov ecx, term.type     ; Load type has of the first argument into ecx
       cmp ecx, #Integer      ; Test that the term is an Integer
-      jne incorrect_type
+      jne Integer_u3c_incorrect_type
       cmp eax, term.payload  ; Test the two number
-      jl true                ; Jump if less than
+      jl Integer_u3c_true                ; Jump if less than
       mov eax, 0             ; False boolean value
       mov edx, &Boolean      ; Boolean object dispatch function
       mov ecx, #Boolean      ; Boolean object type hash
       pop ebp
       ret                    ; and return
-      true:
+      Integer_u3c_true:
       mov eax, 1
       mov edx, &Boolean      ; Boolean object dispatch function
       mov ecx, #Boolean      ; Boolean object type hash
       pop ebp
       ret                    ; and return
-      incorrect_type:
+      Integer_u3c_incorrect_type:
 
   ; Greater than or Equal to. Returns a boolean object
   ≥: λ( term )
     asm
       mov ecx, term.type     ; Load type has of the first argument into ecx
       cmp ecx, #Integer      ; Test that the term is an Integer
-      jne incorrect_type
+      jne Integer_u2265_incorrect_type
       cmp eax, term.payload  ; Test the two numbers
-      jge true
+      jge Integer_u2265_true
       mov eax, 0             ; False boolean value
       mov edx, &Boolean      ; Boolean object dispatch function
       mov ecx, #Boolean      ; Boolean object type hash
       pop ebp
       ret                    ; and return
-      true:
+      Integer_u2265_true:
       mov eax, 1
       mov edx, &Boolean      ; Boolean object dispatch function
       mov ecx, #Boolean      ; Boolean object type hash
       pop ebp
       ret                    ; and return
-      incorrect_type:
+      Integer_u2265_incorrect_type:
 
   ; Less than or equal to. Returns a boolean object
   ≤: λ( term )
     asm
       mov ecx, term.type     ; Load type has of the first argument into ecx
       cmp ecx, #Integer      ; Test that the term is an Integer
-      jne incorrect_type
+      jne Integer_u2264_incorrect_type
       cmp eax, term.payload  ; Test the two number
-      jle true
+      jle Integer_u2265_true
       mov eax, 0             ; False boolean value
       mov edx, &Boolean      ; Boolean object dispatch function
       mov ecx, #Boolean      ; Boolean object type hash
       pop ebp
       ret                    ; and return
-      true:
+      Integer_u2264_true:
       mov eax, 1
       mov edx, &Boolean      ; Boolean object dispatch function
       mov ecx, #Boolean      ; Boolean object type hash
       pop ebp
       ret                    ; and return
-      incorrect_type:
+      Integer_u2264_incorrect_type:
 
   ≡: λ( term )
     asm
       mov ecx, term.type     ; Load type hash of the first argumment into ecx
       cmp ecx, #Integer
-      jne not_equal          ; If it's not an Integer, then it cannot be equal
+      jne Integer_u2261_not_equal ; If it's not an Integer, then it cannot be equal
       cmp eax, term.payload  ; Do the comparison
-      jne not_equal
+      jne Integer_u2261_not_equal
       mov eax, 1             ; return Boolean(true)
       mov edx, &Boolean
       mov ecx, #Boolean
       pop ebp
       ret
-      not_equal:
+      Integer_u2261_not_equal:
       mov eax, 0             ; return Boolean(false)
       mov edx, &Boolean
       mov ecx, #Boolean
@@ -199,7 +199,7 @@ class Integer
     asm
       mov ecx, term.type     ; Load type hash of the first argumment into ecx
       cmp ecx, #Integer
-      jne not_equal          ; If it's not an Integer, then it cannot be equal
+      jne Integer_u2262_not_equal          ; If it's not an Integer, then it cannot be equal
       cmp eax, term.payload  ; Do the comparison
       jne not_equal
       mov eax, 0             ; return Boolean(true)
@@ -207,7 +207,7 @@ class Integer
       mov ecx, #Boolean
       pop ebp
       ret
-      not_equal:
+      Integer_u2262_not_equal:
       mov eax, 1             ; return Boolean(false)
       mov edx, &Boolean
       mov ecx, #Boolean
