@@ -3,3 +3,6 @@ fib: λ(n)
     return 1
   else
     return fib(n - 1)
+
+main: λ()
+  fib(4)
