@@ -5,4 +5,4 @@ fib: λ(n)
     return fib(n - 1)
 
 main: λ()
-  fib(4)
+  fib(25)   ; Should be 75,025
