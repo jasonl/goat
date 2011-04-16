@@ -22,7 +22,8 @@ void ReturnStatementNode::Analyse( Scope *_scope ) {
 
 AssemblyBlock *ReturnStatementNode::GenerateCode() {
   AssemblyBlock *a = returnValue->GenerateCode();
-  a->leave();
+  a->add( esp, *new Operand(scope->GetLocalVariableCount() * 12));
+  a->mov( esp, ebp );
   a->ret();
   return a;
 }

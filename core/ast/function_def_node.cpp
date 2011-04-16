@@ -105,7 +105,8 @@ AssemblyBlock *FunctionDefNode::GenerateCode() {
   bodyAsm->mov( ecx, Dword(goatHash("Null")));
   bodyAsm->mov( edx, *DispatchOperandFor("Null", scope->GetSourceFile()));
 
-  bodyAsm->leave();
+  bodyAsm->add( esp, *new Operand(scope->GetLocalVariableCount() * 12));
+  bodyAsm->mov( esp, ebp );
   bodyAsm->ret();
 
   // Generate code for the actual function object
