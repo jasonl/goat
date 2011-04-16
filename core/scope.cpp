@@ -70,7 +70,7 @@ void Scope::RegisterChildScope( Scope *newChild ) {
 }
 
 void Scope::AddParameterVariable( std::string name ) {
-  Variable *lastVar = NULL, *newVar = new Variable( name );
+  Variable *lastVar = NULL, *newVar = new Variable( name, Variable::Parameter );
 
   if(firstVariable == NULL) {
     newVar->ebpOffset = 8; // As ebp and eip are pushed onto the stack
@@ -89,7 +89,7 @@ void Scope::AddClassVariable( std::string name ) {
 }
 
 void Scope::AddLocalVariable( std::string name ) {
-  Variable *lastVar = NULL, *newVar = new Variable( name ), *cursorVar;
+  Variable *lastVar = NULL, *newVar = new Variable( name, Variable::Local ), *cursorVar;
 
   if (firstVariable == NULL) {
     newVar->ebpOffset = 0 - OBJECT_SIZE;
@@ -104,7 +104,12 @@ void Scope::AddLocalVariable( std::string name ) {
 
     lastVar->next = newVar;
     //TODO: Abstract stack growth direction out of this.
-    newVar->ebpOffset = lastVar->ebpOffset - OBJECT_SIZE;
+    if (lastVar->type == Variable::Parameter) {
+      // Jump over EBP/EIP on the stack.
+      newVar->ebpOffset = 0 - OBJECT_SIZE;
+    } else {
+      newVar->ebpOffset = lastVar->ebpOffset - OBJECT_SIZE;
+    }
   }
 
   localVariableCount++;
