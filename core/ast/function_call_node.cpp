@@ -1,6 +1,6 @@
 #include "../ast_node.h"
 
-FunctionCallNode::FunctionCallNode( TokenIterator &_token ): 
+FunctionCallNode::FunctionCallNode( TokenIterator &_token ):
   ASTNode( ASTNode::FunctionCall ) {
   token = &(*_token);
   receiver = NULL;
@@ -21,7 +21,7 @@ void FunctionCallNode::Analyse(Scope *_scope) {
     SelfNode *self = new SelfNode();
     AddReceiver( self );
   }
-  
+
 
   for( ASTIterator i = ChildNodes(); i != end; ++i ) {
     i->Analyse( scope );
@@ -50,8 +50,8 @@ AssemblyBlock *FunctionCallNode::GenerateCode() {
   // Put the receiver (i.e. this ) onto eax/ecx/edx
   a->AppendBlock( receiver->GenerateCode() );
 
-  a->mov( ecx, Dword(goatHash( Content() )));
-  a->call( edx );  
+  a->mov( ebx, Dword(goatHash( Content() )));
+  a->call( edx );
   a->CommentLastInstruction( "Function Call: " + Content() );
 
   // If we've passed any parameters on the stack, release the space on return

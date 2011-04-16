@@ -23,7 +23,7 @@ void ClassDefinitionNode::Analyse( Scope *_scope ) {
 
     scope->AddClassVariable( i->Content() );
     i->Analyse( scope );
-    
+
   }
 }
 
@@ -40,7 +40,7 @@ AssemblyBlock *ClassDefinitionNode::GenerateCode() {
     fn = i->GetAuxiliaryCode();
     fn->LabelFirstInstruction(GenerateFunctionLabel( &(*i), this->Content() ));
 
-    dispatch->cmp(ecx, Dword(goatHash(i->Content())));
+    dispatch->cmp(ebx, Dword(goatHash(i->Content())));
     dispatch->je(*new Operand(GenerateFunctionLabel( &(*i), this->Content())));
 
     a->AppendBlock(fn);
@@ -48,7 +48,7 @@ AssemblyBlock *ClassDefinitionNode::GenerateCode() {
 
   // TODO: Write error code for when a non-existant method is called
 
-  dispatch->LabelFirstInstruction(DispatchLabelNameFor(this->Content())); 
+  dispatch->LabelFirstInstruction(DispatchLabelNameFor(this->Content()));
   dispatch->PrependItem(new GlobalSymbol(DispatchLabelNameFor(this->Content())));
 
   dispatch->AppendBlock(a);
