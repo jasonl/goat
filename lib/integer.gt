@@ -205,6 +205,7 @@ class Integer
       mov eax, 0             ; return Boolean(false)
       mov edx, &Boolean
       mov ecx, #Boolean
+      add esp, 12
       pop ebp
       ret
 
@@ -225,6 +226,7 @@ class Integer
       mov eax, 1             ; return Boolean(false)
       mov edx, &Boolean
       mov ecx, #Boolean
+      add esp, 12
       pop ebp
       ret
 
