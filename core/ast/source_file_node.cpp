@@ -46,7 +46,7 @@ AssemblyBlock *SourceFileNode::GenerateCode() {
     a->LabelLastInstruction("start");
 
 
-    a->mov(ecx, Dword(goatHash("main")));
+    a->mov(ebx, Dword(goatHash("main")));
     a->mov(edx, *new Operand(DispatchLabelNameFor("__GLOBAL__")));
     a->call(edx);
     // Default exit code
