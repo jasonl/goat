@@ -39,8 +39,8 @@ AssemblyBlock *ConditionalNode::GenerateCode() {
 
   // If the expression isn't a boolean, try to convert it
   a->cmp( ecx, Dword(goatHash("Boolean")));
-  a->jne( *new Operand(isBoolean) );
-  a->mov( ecx, Dword(goatHash("asBoolean")));
+  a->je( *new Operand(isBoolean) );
+  a->mov( ebx, Dword(goatHash("asBoolean")));
   a->call( edx );
 
   // eax/ecx/edx now has a boolean in it.

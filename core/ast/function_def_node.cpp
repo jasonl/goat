@@ -107,6 +107,7 @@ AssemblyBlock *FunctionDefNode::GenerateCode() {
 
   bodyAsm->add( esp, *new Operand(scope->GetLocalVariableCount() * 12));
   bodyAsm->mov( esp, ebp );
+  bodyAsm->pop( ebp );
   bodyAsm->ret();
 
   // Generate code for the actual function object
