@@ -24,6 +24,7 @@ AssemblyBlock *ReturnStatementNode::GenerateCode() {
   AssemblyBlock *a = returnValue->GenerateCode();
   a->add( esp, *new Operand(scope->GetLocalVariableCount() * 12));
   a->mov( esp, ebp );
+  a->pop( ebp );
   a->ret();
   return a;
 }
