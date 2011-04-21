@@ -46,7 +46,12 @@ AssemblyBlock *ClassDefinitionNode::GenerateCode() {
     a->AppendBlock(fn);
   }
 
-  // TODO: Write error code for when a non-existant method is called
+  // If a method isn't found, exit with error code 5
+  // TODO: Write an actual error message.
+  a->push(Dword(5));
+  a->mov(eax, *new Operand(0x01));
+  a->sub(esp, *new Operand(0x04));
+  a->_int(*new Operand(0x80));
 
   dispatch->LabelFirstInstruction(DispatchLabelNameFor(this->Content()));
   dispatch->PrependItem(new GlobalSymbol(DispatchLabelNameFor(this->Content())));
