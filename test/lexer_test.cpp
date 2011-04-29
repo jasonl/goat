@@ -21,7 +21,7 @@ namespace {
       sf->Tokenize();
       return sf->GetTokenStream().begin();
     }
-	
+
     SourceFile *sf;
     Lexer *lex;
   };
@@ -32,7 +32,7 @@ namespace {
   // test: λ( test_param )
 
   TEST_F( LexerTest, ShouldTokenizeFunction ) {
-    TokenIterator i = LoadAndTokenize( "test/function_test.gt" );
+    TokenIterator i = LoadAndTokenize( "fixtures/function_test.gt" );
 
     EXPECT_EQ( Identifier, i->Type() );
     EXPECT_EQ( "test", i->Content() );
@@ -53,11 +53,11 @@ namespace {
   // ():=; Comment
   // identifier.
   //   another_identifier
-  //   123 "A String", 
+  //   123 "A String",
   // "And Another String"
 
   TEST_F( LexerTest, ShouldTokenizeTokens ) {
-    TokenIterator i = LoadAndTokenize( "test/token_test.gt" );
+    TokenIterator i = LoadAndTokenize( "fixtures/token_test.gt" );
 
     EXPECT_EQ( LeftParen, i->Type() );
     EXPECT_EQ( RightParen, (++i)->Type() );
@@ -90,8 +90,8 @@ namespace {
   // Contents of test/keywords.gt
   // if else class return
   TEST_F( LexerTest, ShouldTokenizeKeywords ) {
-    TokenIterator i = LoadAndTokenize( "test/keywords.gt" );
-    
+    TokenIterator i = LoadAndTokenize( "fixtures/keywords.gt" );
+
     EXPECT_EQ( If, i->Type() );
     EXPECT_EQ( Else, (++i)->Type() );
     EXPECT_EQ( Class, (++i)->Type() );
@@ -100,7 +100,7 @@ namespace {
 
   // Tests correct tokenization of inline assembly
   TEST_F( LexerTest, ShouldTokenizeAssembly ) {
-    TokenIterator i = LoadAndTokenize( "test/asm.gt" );
+    TokenIterator i = LoadAndTokenize( "fixtures/asm.gt" );
 
     EXPECT_EQ( Asm, i->Type() );
     EXPECT_EQ( Newline, (++i)->Type() );
