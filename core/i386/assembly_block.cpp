@@ -828,13 +828,21 @@ void AssemblyBlock::_xor( Operand &op1, Operand &op2 ) {
   AppendInstruction( new Instruction("xor", &op1, &op2) );
 }
 
+void AssemblyBlock::db( std::string data ) {
+  AppendItem( new StringDataBlock(data, 8) );
+}
+
+void AssemblyBlock::dw( uint32_t val ) {
+  AppendItem( new NumericDataBlock(val, 32) );
+}
+
 AssemblyBlock::AssemblyBlock() {
   first = NULL;
   last = NULL;
 }
 
 void AssemblyBlock::AppendBlock( AssemblyBlock *ab ) {
-  if( ab == NULL ) return; 
+  if( ab == NULL ) return;
 
   if( ab->first == NULL || ab->last == NULL ) {
     delete ab;
@@ -856,7 +864,7 @@ void AssemblyBlock::AppendInstruction( Instruction *i ) {
   AppendItem(i);
 }
 
-void AssemblyBlock::AppendItem( AssemblerItem *i ) {  
+void AssemblyBlock::AppendItem( AssemblerItem *i ) {
   if(first == NULL ) {
     first = i;
   } else {
@@ -891,7 +899,7 @@ void AssemblyBlock::AddHangingLabel( std::string _label ) {
 
 void AssemblyBlock::SetSegment( std::string _segment ) {
   AppendItem( new SegmentDeclaration(_segment) );
-}  
+}
 
 void AssemblyBlock::PrependItem( AssemblerItem *item ) {
   if(first == NULL) {

@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include <sstream>
 #include <cstdio>
 #include <fcntl.h>
 #include <cstring> // For memset
@@ -19,6 +20,7 @@ SourceFile::SourceFile( std::string _fileName, bool _isLibrary ) {
   lobby = NULL;
   assembly = NULL;
   indentStack.push(0);
+  strCounter = 0;
 }
 
 SourceFile::~SourceFile() {
@@ -37,7 +39,7 @@ void SourceFile::Tokenize() {
   char *start, *end;
 
   fp = open(fileName.c_str(), O_RDONLY);
-  
+
   // Get the file size
   if(fstat(fp, &sb) == -1) {
     printf("Error getting file stat");
@@ -47,11 +49,11 @@ void SourceFile::Tokenize() {
 
   start = (char *) mmap( NULL, size, PROT_READ, MAP_SHARED, fp, 0);
   end = start + size;
-  
+
   if( start == MAP_FAILED ) {
     printf("Map failed\n");
   }
-  
+
   Lexer lexer( start, end, this );
   lexer.Lex();
 }
@@ -85,6 +87,15 @@ void SourceFile::GenerateCode() {
     for( SymbolTable::iterator i = externSymbols.begin(); i != externSymbols.end(); i++) {
       assembly->AppendItem(new ExternSymbol(*i));
     }
+
+    assembly->SetSegment(".data");
+
+    for( std::list<StringData>::iterator i = strings.begin(); i != strings.end(); i++) {
+      assembly->dw((*i).contents.length());
+      assembly->db((*i).contents);
+      assembly->LabelLastInstruction((*i).label );
+    }
+
   } else {
     std::cerr << "No Abstract Syntax Tree was built from this source file";
   }
@@ -97,7 +108,7 @@ void SourceFile::PrintTokens() {
 
   for( std::list<Token>::iterator curr = tokenStream.begin(); curr != tokenStream.end(); curr++) {
     std::cout << curr->LineNumber() << " ";
-    switch( curr->Type() ) 
+    switch( curr->Type() )
       {
       case Indent:            std::cout << "Indent         "; break;
       case Comment:           std::cout << "Comment        "; break;
@@ -130,8 +141,8 @@ void SourceFile::PrintTokens() {
       case AddressString:     std::cout << "AddressString  "; break;
       default:                std::cout << curr->Type();        break;
       }
-      
-    switch( curr->Type() ) 
+
+    switch( curr->Type() )
       {
       case Integer:
       case String:
@@ -144,14 +155,14 @@ void SourceFile::PrintTokens() {
       default:
 	break;
       }
-	
+
     std::cout << "\n";
     }
 }
 
 void SourceFile::PrintAST() {
   char prev_cols[100];
-  
+
   if( astRoot ) {
     memset( prev_cols, 0, 100 );
     astRoot->print( 0, 0, prev_cols );
@@ -172,4 +183,19 @@ void SourceFile::PrintAsm() {
 
 void SourceFile::AddExternSymbol( std::string symbol) {
   externSymbols.insert(symbol);
+}
+
+std::string SourceFile::AddString( std::string _string ) {
+  StringData sd;
+  std::stringstream label;
+
+  label << "str" << strCounter;
+
+  sd.contents = _string;
+  sd.label = label.str();
+
+  strings.push_back(sd);
+  strCounter++;
+
+  return label.str();
 }

@@ -6,6 +6,8 @@
 #include "segment_declaration.h"
 #include "extern_symbol.h"
 #include "global_symbol.h"
+#include "numeric_data_block.h"
+#include "string_data_block.h"
 
 class AssemblyBlock {
 public:
@@ -216,6 +218,8 @@ public:
   void xchg( Operand&, Operand& );
   void xlat();
   void _xor( Operand&, Operand& );
+  void db( std::string );
+  void dw( uint32_t );
   AssemblyBlock();
   void AppendBlock( AssemblyBlock* );
   void AppendItem( AssemblerItem* );
