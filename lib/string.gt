@@ -1,0 +1,3 @@
+class String
+  as_string: λ()
+    return self
