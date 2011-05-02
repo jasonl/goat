@@ -8,7 +8,7 @@ typedef std::list<Token>::iterator TokenIterator;
 namespace {
   class ParserTest : public ::testing::Test {
   protected:
-    void Add( TokenType _type, std::string _content = "" ) { 
+    void Add( TokenType _type, std::string _content = "" ) {
       tokenStream.push_back( Token( _type, _content ) );
     }
     std::list<Token> tokenStream;
@@ -72,13 +72,13 @@ namespace {
 
   TEST_F( ParserTest, ShouldMatchMethodInvocation ) {
     Add( Identifier, "function_name" );
-    Add( LeftParen ); Add( RightParen ); 
+    Add( LeftParen ); Add( RightParen );
     ASTNode *functionCall = Parser( tokenStream ).MatchMethodInvocation();
     EXPECT_EQ( ASTNode::FunctionCall, functionCall->Type() );
     EXPECT_EQ( "function_name", functionCall->Content() );
   }
 
-  // Tests that the parser doesn't match a single identifier without 
+  // Tests that the parser doesn't match a single identifier without
   // parentheses following as a function call. It's the job of
   // semantic analysis to translate this if required, not the parser.
   TEST_F( ParserTest, ShouldntMatchSingleIdentifierAsFunctionCall ) {
@@ -93,7 +93,7 @@ namespace {
     ASTNode *functionCall = Parser( tokenStream ).MatchFunctionCall();
     EXPECT_EQ( NULL, functionCall );
   }
-  
+
   TEST_F( ParserTest, ShouldMatchAFunctionCallWithParameters ) {
     Add( Identifier, "function_name"); Add( LeftParen );
     Add( Integer, "1" ); Add( RightParen );
@@ -120,7 +120,7 @@ namespace {
     Add( String, "Some String");
     ASTNode *parameter = Parser( tokenStream ).MatchParameter();
     EXPECT_EQ( ASTNode::Parameter, parameter->Type() );
-    
+
     ASTIterator nodes = parameter->ChildNodes();
     EXPECT_EQ( ASTNode::StringLiteral, nodes->Type() );
     EXPECT_EQ( "Some String", nodes->Content() );
@@ -131,7 +131,7 @@ namespace {
     Add( Integer, "432");
     ASTNode *parameter = Parser( tokenStream ).MatchParameter();
     EXPECT_EQ( ASTNode::Parameter, parameter->Type() );
-    
+
     ASTIterator nodes = parameter->ChildNodes();
     EXPECT_EQ( ASTNode::IntegerLiteral, nodes->Type() );
     EXPECT_EQ( "432", nodes->Content() );
@@ -193,7 +193,7 @@ namespace {
 
   // Should match a Lambda-LParen-Param-RParen-Block as a FunctionDef
   TEST_F( ParserTest, ShouldMatchFunctionDef1Param ) {
-    Add( Lambda ); Add( LeftParen ); 
+    Add( Lambda ); Add( LeftParen );
     Add( Identifier, "a" ); Add( RightParen );
     Add( Newline ); Add( IndentIncrease );
     Add( Identifier, "var" ); Add( Equals ); Add( String, "blah" );
@@ -207,7 +207,7 @@ namespace {
 
   // Should Match a FunctionDef with multiple params
   TEST_F( ParserTest, ShouldMatchFunctionDefMultipleParams ) {
-    Add( Lambda ); Add( LeftParen ); 
+    Add( Lambda ); Add( LeftParen );
     Add( Identifier, "a" ); Add( Comma );
     Add( Identifier, "b" ); Add( RightParen );
     Add( Newline ); Add( IndentIncrease );
@@ -284,7 +284,7 @@ namespace {
     EXPECT_EQ( ASTNode::Block, conditional->IfBlock()->Type() );
     EXPECT_EQ( NULL, conditional->ElseBlock() );
   }
-  
+
   TEST_F( ParserTest, ShouldMatchConditionWithTwoClauses ) {
     Add( If ); Add( Identifier, "blah" ); Add( Newline );
     Add( IndentIncrease );
@@ -313,7 +313,7 @@ namespace {
 
     ASSERT_FALSE( conditional );
   }
-  
+
   // Return statement parsing tests
   //----------------------------------------------------------------------------
   TEST_F( ParserTest, ShouldNotMatchReturnStatementNotStartingWithReturn ) {
@@ -323,7 +323,7 @@ namespace {
   }
 
   TEST_F( ParserTest, ShouldMatchReturnStatement ) {
-    Add( Return ); 
+    Add( Return );
     Add( Identifier, "a" ); Add( Identifier, "+" ); Add( Identifier, "b" );
     ReturnStatementNode *returnStatement = Parser( tokenStream ).MatchReturnStatement();
     ASSERT_TRUE( returnStatement );
@@ -342,24 +342,24 @@ namespace {
     ASSERT_TRUE( returnStatement->ReturnExpr() );
     EXPECT_EQ( ASTNode::NullLiteral, returnStatement->ReturnExpr()->Type() );
   }
-  
+
   // Class definition parsing
   //----------------------------------------------------------------------------
   TEST_F( ParserTest, ShouldNotMatchClassDefinitionNotStartingWithClass ) {
     Add( Identifier, "rah" );
-    ASTClassDefinitionNode* classDef = Parser( tokenStream ).MatchClassDefinition();
+    ClassDefinitionNode* classDef = Parser( tokenStream ).MatchClassDefinition();
     ASSERT_FALSE( classDef );
   }
 
   TEST_F( ParserTest, ShouldNotMatchClassDefinitionWithoutANamingIdentifier ) {
     Add( Class ); Add( RightParen );
-    ASTClassDefinitionNode* classDef = Parser( tokenStream ).MatchClassDefinition();
+    ClassDefinitionNode* classDef = Parser( tokenStream ).MatchClassDefinition();
     ASSERT_FALSE( classDef );
   }
 
   TEST_F( ParserTest, ShouldMatchAnEmptyClass ) {
     Add( Class ); Add( Identifier, "Integer" ); Add( Newline );
-    ASTClassDefinitionNode* classDef = Parser( tokenStream ).MatchClassDefinition();
+    ClassDefinitionNode* classDef = Parser( tokenStream ).MatchClassDefinition();
 
     ASSERT_TRUE( classDef );
     EXPECT_EQ( ASTNode::ClassDefinition, classDef->Type() );
@@ -371,14 +371,14 @@ namespace {
     Add( IndentIncrease );
     Add( Identifier, "rah" ); Add( Colon ); Add( Integer, "123"); Add( Newline );
     Add( IndentDecrease );
-    ASTClassDefinitionNode* classDef = Parser( tokenStream ).MatchClassDefinition();
+    ClassDefinitionNode* classDef = Parser( tokenStream ).MatchClassDefinition();
 
     ASSERT_TRUE( classDef );
     EXPECT_EQ( ASTNode::ClassDefinition, classDef->Type() );
     EXPECT_EQ( "Integer", classDef->Content() );
-    
+
     ASTIterator classBody = classDef->ChildNodes();
     EXPECT_EQ( ASTNode::ImmutableAssignment, classBody->Type() );
   }
-  
+
 }

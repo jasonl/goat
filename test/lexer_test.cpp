@@ -17,7 +17,7 @@ namespace {
     }
 
     TokenIterator LoadAndTokenize( std::string _name ) {
-      sf = new SourceFile( _name );
+      sf = new SourceFile( _name, true );
       sf->Tokenize();
       return sf->GetTokenStream().begin();
     }
@@ -106,7 +106,7 @@ namespace {
     EXPECT_EQ( Newline, (++i)->Type() );
     EXPECT_EQ( IndentIncrease, (++i)->Type() );
     EXPECT_EQ( Label, (++i)->Type() );
-    EXPECT_EQ( "label:", i->Content() );
+    EXPECT_EQ( "label", i->Content() );
     EXPECT_EQ( Identifier, (++i)->Type() );
     EXPECT_EQ( "mov", i->Content() );
     EXPECT_EQ( Identifier, (++i)->Type() );
