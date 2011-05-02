@@ -1,8 +1,0 @@
-generate_callback: λ()
-  return λ(item)
-    print(item)
-
-main: λ()
-  number = 1
-  callback = generate_callback
-  callback( number )

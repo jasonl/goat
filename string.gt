@@ -1,2 +1,0 @@
-main: λ()
-  print "Test"

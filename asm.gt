@@ -1,5 +1,0 @@
-asm
-  mov eax, eax
-  not_equal: mov eax, 32
-
-	

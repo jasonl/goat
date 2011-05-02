@@ -1,8 +1,0 @@
-fib: λ(n)
-  if n ≡ 1
-    return 1
-  else
-    return fib(n - 1)
-
-main: λ()
-  fib(25)   ; Should be 75,025
