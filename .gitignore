@@ -6,3 +6,5 @@ goat-test
 *.o
 *.cpp~
 nbproject/*
+lib/*.o
+lib/*.asm
