@@ -8,3 +8,5 @@ goat-test
 nbproject/*
 lib/*.o
 lib/*.asm
+a.out
+*.asm
