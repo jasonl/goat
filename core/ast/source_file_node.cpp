@@ -10,19 +10,21 @@ void SourceFileNode::Analyse( Scope *_scope ) {
 
   scope = _scope;
 
-  Token *globalName = new Token(Identifier, "__GLOBAL__");
-  globalObject = new ClassDefinitionNode(*globalName);
+  if(!scope->GetSourceFile()->IsLibrary()) {
+    Token *globalName = new Token(Identifier, "__GLOBAL__");
+    globalObject = new ClassDefinitionNode(*globalName);
 
-  InsertFirstChild(globalObject);
+    InsertFirstChild(globalObject);
 
-  ASTIterator i = ChildNodes();
+    ASTIterator i = ChildNodes();
 
-  while( i != end ) {
-    if( i->Type() == MutableAssignment || i->Type() == ImmutableAssignment ) {
-      nextNode = i->MoveNodeTo(globalObject);
-      i = ASTIterator(nextNode);
-    } else {
-      i++;
+    while( i != end ) {
+      if( i->Type() == MutableAssignment || i->Type() == ImmutableAssignment ) {
+	nextNode = i->MoveNodeTo(globalObject);
+	i = ASTIterator(nextNode);
+      } else {
+	i++;
+      }
     }
   }
 
