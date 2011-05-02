@@ -271,40 +271,21 @@ void Lexer::Lex() {
   PushEmptyToken();
 }
 
+
 // Transforms Identifier tokens into keyword tokens.
 void Lexer::TranslateKeywordToken( Token &token ) {
 
   if( token.Type() != Identifier ) return;
 
-  if( token.Content() == "if" ) {
-    token.SetType( If );
-    token.ClearContent();
-  }
+	token.TransformKeyword("if", If);
+	token.TransformKeyword("if", If);
+	token.TransformKeyword("else", Else);
+	token.TransformKeyword("class", Class);
+	token.TransformKeyword("new", New);
+	token.TransformKeyword("return", Return);
+	token.TransformKeyword("asm", Asm);
+	token.TransformKeyword("include", Include);
 
-  if( token.Content() == "else" ) {
-    token.SetType( Else );
-    token.ClearContent();
-  }
-
-  if( token.Content() == "class" ) {
-    token.SetType( Class );
-    token.ClearContent();
-  }
-
-  if( token.Content() == "new" ) {
-    token.SetType( New );
-    token.ClearContent();
-  }
-
-  if( token.Content() == "return" ) {
-    token.SetType( Return );
-    token.ClearContent();
-  }
-
-  if( token.Content() == "asm" ) {
-    token.SetType( Asm );
-    token.ClearContent();
-  }
 }
 
 
