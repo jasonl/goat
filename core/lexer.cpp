@@ -39,9 +39,9 @@ void Lexer::PushIndentToken() {
     } else {
       Token newToken( IndentDecrease );
       while( !sourceFile->indentStack.empty() && sourceFile->indentStack.top() > indent ) {
-	newToken.SetLineNumber( currentLine );
-	sourceFile->tokenStream.push_back( newToken );
-	sourceFile->indentStack.pop();
+				newToken.SetLineNumber( currentLine );
+				sourceFile->tokenStream.push_back( newToken );
+				sourceFile->indentStack.pop();
       }
     }
   }
@@ -51,12 +51,12 @@ void Lexer::PushIndentToken() {
 // by the thunkStart and thunkEnd pointers.
 TokenType Lexer::PushToken() {
   size_t thunkLength;
-  
+
   thunkLength = (size_t)(thunkEnd - thunkStart);
-  std::string thunk( thunkStart, thunkLength + 1 ); 
+  std::string thunk( thunkStart, thunkLength + 1 );
 
   if( thunk == "end" ) return Newline;
-  
+
   Token newToken( lexerState, thunk );
   newToken.SetLineNumber( currentLine );
   TranslateKeywordToken( newToken );
@@ -71,7 +71,7 @@ TokenType Lexer::PushToken() {
     indent = asmLexer.GetIndent();
     return Indent;
   }
-  
+
   return Newline;
 }
 
@@ -85,13 +85,13 @@ void Lexer::PushEmptyToken() {
 // Changes the lexer state according to the next character in the stream
 void Lexer::DefaultStateTransitions( CodePoint &cp ) {
 
-  switch( cp.wchar ) 
+  switch( cp.wchar )
     {
     case '(': lexerState = LeftParen; break;
     case ')': lexerState = RightParen; break;
     case '"':
       StartThunkAtNext(cp);
-      lexerState = String; 
+      lexerState = String;
       break;
     case '.': lexerState = Period; break;
     case 0x03bb: lexerState = Lambda; break;
@@ -101,8 +101,8 @@ void Lexer::DefaultStateTransitions( CodePoint &cp ) {
     case ';': lexerState = Comment; break;
     case ' ': lexerState = Whitespace; break;
     case '\n': lexerState = Newline; break;
-    default: 
-      lexerState = Identifier; 
+    default:
+      lexerState = Identifier;
       StartThunk( cp );
     }
 }
@@ -112,41 +112,41 @@ void Lexer::DefaultStateTransitions( CodePoint &cp ) {
 // maintains the UTF8 encoding for string literals and identifiers.
 void Lexer::Lex() {
   CodePoint cp;
-  
+
   while (sourceNext < sourceEnd) {
     sourceCurr = sourceNext; // Save the address of the current character
     GetNextCodePoint( &cp );
 
     if ( cp.wchar == '\r') GetNextCodePoint( &cp ); // Ignore '\r' on Windows
-    
-    switch( lexerState ) 
+
+    switch( lexerState )
       {
-	
+
       case Indent: // Indent is just Whitespace before any non-space characters on a line.
-	if(cp.wchar == ' ') { indent++; break; }
+				if(cp.wchar == ' ') { indent++; break; }
 
-	if(cp.wchar == '\n') {
-	  lexerState = Newline;
-	  break;
-	}
+				if(cp.wchar == '\n') {
+					lexerState = Newline;
+					break;
+				}
 
-	PushIndentToken();
-	if(cp.wchar >= '0' && cp.wchar <= '9') { 
-	  lexerState = Integer; 
-	  StartThunk( cp );
-	  break;
-	}
-	DefaultStateTransitions( cp );
-	break;
+				PushIndentToken();
+				if(cp.wchar >= '0' && cp.wchar <= '9') {
+					lexerState = Integer;
+					StartThunk( cp );
+					break;
+				}
+				DefaultStateTransitions( cp );
+				break;
 
       case Whitespace:
-	if(cp.wchar >= 0x30 && cp.wchar <= 0x39) { 
-	  lexerState = Integer; 
-	  StartThunk( cp );
-	  break; 
-	}
-	DefaultStateTransitions( cp );
-	break;
+				if(cp.wchar >= 0x30 && cp.wchar <= 0x39) {
+					lexerState = Integer;
+					StartThunk( cp );
+					break;
+				}
+				DefaultStateTransitions( cp );
+				break;
 
       case RightParen:
       case LeftParen:
@@ -155,92 +155,92 @@ void Lexer::Lex() {
       case Equals:
       case Period:
       case Lambda:
-	PushEmptyToken();
-	if(cp.wchar >= 0x30 && cp.wchar <= 0x39) { lexerState = Integer; thunkStart = sourceCurr; thunkEnd = sourceCurr + cp.bytes - 1; break; }
-	DefaultStateTransitions( cp );
-	break;
+				PushEmptyToken();
+				if(cp.wchar >= 0x30 && cp.wchar <= 0x39) { lexerState = Integer; thunkStart = sourceCurr; thunkEnd = sourceCurr + cp.bytes - 1; break; }
+				DefaultStateTransitions( cp );
+				break;
 
       case Comment:
-	while(cp.wchar != '\n' && sourceNext < sourceEnd) { 
-	  GetNextCodePoint( &cp ); 
-	}
-	lexerState = Newline;
-	break;
-	
+				while(cp.wchar != '\n' && sourceNext < sourceEnd) {
+					GetNextCodePoint( &cp );
+				}
+				lexerState = Newline;
+				break;
+
       case Newline:
-	PushEmptyToken();
-	indent = 0; currentLine++;
-	
-	if (cp.wchar == ' ') {
-	  indent++;
-	  lexerState = Indent;
-	  break;
-	}
+				PushEmptyToken();
+				indent = 0; currentLine++;
 
-	PushIndentToken();
+				if (cp.wchar == ' ') {
+					indent++;
+					lexerState = Indent;
+					break;
+				}
 
-	switch( cp.wchar ) 
-	  {
-	  case '(':    lexerState = LeftParen; break;
-	  case ')':    lexerState = RightParen; break;		
-	  case '"':    lexerState = String; thunkStart=sourceNext; thunkEnd=sourceNext; break;
-	  case '.':    lexerState = Period; break;					
-	  case 0x03bb: lexerState = Lambda; break;
-	  case ':':    lexerState = Colon; break;
-	  case '=':    lexerState = Equals; break;		
-	  case ',':    lexerState = Comma; break;		
-	  case ';':    lexerState = Comment; break;	       
-	  case '\n':   lexerState = Newline; break;    
-	  default:     lexerState = Identifier; StartThunk( cp );
-	  }	
-	break;
+				PushIndentToken();
+
+				switch( cp.wchar )
+					{
+					case '(':    lexerState = LeftParen; break;
+					case ')':    lexerState = RightParen; break;
+					case '"':    lexerState = String; thunkStart=sourceNext; thunkEnd=sourceNext; break;
+					case '.':    lexerState = Period; break;
+					case 0x03bb: lexerState = Lambda; break;
+					case ':':    lexerState = Colon; break;
+					case '=':    lexerState = Equals; break;
+					case ',':    lexerState = Comma; break;
+					case ';':    lexerState = Comment; break;
+					case '\n':   lexerState = Newline; break;
+					default:     lexerState = Identifier; StartThunk( cp );
+					}
+				break;
 
       case Identifier:
-	switch(cp.wchar) 
-	  {
-	  case '=':    PushToken(); lexerState = Equals; break;
-	  case ' ':    PushToken(); lexerState = Whitespace; break;
-	  case '\t':   PushToken(); lexerState = Whitespace; break;
-	  case '(':    PushToken(); lexerState = LeftParen; break;
-	  case 0x03bb: PushToken(); lexerState = Lambda; break;
-	  case '.':    PushToken(); lexerState = Period; break;
-	  case '"':    PushToken(); lexerState = String; break;
-	  case ':':    PushToken(); lexerState = Colon; break;
-	  case ',':    PushToken(); lexerState = Comma; break;
-	  case ';':    PushToken(); lexerState = Comment; break;	       
-	  case ')':    PushToken(); lexerState = RightParen; break;
-	  case '\n':   lexerState = PushToken(); break;
-	  default:
-	    thunkEnd += cp.bytes;
-	    break; // If it's not listed above, it's part of the identifier
-	  }
-	break;
-        
+				switch(cp.wchar)
+					{
+					case '=':    PushToken(); lexerState = Equals; break;
+					case ' ':    PushToken(); lexerState = Whitespace; break;
+					case '\t':   PushToken(); lexerState = Whitespace; break;
+					case '(':    PushToken(); lexerState = LeftParen; break;
+					case 0x03bb: PushToken(); lexerState = Lambda; break;
+					case '.':    PushToken(); lexerState = Period; break;
+					case '"':    PushToken(); lexerState = String; break;
+					case ':':    PushToken(); lexerState = Colon; break;
+					case ',':    PushToken(); lexerState = Comma; break;
+					case ';':    PushToken(); lexerState = Comment; break;
+					case ')':    PushToken(); lexerState = RightParen; break;
+					case '\n':   lexerState = PushToken(); break;
+					default:
+						thunkEnd += cp.bytes;
+						break; // If it's not listed above, it's part of the identifier
+					}
+				break;
+
       case Integer:
-	if( cp.wchar >= '0' && cp.wchar <= '9') { thunkEnd+=cp.bytes; break; }
-	PushToken();
-	DefaultStateTransitions( cp );
-	break;
-	
+				if( cp.wchar >= '0' && cp.wchar <= '9') { thunkEnd+=cp.bytes; break; }
+				PushToken();
+				DefaultStateTransitions( cp );
+				break;
+
       case String:
-	switch( cp.wchar ) 
-	  {
-	  case '"':
-	    thunkEnd--; // Last byte of the previous code point, not the quotation mark
-	    PushToken();
-	    GetNextCodePoint( &cp ); // Discard the quotation mark
-	    DefaultStateTransitions( cp );
-	    break;
-	  default: thunkEnd += cp.bytes; break;
-	  }
-	break;
+				switch( cp.wchar )
+					{
+					case '"':
+						thunkEnd--; // Last byte of the previous code point, not the quotation mark
+						PushToken();
+						GetNextCodePoint( &cp ); // Discard the quotation mark
+						DefaultStateTransitions( cp );
+						break;
+					default: thunkEnd += cp.bytes; break;
+					}
+				break;
       default:
-	break;
+				break;
       }
   }
-  
+
   // Close out the last token
-  switch( lexerState ) 
+  switch( lexerState )
     {
     case String:
       goatError( currentLine, "Unclosed string found at end of file.");
@@ -260,7 +260,7 @@ void Lexer::Lex() {
     sourceFile->tokenStream.push_back( newToken );
     sourceFile->indentStack.pop();
   }
-  
+
   // Add an End-of-File marker
   lexerState = EndOfFile;
   PushEmptyToken();
@@ -269,7 +269,7 @@ void Lexer::Lex() {
 // Transforms Identifier tokens into keyword tokens.
 void Lexer::TranslateKeywordToken( Token &token ) {
 
-  if( token.Type() != Identifier ) return; 
+  if( token.Type() != Identifier ) return;
 
   if( token.Content() == "if" ) {
     token.SetType( If );
@@ -317,42 +317,42 @@ void Lexer::GetNextCodePoint( CodePoint *cp ) {
 
   // Convert the character, fill the CodePoint struct and increment
   // the buffer pointers as required
-    if ((*sourceNext & 0x80) == 0) {
-        // It's a single-byte ASCII charater
-        cp->utf8[0] = *sourceNext;
-        cp->bytes = 1;
-        cp->wchar = (w_char) (cp->utf8[0] & 0x7F);
-    } else if ((*sourceNext & 0xE0) == 0xC0) {
-        // 2-byte character;
-        // TODO: Check that the 2-byte character doesn't take us beyond the
-        // end of the buffer.
-        cp->utf8[0] = *sourceNext;
-        cp->utf8[1] = *(++sourceNext);
-        cp->bytes = 2;
-        cp->wchar = (((w_char) (cp->utf8[0] & 0x1F)) << 6) |
-                    ((w_char) (cp->utf8[1] & 0x3F));
-    } else if ((*sourceNext & 0xF0) == 0xE0) {
-        // 3-byte character
-        cp->utf8[0] = *sourceNext;
-        cp->utf8[1] = *(++sourceNext);
-        cp->utf8[2] = *(++sourceNext);
-        cp->bytes = 3;
-        cp->wchar = (((w_char) (cp->utf8[0] & 0x0F)) << 12) |
-                    (((w_char) (cp->utf8[1] & 0x3F)) << 6) |
-                    ((w_char) (cp->utf8[2] & 0x3F));
-    } else if ((*sourceNext & 0xF8) == 0xF0) {
-      // 4-byte character
-      cp->utf8[0] = *sourceNext;
-      cp->utf8[1] = *(++sourceNext);
-      cp->utf8[2] = *(++sourceNext);
-      cp->utf8[3] = *(++sourceNext);
-      cp->bytes = 4;
-      cp->wchar = (((w_char) (cp->utf8[0] & 0x07)) << 18) |
-	          (((w_char) (cp->utf8[0] & 0x3F)) << 12) |
-	          (((w_char) (cp->utf8[1] & 0x3F)) << 6) |
-	           ((w_char) (cp->utf8[2] & 0x3F));
-    } else {
-      std::cerr << "Invalid code point\n";
-    }
-    ++sourceNext;
+	if ((*sourceNext & 0x80) == 0) {
+		// It's a single-byte ASCII charater
+		cp->utf8[0] = *sourceNext;
+		cp->bytes = 1;
+		cp->wchar = (w_char) (cp->utf8[0] & 0x7F);
+	} else if ((*sourceNext & 0xE0) == 0xC0) {
+		// 2-byte character;
+		// TODO: Check that the 2-byte character doesn't take us beyond the
+		// end of the buffer.
+		cp->utf8[0] = *sourceNext;
+		cp->utf8[1] = *(++sourceNext);
+		cp->bytes = 2;
+		cp->wchar = (((w_char) (cp->utf8[0] & 0x1F)) << 6) |
+			((w_char) (cp->utf8[1] & 0x3F));
+	} else if ((*sourceNext & 0xF0) == 0xE0) {
+		// 3-byte character
+		cp->utf8[0] = *sourceNext;
+		cp->utf8[1] = *(++sourceNext);
+		cp->utf8[2] = *(++sourceNext);
+		cp->bytes = 3;
+		cp->wchar = (((w_char) (cp->utf8[0] & 0x0F)) << 12) |
+			(((w_char) (cp->utf8[1] & 0x3F)) << 6) |
+			((w_char) (cp->utf8[2] & 0x3F));
+	} else if ((*sourceNext & 0xF8) == 0xF0) {
+		// 4-byte character
+		cp->utf8[0] = *sourceNext;
+		cp->utf8[1] = *(++sourceNext);
+		cp->utf8[2] = *(++sourceNext);
+		cp->utf8[3] = *(++sourceNext);
+		cp->bytes = 4;
+		cp->wchar = (((w_char) (cp->utf8[0] & 0x07)) << 18) |
+			(((w_char) (cp->utf8[0] & 0x3F)) << 12) |
+			(((w_char) (cp->utf8[1] & 0x3F)) << 6) |
+			((w_char) (cp->utf8[2] & 0x3F));
+	} else {
+		std::cerr << "Invalid code point\n";
+	}
+	++sourceNext;
 }
