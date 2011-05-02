@@ -4,7 +4,7 @@ class Boolean
       mov eax, 0
       mov ecx, #Boolean
       mov edx, &Boolean
-      add esp, 0x12
+      add esp, 12
       pop ebp
       ret
 end
