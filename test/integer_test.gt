@@ -3,24 +3,29 @@ main: λ()
   assert(0 ≡ 0)
   assert_false(0 ≡ 1)
   assert(1 ≡ 1)
+
   ; Inequality
   assert(0 ≢ 1)
   assert_false(0 ≢ 0)
   assert(1 ≢ 2)
+
   ; Addition
   assert_equal(2, 1 + 1)
   assert_equal(0, 0 + 0)
   assert_equal(512, 256 + 256)
+
   ; Subtraction
   assert_equal(1, 2 - 1)
   assert_equal(0, 0 - 0)
   assert_equal(1024, 2048 - 1024)
+
   ; Multiplication
   assert_equal(0, 1 * 0)
   assert_equal(0, 0 * 1)
   assert_equal(1, 1 * 1)
   assert_equal(2, 2 * 1)
   assert_equal(400, 20 * 20)
+
   ; Division
   ; NB: Not testing for divide by zero yet
   assert_equal(1, 1 / 1)

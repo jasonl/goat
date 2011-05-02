@@ -125,4 +125,17 @@ namespace {
   }
 
 
+  TEST_F( LexerTest, ShouldIgnoreBlankLines ) {
+    TokenIterator i = LoadAndTokenize("fixtures/blank_line.gt");
+
+    EXPECT_EQ(Identifier, i->Type());
+    EXPECT_EQ(Equals, (++i)->Type());
+    EXPECT_EQ(Integer, (++i)->Type());
+    EXPECT_EQ(Newline, (++i)->Type());
+    // Blank line should be skipped here
+    EXPECT_EQ(Identifier, (++i)->Type());
+    EXPECT_EQ(Equals, (++i)->Type());
+    EXPECT_EQ(Integer, (++i)->Type());
+  }
+
 }

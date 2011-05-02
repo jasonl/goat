@@ -171,6 +171,11 @@ void Lexer::Lex() {
 				PushEmptyToken();
 				indent = 0; currentLine++;
 
+				// Ignore blank lines
+				while(cp.wchar == '\n' && sourceNext < sourceEnd) {
+					GetNextCodePoint(&cp);
+				}
+
 				if (cp.wchar == ' ') {
 					indent++;
 					lexerState = Indent;
