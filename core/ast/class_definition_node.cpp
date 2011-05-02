@@ -48,10 +48,12 @@ AssemblyBlock *ClassDefinitionNode::GenerateCode() {
 
   // If a method isn't found, exit with error code 5
   // TODO: Write an actual error message.
-  a->push(Dword(5));
-  a->mov(eax, *new Operand(0x01));
-  a->sub(esp, *new Operand(0x04));
-  a->_int(*new Operand(0x80));
+  dispatch->push(Dword(5));
+  dispatch->mov(eax, *new Operand(0x01));
+  dispatch->sub(esp, *new Operand(0x04));
+  dispatch->_int(*new Operand(0x80));
+
+  dispatch->CommentLastInstruction("Exit with code 5 if not found");
 
   dispatch->LabelFirstInstruction(DispatchLabelNameFor(this->Content()));
   dispatch->PrependItem(new GlobalSymbol(DispatchLabelNameFor(this->Content())));
