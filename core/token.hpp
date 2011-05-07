@@ -35,7 +35,6 @@ private:
   TokenType type;
   int lineNumber;
   std::string content;
-  Token *next;
 };
 
 #endif
