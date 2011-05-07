@@ -15,7 +15,7 @@ class ASTIterator;
 typedef uint32_t Hash;
 Hash goatHash( std::string );
 
-const std::string NODE_TYPES[] = { 
+const std::string NODE_TYPES[] = {
   "SourceFile",
   "\x1b[1;33mBlock\x1b[0;37;00m",
   "StatementGroup", "Statement", "ClassStatement", "My",
@@ -64,6 +64,8 @@ class ASTNode {
   ASTNode( enum NODE_TYPE, Token* );
   ~ASTNode();
 
+  ASTNode *FirstChild() { return firstChild; }
+
   void append( ASTNode* );
   void AppendChild( ASTNode *_a ) { append(_a); }
   void InsertFirstChild( ASTNode* );
@@ -104,8 +106,6 @@ public:
   ASTNode& operator*() { return *p; }
   ASTNode* operator->() { return p; }
 };
-
-
 
 typedef std::list<Token>::iterator TokenIterator;
 

@@ -61,12 +61,22 @@ void SourceFile::Tokenize() {
 // Parse()
 // Transforms the stream of tokens into an Abstract Syntax Tree
 void SourceFile::Parse() {
-  if( ! tokenStream.empty() ) {
-    Parser parser( tokenStream );
-    astRoot = parser.Parse();
+  astRoot = new SourceFileNode;
+  ParseOntoNode(astRoot);
+}
+
+void SourceFile::ParseOntoNode( ASTNode *baseNode ) {
+  if( !tokenStream.empty() ) {
+	  Parser parser(tokenStream);
+	  parser.Parse(baseNode);
   } else {
     std::cerr << "Unable to parse source file. No tokens found";
   }
+}
+
+void SourceFile::RetainAST() {
+	// This ensures the AST won't be deleted when the destructor is called.
+	astRoot = NULL;
 }
 
 void SourceFile::Analyse() {

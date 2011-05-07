@@ -25,6 +25,8 @@ public:
   ~SourceFile();
   void Tokenize();
   void Parse();
+	void ParseOntoNode(ASTNode*);
+	void RetainAST();
   void Analyse();
   void GenerateCode();
   void PrintTokens();
@@ -39,6 +41,9 @@ public:
 private:
   std::string fileName;
   std::list<Token> tokenStream;
+  // A place to keep tokens when copied from SourceFiles which might
+  // go out of scope.
+  std::list<Token> auxillaryTokens;
   std::list<StringData> strings;
   ASTNode *astRoot;
   Scope *lobby;
