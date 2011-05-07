@@ -136,10 +136,10 @@ ImmediateOperandNode *Parser::MatchImmediateOperand() {
 ObjectOperandNode *Parser::MatchObjectOperand() {
   ObjectOperandNode *thisNode = NULL;
   TokenIterator savedCurr = currentToken;
-  TokenIterator variable;
+  std::string variable;
 
   if(TokenIs(Identifier)) {
-	variable = currentToken;
+	variable = currentToken->Content();
     ConsumeToken();
   } else {
     return NULL;
@@ -154,7 +154,7 @@ ObjectOperandNode *Parser::MatchObjectOperand() {
   }
 
   if(TokenIs(Identifier)) {
-	thisNode = new ObjectOperandNode(variable->Content(), currentToken->Content());
+	thisNode = new ObjectOperandNode(variable, currentToken->Content());
     ConsumeToken();
     return thisNode;
   } else {

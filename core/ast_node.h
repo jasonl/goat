@@ -97,6 +97,8 @@ public:
   ASTIterator( const ASTIterator& asti ) : p(asti.p) {}
   ASTIterator operator++() {p = p->nextSibling; return *this;}
   ASTIterator operator++(int) { p = p->nextSibling; return *this;}
+  ASTIterator operator--() {p = p->prevSibling; return *this;}
+  ASTIterator operator--(int) { p = p->prevSibling; return *this;}
   bool operator==( const ASTIterator& asti ) { return asti.p == p; }
   bool operator!=( const ASTIterator& asti ) { return asti.p != p; }
   ASTNode& operator*() { return *p; }

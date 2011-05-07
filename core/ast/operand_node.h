@@ -7,7 +7,7 @@ class OperandNode : public ASTNode {
   friend class OperandIterator;
  public:
  OperandNode( ASTNode::NODE_TYPE _t ) : ASTNode(_t) {};
-  virtual Operand *GenerateOperand() { return NULL; }
+  virtual Operand *GenerateOperand() const { return NULL; }
 };
 
 class OperandIterator {

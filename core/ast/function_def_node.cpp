@@ -37,21 +37,16 @@ void FunctionDefNode::AddParameterDef( ASTNode *_param ) {
 }
 
 void FunctionDefNode::Analyse( Scope *_scope ) {
-  ASTIterator endParams( body ); // body is first node after last ParameterDef
-
-  // Reverse the list of params
-  std::list<ASTNode> paramsList;
-
-  for(ASTIterator i = ParameterDefs(); i != endParams; i++) {
-    paramsList.push_front( *i );
-  }
+  ASTIterator start( NULL );
 
   // Create a new lexical scope for the function body
   scope = new Scope( _scope );
 
   // Add the parameters to the scope
-  for(std::list<ASTNode>::iterator i = paramsList.begin(); i != paramsList.end(); i++) {
-	ParameterDefNode *param = dynamic_cast<ParameterDefNode*>(&(*i));
+  ASTIterator i = ASTIterator(body);
+
+  for(i--; i != start; i--) {
+	  ParameterDefNode *param = dynamic_cast<ParameterDefNode*>(&(*i));
 
 	if(param)
 	{
