@@ -162,19 +162,21 @@ void Lexer::Lex() {
 
       case Comment:
 				while(cp.wchar != '\n' && sourceNext < sourceEnd) {
+					sourceCurr = sourceNext; // Save the address of the current character
 					GetNextCodePoint( &cp );
 				}
 				lexerState = Newline;
 				break;
 
       case Newline:
-				PushEmptyToken();
-				indent = 0; currentLine++;
-
 				// Ignore blank lines
 				while(cp.wchar == '\n' && sourceNext < sourceEnd) {
+					sourceCurr = sourceNext; // Save the address of the current character
 					GetNextCodePoint(&cp);
 				}
+
+				PushEmptyToken();
+				indent = 0; currentLine++;
 
 				if (cp.wchar == ' ') {
 					indent++;
