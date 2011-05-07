@@ -3,10 +3,10 @@
 
 class HashOperandNode : public OperandNode {
  public:
-  HashOperandNode( Token& );
-  Operand *GenerateOperand();
+ HashOperandNode(const std::string &_hashString) : OperandNode(HashOperand), hashString(_hashString) {};
+  Operand *GenerateOperand() const;
  private:
-  std::string hashString;
+  const std::string hashString;
 };
 
 #endif

@@ -241,19 +241,19 @@ INT_MATCHER_FOR( Expression ) {
   }
 
   if( TokenIs( String ) ) {
-    thisNode = new StringLiteralNode( *currentToken );
+	thisNode = new StringLiteralNode( currentToken->Content() );
     ConsumeToken();
     return thisNode;
   }
 
   if( TokenIs( Integer )) {
-    thisNode = new IntegerLiteralNode( *currentToken );
+	thisNode = new IntegerLiteralNode( currentToken->Content() );
     ConsumeToken();
     return thisNode;
   }
 
   if( TokenIs( Identifier )) {
-    thisNode = new VariableNode( currentToken );
+	  thisNode = new VariableNode( currentToken->Content() );
     ConsumeToken();
     return thisNode;
   }
@@ -287,20 +287,20 @@ INT_MATCHER_FOR( Receiver ) {
     // Lookahead to determine if this identifier is actually
     // a receiver or a method name
     if (!LookAheadFor( LeftParen )) {
-      thisNode = new VariableNode( currentToken );
+	  thisNode = new VariableNode( currentToken->Content() );
       ConsumeToken();
       return thisNode;
       }
   }
 
   if (TokenIs( String ) ) {
-    thisNode = new StringLiteralNode( *currentToken );
+	thisNode = new StringLiteralNode( currentToken->Content() );
     ConsumeToken();
     return thisNode;
   }
 
   if (TokenIs( Integer )) {
-    thisNode = new IntegerLiteralNode( *currentToken );
+	thisNode = new IntegerLiteralNode( currentToken->Content() );
     ConsumeToken();
     return thisNode;
   }
@@ -361,7 +361,7 @@ FunctionCallNode *Parser::MatchMethodInvocation() {
     must_match_paren = TRUE;
   }
 
-  thisNode = new FunctionCallNode( functionName );
+  thisNode = new FunctionCallNode( functionName->Content() );
 
   while((newChild = MATCH( Parameter ))) {
     thisNode->append(newChild);
@@ -487,7 +487,7 @@ ParameterDefNode *Parser::MatchParameterDef() {
   ParameterDefNode *thisNode;
 
   if (TokenIs( Identifier )) {
-    thisNode = new ParameterDefNode( currentToken );
+	  thisNode = new ParameterDefNode( currentToken->Content() );
     ConsumeToken();
     return thisNode;
   } else {
@@ -592,7 +592,7 @@ MutableAssignmentNode *Parser::MatchMutableAssignment() {
   ConsumeToken();
 
   if((rValue = MATCH( Expression ))) {
-    thisNode = new MutableAssignmentNode( variable );
+	thisNode = new MutableAssignmentNode(variable->Content());
     thisNode->SetRValue( rValue );
     return thisNode;
   }
@@ -618,7 +618,7 @@ ImmutableAssignmentNode *Parser::MatchImmutableAssignment() {
   ConsumeToken();
 
   if((rValue = MATCH( Expression ))) {
-    thisNode = new ImmutableAssignmentNode( variable );
+	thisNode = new ImmutableAssignmentNode( variable->Content() );
     thisNode->SetRValue( rValue );
     return thisNode;
   }
@@ -661,7 +661,7 @@ ClassDefinitionNode *Parser::MatchClassDefinition() {
   ConsumeToken();
 
   if( TokenIs( Identifier )) {
-    thisNode = new ClassDefinitionNode( *currentToken );
+	  thisNode = new ClassDefinitionNode( currentToken->Content() );
   } else {
     goatError(CurrentSourcePosition(), "Unexpected token %s found after class keyword. Identifier expected", TOKEN_TYPES[currentToken->Type()]);
     ResetTokenPosition( savedCurr );

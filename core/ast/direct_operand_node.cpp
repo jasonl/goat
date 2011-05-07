@@ -1,16 +1,9 @@
 #include "../ast_node.h"
-#include "../lexer.h"
-
-DirectOperandNode::DirectOperandNode( Token& _token ):
-  OperandNode( ASTNode::DirectOperand ) {
-  token = &_token;
-}
 
 // Generate the operand from the source string. Note, only accepts
 // lower case registers - eax not EAX
-Operand *DirectOperandNode::GenerateOperand() {
-  std::string reg = Content();
-
+Operand *DirectOperandNode::GenerateOperand() const
+{
   if( tolower(reg[0]) == 'e' && reg.length() == 3) {
     if( reg == "eax" ) return &eax;
     if( reg == "ebx" ) return &ebx;

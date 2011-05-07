@@ -54,29 +54,26 @@ InlineAssemblyNode *Parser::MatchInlineAssembly() {
 
 InstructionNode *Parser::MatchInstruction() {
   TokenIterator savedPos = currentToken;
-  ASTLabelNode *label = NULL;
+  std::string label;
   OperandNode *operand = NULL;
   InstructionNode *thisNode = NULL;
   bool must_match = false;
 
   if( TokenIs(Label) ) {
-    label = new ASTLabelNode( currentToken );
+	label = currentToken->Content();
     ConsumeToken();
-    
-    // When a 
+
+    // When a
     if( TokenIs(Newline) ) {
-      thisNode = new InstructionNode( currentToken );
-      thisNode->AppendChild( label );
+	  thisNode = new InstructionNode(label, currentToken->Content());
       ConsumeToken();
       return thisNode;
     }
   }
 
   if( TokenIs(Identifier) ) {
-    thisNode = new InstructionNode( currentToken );
+	thisNode = new InstructionNode(label, currentToken->Content());
     ConsumeToken();
-
-    if( label ) thisNode->AppendChild( label );
 
     while((operand = MATCH(Operand))) {
       thisNode->AppendOperand( operand );
@@ -96,12 +93,10 @@ InstructionNode *Parser::MatchInstruction() {
 
     // We expected to find another operand but didn't
     goatError(CurrentSourcePosition(), "ASM Instruction: Expected to find another operand, but found %s instead.", TOKEN_TYPES[currentToken->Type()]);
-    if( label ) delete label;
     ResetTokenPosition( savedPos );
     return NULL;
-      
+
   } else {
-    if( label ) delete label;
     ResetTokenPosition( savedPos );
     return NULL;
   }
@@ -123,7 +118,7 @@ OperandNode *Parser::MatchOperand() {
 DirectOperandNode *Parser::MatchDirectOperand() {
   DirectOperandNode *thisNode = NULL;
   if( TokenIs(Identifier) ) {
-    thisNode = new DirectOperandNode( *currentToken );
+	thisNode = new DirectOperandNode(currentToken->Content());
     ConsumeToken();
   }
   return thisNode;
@@ -132,7 +127,7 @@ DirectOperandNode *Parser::MatchDirectOperand() {
 ImmediateOperandNode *Parser::MatchImmediateOperand() {
   ImmediateOperandNode *thisNode = NULL;
   if( TokenIs(Integer) ) {
-    thisNode = new ImmediateOperandNode( currentToken );
+	thisNode = new ImmediateOperandNode(currentToken->Content());
     ConsumeToken();
   }
   return thisNode;
@@ -141,9 +136,10 @@ ImmediateOperandNode *Parser::MatchImmediateOperand() {
 ObjectOperandNode *Parser::MatchObjectOperand() {
   ObjectOperandNode *thisNode = NULL;
   TokenIterator savedCurr = currentToken;
+  TokenIterator variable;
 
   if(TokenIs(Identifier)) {
-    thisNode = new ObjectOperandNode(*currentToken);
+	variable = currentToken;
     ConsumeToken();
   } else {
     return NULL;
@@ -158,7 +154,7 @@ ObjectOperandNode *Parser::MatchObjectOperand() {
   }
 
   if(TokenIs(Identifier)) {
-    thisNode->SetPropertyName(currentToken->Content());
+	thisNode = new ObjectOperandNode(variable->Content(), currentToken->Content());
     ConsumeToken();
     return thisNode;
   } else {
@@ -171,7 +167,7 @@ ObjectOperandNode *Parser::MatchObjectOperand() {
 HashOperandNode *Parser::MatchHashOperand() {
   HashOperandNode *thisNode = NULL;
   if(TokenIs(HashString)) {
-    thisNode = new HashOperandNode( *currentToken );
+	thisNode = new HashOperandNode(currentToken->Content());
     ConsumeToken();
   }
   return thisNode;
@@ -180,7 +176,7 @@ HashOperandNode *Parser::MatchHashOperand() {
 AddressOperandNode *Parser::MatchAddressOperand() {
   AddressOperandNode *thisNode = NULL;
   if(TokenIs(AddressString)) {
-    thisNode = new AddressOperandNode( *currentToken );
+	thisNode = new AddressOperandNode( currentToken->Content() );
     ConsumeToken();
   }
   return thisNode;
@@ -200,13 +196,13 @@ IndirectOperandNode *Parser::MatchIndirectOperand() {
     return NULL;
   }
 
-  thisNode = new IndirectOperandNode( *currentToken );
+  thisNode = new IndirectOperandNode(currentToken->Content());
   ConsumeToken();
 
   while((termNode = MATCH(IndirectOperandTerm))) {
     thisNode->AppendChild( termNode );
   }
-  
+
   if( TokenIsNot(RightSquare) ) {
     // TODO: Raise syntax error
     ResetTokenPosition( savedCurr );
@@ -229,16 +225,16 @@ IndirectOperandTermNode *Parser::MatchIndirectOperandTerm() {
     return NULL;
   }
 
-  thisNode = new IndirectOperandTermNode( *currentToken );
+  thisNode = new IndirectOperandTermNode( currentToken->Content() );
   ConsumeToken();
 
   if( TokenIs(Integer) ) {
-    value = new IntegerLiteralNode( *currentToken );
+	value = new IntegerLiteralNode( currentToken->Content() );
     ConsumeToken();
     thisNode->AppendChild( value );
     return thisNode;
   } else if ( TokenIs(Identifier) ) {
-    value = new DirectOperandNode( *currentToken );
+	value = new DirectOperandNode( currentToken->Content() );
     ConsumeToken();
     thisNode->AppendChild( value );
     return thisNode;

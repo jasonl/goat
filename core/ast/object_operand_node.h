@@ -3,11 +3,12 @@
 
 class ObjectOperandNode : public OperandNode {
  public:
-  ObjectOperandNode( Token& );
-  void SetPropertyName( std::string );
-  Operand *GenerateOperand();
+  ObjectOperandNode(const std::string &_variable, const std::string &_propertyName) :
+	OperandNode(ObjectOperand), variable(_variable), propertyName(_propertyName) {};
+  Operand *GenerateOperand() const;
  private:
-  std::string propertyName;
+  const std::string variable;
+  const std::string propertyName;
 };
 
 #endif

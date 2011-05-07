@@ -1,14 +1,8 @@
 #include "../ast_node.h"
-#include "../lexer.h"
 
-IndirectOperandNode::IndirectOperandNode( Token &_token ) : OperandNode( ASTNode::IndirectOperand ) {
-  token = &_token;
-}
-
-Operand *IndirectOperandNode::GenerateOperand() {
+Operand *IndirectOperandNode::GenerateOperand() const
+{
   OperandIterator end(NULL);
-  std::string reg = Content();
-  
   Operand *base = NULL; // Temporary value for reference
 
   if( reg[0] == 'e' && reg.length() == 3) {
@@ -22,7 +16,7 @@ Operand *IndirectOperandNode::GenerateOperand() {
     if( reg == "esp" ) base = &esp;
     // Invalid Register
     return NULL;
-  } 
+  }
 
   if( reg.length() == 2 ) {
     if( reg == "ax" ) base = &ax;
@@ -46,21 +40,7 @@ Operand *IndirectOperandNode::GenerateOperand() {
     return NULL;
   }
 
-  /*for( OperandIterator i = ChildOperands(); i != end; i++ ) {
-    switch( i->Content()[0] ) {
-    case '+':
-      *base = *base + *(i->GenerateOperand());
-      break;
-    case '-':
-      *base = *base - *(i->GenerateOperand());
-      break;
-    case '*':
-      *base = *base * *(i->GenerateOperand());
-      break;
-    default:
-      // Invalid operation
-    }
-    }*/
+  // TODO: Generate correct offsets etc from terms
 
   return &_[*base];
 }

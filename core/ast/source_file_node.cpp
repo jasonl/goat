@@ -11,8 +11,7 @@ void SourceFileNode::Analyse( Scope *_scope ) {
   scope = _scope;
 
   if(!scope->GetSourceFile()->IsLibrary()) {
-    Token *globalName = new Token(Identifier, "__GLOBAL__");
-    globalObject = new ClassDefinitionNode(*globalName);
+    globalObject = new ClassDefinitionNode("__GLOBAL__");
 
     InsertFirstChild(globalObject);
 

@@ -3,10 +3,11 @@
 
 class IntegerLiteralNode : public ASTNode {
  public:
-  IntegerLiteralNode( Token& );
-  void Analyse( Scope * );
+ IntegerLiteralNode( const std::string &_contents ) : ASTNode(IntegerLiteral), contents(_contents) {};
   AssemblyBlock *GenerateCode();
   AssemblyBlock *PushOntoStack();
+ private:
+  const std::string contents;
 };
 
 #endif

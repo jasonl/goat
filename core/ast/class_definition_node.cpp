@@ -1,11 +1,7 @@
 #include "../ast_node.h"
 #include "../lexer.h"
 
-std::string GenerateFunctionLabel( ASTNode*, std::string );
-
-ClassDefinitionNode::ClassDefinitionNode( Token &_token ) : ASTNode( ASTNode::ClassDefinition ) {
-  token = &_token;
-}
+std::string GenerateFunctionLabel(const std::string, const std::string);
 
 void ClassDefinitionNode::Analyse( Scope *_scope ) {
   ASTIterator end(NULL);
@@ -13,17 +9,17 @@ void ClassDefinitionNode::Analyse( Scope *_scope ) {
   scope = new Scope( _scope );
 
   // Add a class variable for every assignment (including functions)
-  for( ASTIterator i = ChildNodes(); i != end; i++ ) {
-    // This all depends on the knowledge that only MutableAssignment
-    // and ImmutableAssignment ASTNodes can be found in a class body
+  for( ASTIterator i = ChildNodes(); i != end; i++ )
+  {
+	  ImmutableAssignmentNode *m = dynamic_cast<ImmutableAssignmentNode*>(&(*i));
+	  // This all depends on the knowledge that only MutableAssignment
+	  // and ImmutableAssignment ASTNodes can be found in a class body
 
-    if( scope->HasVariable( i->Content()) ) {
-      // TODO: Add warning of redefinition
-    }
+	  if(m && scope->HasVariable(m->VariableName())) {
+		  // TODO: Add warning of redefinition
+	  }
 
-    scope->AddClassVariable( i->Content() );
-    i->Analyse( scope );
-
+	  i->Analyse( scope );
   }
 }
 
@@ -34,16 +30,21 @@ AssemblyBlock *ClassDefinitionNode::GenerateCode() {
   AssemblyBlock *dispatch = new AssemblyBlock;
 
   for(ASTIterator i = ChildNodes(); i != end; i++) {
-    // As we are guaranteed by the parser to only have AssignmentNodes,
-    // we don't generate the actual code for them, but merely use the names
-    i->GenerateCode();
-    fn = i->GetAuxiliaryCode();
-    fn->LabelFirstInstruction(GenerateFunctionLabel( &(*i), this->Content() ));
+	  ImmutableAssignmentNode *m = dynamic_cast<ImmutableAssignmentNode*>(&(*i));
 
-    dispatch->cmp(ebx, Dword(goatHash(i->Content())));
-    dispatch->je(*new Operand(GenerateFunctionLabel( &(*i), this->Content())));
+	  if(m)
+	  {
+		  // As we are guaranteed by the parser to only have AssignmentNodes,
+		  // we don't generate the actual code for them, but merely use the names
+		  m->GenerateCode();
+		  fn = m->GetAuxiliaryCode();
+		  fn->LabelFirstInstruction(GenerateFunctionLabel(m->VariableName(), name));
 
-    a->AppendBlock(fn);
+		  dispatch->cmp(ebx, Dword(goatHash(m->VariableName())));
+		  dispatch->je(*new Operand(GenerateFunctionLabel(m->VariableName(), name)));
+
+		  a->AppendBlock(fn);
+	  }
   }
 
   // If a method isn't found, exit with error code 5
@@ -55,8 +56,8 @@ AssemblyBlock *ClassDefinitionNode::GenerateCode() {
 
   dispatch->CommentLastInstruction("Exit with code 5 if not found");
 
-  dispatch->LabelFirstInstruction(DispatchLabelNameFor(this->Content()));
-  dispatch->PrependItem(new GlobalSymbol(DispatchLabelNameFor(this->Content())));
+  dispatch->LabelFirstInstruction(DispatchLabelNameFor(name));
+  dispatch->PrependItem(new GlobalSymbol(DispatchLabelNameFor(name)));
 
   dispatch->AppendBlock(a);
   return dispatch;
@@ -66,7 +67,7 @@ AssemblyBlock *ClassDefinitionNode::GetAuxiliaryCode() {
   return new AssemblyBlock;
 }
 
-std::string GenerateFunctionLabel( ASTNode* assignmentNode, std::string className ) {
-  std::string fnName = "__" + assignmentNode->Content() + "_" + className;
+std::string GenerateFunctionLabel( const std::string functionName, const std::string className ) {
+  std::string fnName = "__" + functionName + "_" + className;
   return SanitizeLabel(fnName);
 }

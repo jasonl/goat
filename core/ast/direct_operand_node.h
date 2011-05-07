@@ -3,8 +3,10 @@
 
 class DirectOperandNode : public OperandNode {
 public:
-  DirectOperandNode( Token& );
-  Operand *GenerateOperand();
+ DirectOperandNode(const std::string &_reg) : OperandNode(DirectOperand), reg(_reg) {};
+  Operand *GenerateOperand() const;
+ private:
+  const std::string reg;
 };
 
 #endif

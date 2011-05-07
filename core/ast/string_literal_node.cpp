@@ -1,13 +1,9 @@
 #include "../ast_node.h"
 #include "../source_file.h"
 
-StringLiteralNode::StringLiteralNode( Token &_token ) : ASTNode( ASTNode::StringLiteral ) {
-  token = &_token;
-}
-
 void StringLiteralNode::Analyse( Scope *_scope ) {
   scope = _scope;
-  strLabelName = scope->GetSourceFile()->AddString(Content());
+  strLabelName = scope->GetSourceFile()->AddString(contents);
 }
 
 AssemblyBlock *StringLiteralNode::GenerateCode() {
@@ -17,7 +13,7 @@ AssemblyBlock *StringLiteralNode::GenerateCode() {
   a->mov(ecx, Dword(goatHash("String")));
   a->mov(edx, *DispatchOperandFor("String", scope->GetSourceFile()));
 
-  a->CommentLastInstruction("Move String Literal \"" + Content() + "\" into eax/ecx/edx");
+  a->CommentLastInstruction("Move String Literal \"" + contents + "\" into eax/ecx/edx");
   return a;
 }
 
@@ -28,6 +24,6 @@ AssemblyBlock *StringLiteralNode::PushOntoStack() {
   a->push( *DispatchOperandFor("String", scope->GetSourceFile()) );
   a->push( *new Operand(strLabelName));
 
-  a->CommentLastInstruction("Push String Literal \"" + Content() + "\" onto stack");
+  a->CommentLastInstruction("Push String Literal \"" + contents + "\" onto stack");
   return a;
 }

@@ -3,11 +3,13 @@
 
 class ImmutableAssignmentNode : public ASTNode {
 public:
-  ImmutableAssignmentNode( TokenIterator& );
+ ImmutableAssignmentNode(const std::string &_lValue) : ASTNode(ImmutableAssignment), lValue(_lValue) {};
   void Analyse( Scope* );
   void SetRValue( ASTNode* );
-  ASTIterator ChildNodes();
-  AssemblyBlock *GenerateCode();
+  const std::string& VariableName() const { return lValue; }
+  AssemblyBlock *GenerateCode() const;
+ private:
+  const std::string lValue;
 };
 
 #endif

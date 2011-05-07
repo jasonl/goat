@@ -3,11 +3,12 @@
 
 class StringLiteralNode : public ASTNode {
  public:
-  StringLiteralNode( Token& );
+  StringLiteralNode(const std::string &_contents) : ASTNode(StringLiteral), contents(_contents) {};
   void Analyse( Scope * );
   AssemblyBlock *GenerateCode();
   AssemblyBlock *PushOntoStack();
  private:
+  std::string contents;
   std::string strLabelName;
 };
 
