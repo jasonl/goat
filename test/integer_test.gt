@@ -1,3 +1,10 @@
+include "assertions.gt"
+
+include "../lib/integer.gt"
+include "../lib/boolean.gt"
+include "../lib/null.gt"
+include "../lib/string.gt"
+
 main: λ()
   ; Equality
   assert(0 ≡ 0)
@@ -32,32 +39,4 @@ main: λ()
   assert_equal(2, 2 / 1)
   assert_equal(4, 16 / 4)
 
-assert: λ(condition)
-  if condition
-    print(".")
-  else
-    print("F")
-
-assert_false: λ(condition)
-  if condition
-    print("F")
-  else
-    print(".")
-
-assert_equal: λ(item1, item2)
-  if item1 ≡ item2
-    print(".")
-  else
-    print("F")
-
-print: λ(str)
-  asm
-    push 1              ; length of string
-    push str.payload    ; string
-    push 1              ; file descriptor (STDOUT)
-    mov  eax, 4         ; System call number
-    sub  esp, 4         ; 4 bytes for OSX
-    int  128            ; System Call
-    add  esp, 16
-  return 0
 

@@ -1,17 +1,5 @@
 #include "../ast_node.h"
 
-FunctionCallNode::FunctionCallNode( TokenIterator &_token ):
-  ASTNode( ASTNode::FunctionCall ) {
-  token = &(*_token);
-  receiver = NULL;
-}
-
-FunctionCallNode::FunctionCallNode( Token *_token ):
-  ASTNode( ASTNode::FunctionCall ) {
-  token = _token;
-  receiver = NULL;
-}
-
 void FunctionCallNode::Analyse(Scope *_scope) {
   ASTIterator end(NULL);
   scope = _scope;
@@ -34,7 +22,8 @@ void FunctionCallNode::AddReceiver( ASTNode *_receiver ) {
   receiver = _receiver;
 }
 
-AssemblyBlock *FunctionCallNode::GenerateCode() {
+AssemblyBlock *FunctionCallNode::GenerateCode()
+{
   AssemblyBlock *a = new AssemblyBlock;
   ASTIterator end(NULL);
   uint32_t paramCount = 0;
@@ -50,9 +39,9 @@ AssemblyBlock *FunctionCallNode::GenerateCode() {
   // Put the receiver (i.e. this ) onto eax/ecx/edx
   a->AppendBlock( receiver->GenerateCode() );
 
-  a->mov( ebx, Dword(goatHash( Content() )));
+  a->mov( ebx, Dword(goatHash(name)));
   a->call( edx );
-  a->CommentLastInstruction( "Function Call: " + Content() );
+  a->CommentLastInstruction( "Function Call: " + name );
 
   // If we've passed any parameters on the stack, release the space on return
   if(paramCount > 0) {
@@ -61,7 +50,8 @@ AssemblyBlock *FunctionCallNode::GenerateCode() {
   return a;
 }
 
-AssemblyBlock *FunctionCallNode::PushOntoStack() {
+AssemblyBlock *FunctionCallNode::PushOntoStack()
+{
   AssemblyBlock *a = GenerateCode();
 
   a->push( ecx );   // Type Hash of the object

@@ -3,7 +3,9 @@
 
 class IndirectOperandTermNode : public ASTNode {
 public:
-  IndirectOperandTermNode( Token& );
+ IndirectOperandTermNode(const std::string &_operation) : ASTNode(IndirectOperandTerm), operation(_operation) {};
+ private:
+	const std::string operation;
 };
 
 #endif

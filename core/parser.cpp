@@ -7,7 +7,7 @@
  * -----------------------------------------------------------------------------
  * block                 = indent_increase,{ statement_group }, indent_decrease;
  * statement_group       = statement, { statement }
- * statement             = [ assignment | function_call | conditional | class_def | return_statement | inline_assembly ], newline;
+ * statement             = [ assignment | function_call | conditional | class_def | return_statement | inline_assembly | include_statement ], newline;
  *
  *
  * inline_assembly_block = asm, indent_increase, assembly_statement, {assembly_statement}, indent_decrease
@@ -15,6 +15,8 @@
  * assembly_operand      = identifier | indirect_operand | integer
  * indirect_operand      = left_square, identifier, [indirect_operand_term], [indirect_operand_term], right_square
  * indirect_operand_term = plus | minus | multiply, identifier | integer
+ *
+ * include_statement     = include, string_literal;
  *
  * assignment            = mutable_assignment | immutable_assignment;
  * mutable_assignment    = identifier, equals, expression;
@@ -41,7 +43,7 @@
  * function_call         = [receiver], method_invocation;
  * method_invocation     = [period] identifier, [left_paren] , { parameter }, [right_paren];
  * receiver              = method_invocation | string_literal | integer_literal | identifier ;
- * 
+ *
  * parameter             = named_parameter | expression;
  * named_parameter       = identifier, colon, expression;
  *
@@ -65,20 +67,19 @@
 #include "parser.h"
 #include "goat.h"
 
-const char *TOKEN_TYPES[]={ "RightParen", "LeftParen", "Lambda", "Colon", "Period", 
+const char *TOKEN_TYPES[]={ "RightParen", "LeftParen", "Lambda", "Colon", "Period",
 			    "Comma", "Equals", "Identifier", "Integer", "String",
-			    "If", "Else", "Return", "End", "New", 
-			    "Asm", "Class", "Indent", "IndentIncrease", "IndentDecrease", 
-			    "Newline", "Whitespace", "Comment", "EndOfFile", 
-		 
+			    "If", "Else", "Return", "End", "New",
+			    "Asm", "Class", "Indent", "IndentIncrease", "IndentDecrease",
+			    "Newline", "Whitespace", "Comment", "EndOfFile",
+
 			    // Assembly-only tokens
 			    "RightSquare", "LeftSquare",
 			    "Plus", "Minus", "Multiply",
-			    "Label"		 
+			    "Label"
 };
 
-ASTNode * Parser::Parse() {
-  ASTNode *astRoot = new SourceFileNode;
+ASTNode * Parser::Parse( ASTNode *astRoot ) {
   ASTNode *newChild;
 
   // Remove any leading newlines - e.g. from comments
@@ -130,7 +131,7 @@ bool Parser::TokenIsNot( TokenType type ) {
 BlockNode *Parser::MatchBlock() {
   BlockNode *thisNode = NULL;
   ASTNode *newChild = NULL;
-    
+
   if(TokenIsNot( IndentIncrease )) { return NULL; }
   ConsumeToken();
 
@@ -154,7 +155,7 @@ BlockNode *Parser::MatchBlock() {
       thisNode->AppendChild( newChild );
     } else {
       ConsumeToken();
-    }  
+    }
   }
 
   if( TokenIsNot( IndentDecrease )) {
@@ -162,25 +163,53 @@ BlockNode *Parser::MatchBlock() {
     delete thisNode;
     return NULL;
   }
-    
+
   ConsumeToken();
   return thisNode;
 }
 
-INT_MATCHER_FOR( Statement ) 
+INT_MATCHER_FOR( Statement )
 {
   ASTNode *thisNode;
 
-  if((thisNode = MATCH( Assignment )) || 
-     (thisNode = MATCH( FunctionCall )) || 
+  if((thisNode = MATCH( Assignment )) ||
+     (thisNode = MATCH( FunctionCall )) ||
      (thisNode = MATCH( Conditional )) ||
      (thisNode = MATCH( InlineAssembly )) ||
      (thisNode = MATCH( ClassDefinition )) ||
-     (thisNode = MatchReturnStatement())) {   
+		 (thisNode = MatchIncludeStatement()) ||
+     (thisNode = MatchReturnStatement())) {
     return thisNode;
   }
 
   return NULL;
+}
+
+ASTNode *Parser::MatchIncludeStatement() {
+	TokenIterator savedCurr = currentToken;
+
+	if(TokenIsNot(Include)) {
+		return NULL;
+	}
+
+	ConsumeToken();
+
+	if(TokenIsNot(String)) {
+		ResetTokenPosition(savedCurr);
+		goatError(CurrentSourcePosition(), "A string literal must be found after an include statement.");
+		return NULL;
+	}
+
+	ASTNode *dummyNode = new SourceFileNode;
+	::SourceFile includedFile( currentToken->Content(), true);
+
+	includedFile.Tokenize();
+	includedFile.ParseOntoNode(dummyNode);
+	includedFile.RetainAST();
+
+	ConsumeToken();
+
+	return dummyNode->FirstChild();
 }
 
 // Match an expression
@@ -191,14 +220,14 @@ INT_MATCHER_FOR( Expression ) {
   if((thisNode = MATCH( FunctionCall ))) {
     return thisNode;
   }
-  
+
   if( TokenIs( LeftParen )) {
     ConsumeToken();
     if((thisNode = MATCH(Expression))) {
       if( TokenIs( RightParen)) {
 	ConsumeToken();
 	return thisNode;
-      } 
+      }
       else {
 	goatError(CurrentSourcePosition(), "Expression: expected to find a right parenthesis, found a %s instead.", TOKEN_TYPES[currentToken->Type()]);
 	ResetTokenPosition( savedCurr );
@@ -210,21 +239,21 @@ INT_MATCHER_FOR( Expression ) {
   if((thisNode = MATCH( FunctionDef ))) {
     return thisNode;
   }
-  
+
   if( TokenIs( String ) ) {
-    thisNode = new StringLiteralNode( *currentToken );
+	thisNode = new StringLiteralNode( currentToken->Content() );
     ConsumeToken();
     return thisNode;
   }
 
   if( TokenIs( Integer )) {
-    thisNode = new IntegerLiteralNode( *currentToken );
+	thisNode = new IntegerLiteralNode( currentToken->Content() );
     ConsumeToken();
     return thisNode;
   }
 
   if( TokenIs( Identifier )) {
-    thisNode = new VariableNode( currentToken );
+	  thisNode = new VariableNode( currentToken->Content() );
     ConsumeToken();
     return thisNode;
   }
@@ -243,7 +272,7 @@ INT_MATCHER_FOR( Receiver ) {
       if (TokenIs( RightParen)) {
 	ConsumeToken();
 	return thisNode;
-      } 
+      }
       else {
 	goatError(CurrentSourcePosition(), "Receiver: expected to find a right parenthesis, found a %s instead.", TOKEN_TYPES[currentToken->Type()]);
 	ResetTokenPosition( savedCurr );
@@ -258,20 +287,20 @@ INT_MATCHER_FOR( Receiver ) {
     // Lookahead to determine if this identifier is actually
     // a receiver or a method name
     if (!LookAheadFor( LeftParen )) {
-      thisNode = new VariableNode( currentToken );
+	  thisNode = new VariableNode( currentToken->Content() );
       ConsumeToken();
       return thisNode;
       }
   }
 
   if (TokenIs( String ) ) {
-    thisNode = new StringLiteralNode( *currentToken );
+	thisNode = new StringLiteralNode( currentToken->Content() );
     ConsumeToken();
     return thisNode;
   }
 
   if (TokenIs( Integer )) {
-    thisNode = new IntegerLiteralNode( *currentToken );
+	thisNode = new IntegerLiteralNode( currentToken->Content() );
     ConsumeToken();
     return thisNode;
   }
@@ -286,14 +315,14 @@ FunctionCallNode *Parser::MatchFunctionCall() {
   TokenIterator savedCurr = currentToken;
 
   receiver = MATCH( Receiver );
-  
+
   if(!(thisNode = MATCH( MethodInvocation ))) {
     ResetTokenPosition( savedCurr );
     if(receiver) delete receiver;
     return NULL;
   }
 
-  while((newParent = MATCH( MethodInvocation ))) {    
+  while((newParent = MATCH( MethodInvocation ))) {
     newParent->InsertFirstChild( thisNode );
     thisNode = newParent;
   }
@@ -319,11 +348,11 @@ FunctionCallNode *Parser::MatchMethodInvocation() {
     ConsumeToken();
   }
 
-  if (TokenIsNot( Identifier )) { 
+  if (TokenIsNot( Identifier )) {
     ResetTokenPosition( savedCurr );
-    return NULL; 
+    return NULL;
   }
-  
+
   functionName = currentToken;
   ConsumeToken();
 
@@ -331,8 +360,8 @@ FunctionCallNode *Parser::MatchMethodInvocation() {
     ConsumeToken();
     must_match_paren = TRUE;
   }
- 
-  thisNode = new FunctionCallNode( functionName );
+
+  thisNode = new FunctionCallNode( functionName->Content() );
 
   while((newChild = MATCH( Parameter ))) {
     thisNode->append(newChild);
@@ -360,7 +389,7 @@ FunctionCallNode *Parser::MatchMethodInvocation() {
     delete thisNode;
     return NULL;
   }
-  
+
   if( !must_match ) {
     if (TokenIs( RightParen )) {
       if( must_match_paren ) {
@@ -401,27 +430,27 @@ FunctionDefNode *Parser::MatchFunctionDef() {
   if( TokenIsNot( LeftParen )) {
     goatError(CurrentSourcePosition(), "Unexpected %s found when a left parenthesis '(' was expected.", TOKEN_TYPES[currentToken->Type()]);
     ResetTokenPosition( savedCurr );
-    return NULL; 
+    return NULL;
   }
   ConsumeToken();
-  
+
   thisNode = new FunctionDefNode;
 
   while((parameter = MatchParameterDef())) {
     thisNode->AddParameterDef( parameter );
-    
+
     // So if we match a right Parenthesis, that's a complete function call
     if( TokenIs( RightParen )) {
       break;
     }
-    
+
     // If we match a comma, then we must match another parameter.
     if( TokenIs( Comma ) && ! must_match) {
       must_match = TRUE;
       ConsumeToken();
       continue;
     }
-    
+
     // If execution gets to here, we've encountered some other token
     goatError(CurrentSourcePosition(), "FunctionDefinition: Unexpected %s found when a right parenthesis ')' was expected.", TOKEN_TYPES[currentToken->Type()]);
     delete thisNode;
@@ -442,10 +471,10 @@ FunctionDefNode *Parser::MatchFunctionDef() {
     return NULL;
   }
   ConsumeToken();
-  
+
   if ((functionBody = MatchBlock())) {
     thisNode->AddBody(functionBody);
-    return thisNode;  
+    return thisNode;
   } else {
     goatError(CurrentSourcePosition(), "No Block found for function definition");
     delete thisNode;
@@ -458,7 +487,7 @@ ParameterDefNode *Parser::MatchParameterDef() {
   ParameterDefNode *thisNode;
 
   if (TokenIs( Identifier )) {
-    thisNode = new ParameterDefNode( currentToken );
+	  thisNode = new ParameterDefNode( currentToken->Content() );
     ConsumeToken();
     return thisNode;
   } else {
@@ -476,12 +505,12 @@ ParameterNode *Parser::MatchParameter() {
     thisNode->append(newChild);
     return thisNode;
   }
-  
+
   return NULL;
 }
 
 ConditionalNode *Parser::MatchConditional() {
-  ConditionalNode *thisNode; 
+  ConditionalNode *thisNode;
   ASTNode *exprChild;
   BlockNode *ifChild, *elseChild;
   TokenIterator savedCurr = currentToken;
@@ -551,23 +580,23 @@ MutableAssignmentNode *Parser::MatchMutableAssignment() {
   TokenIterator variable, savedCurr = currentToken;
   MutableAssignmentNode *thisNode;
   ASTNode *rValue;
-  
+
   if(TokenIsNot( Identifier )) { return NULL; }
   variable = currentToken;
   ConsumeToken();
-  
+
   if(TokenIsNot( Equals )) {
     ResetTokenPosition( savedCurr );
     return NULL;
   }
   ConsumeToken();
-  
+
   if((rValue = MATCH( Expression ))) {
-    thisNode = new MutableAssignmentNode( variable );
+	thisNode = new MutableAssignmentNode(variable->Content());
     thisNode->SetRValue( rValue );
     return thisNode;
   }
-  
+
   goatError(CurrentSourcePosition(), "Unexpected token %s found after equals sign in a mutable assignment.", TOKEN_TYPES[currentToken->Type()]);
   ResetTokenPosition( savedCurr );
   return NULL;
@@ -577,23 +606,23 @@ ImmutableAssignmentNode *Parser::MatchImmutableAssignment() {
   TokenIterator variable, savedCurr = currentToken;
   ImmutableAssignmentNode *thisNode = NULL;
   ASTNode *rValue;
-  
+
   if(TokenIsNot( Identifier )) { return NULL; }
   variable = currentToken;
   ConsumeToken();
-  
+
   if(TokenIsNot( Colon )) {
     ResetTokenPosition( savedCurr );
     return NULL;
   }
   ConsumeToken();
-  
+
   if((rValue = MATCH( Expression ))) {
-    thisNode = new ImmutableAssignmentNode( variable );
+	thisNode = new ImmutableAssignmentNode( variable->Content() );
     thisNode->SetRValue( rValue );
     return thisNode;
   }
-  
+
   goatError(CurrentSourcePosition(), "Unexpected token %s found after colon sign in a immutable assignment.", TOKEN_TYPES[currentToken->Type()]);
   ResetTokenPosition( savedCurr );
   return NULL;
@@ -613,7 +642,7 @@ ReturnStatementNode *Parser::MatchReturnStatement() {
   if(!(returnExpr = MATCH( Expression ))){
     returnExpr = new NullLiteralNode;
   }
-  
+
   // TODO: This is too permissive - it should only return a null literal when
   // the return statement is followed by a newline.
 
@@ -632,14 +661,14 @@ ClassDefinitionNode *Parser::MatchClassDefinition() {
   ConsumeToken();
 
   if( TokenIs( Identifier )) {
-    thisNode = new ClassDefinitionNode( *currentToken );
+	  thisNode = new ClassDefinitionNode( currentToken->Content() );
   } else {
     goatError(CurrentSourcePosition(), "Unexpected token %s found after class keyword. Identifier expected", TOKEN_TYPES[currentToken->Type()]);
     ResetTokenPosition( savedCurr );
     return NULL;
   }
   ConsumeToken();
-  
+
   if( TokenIsNot( Newline )) {
     goatError(CurrentSourcePosition(), "Unexpected token %s found after class name. Newline expected", TOKEN_TYPES[currentToken->Type()]);
     ResetTokenPosition( savedCurr );

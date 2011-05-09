@@ -6,8 +6,8 @@ class OperandNode : public ASTNode {
   friend class InstructionNode;
   friend class OperandIterator;
  public:
- OperandNode( ASTNode::NODE_TYPE _t ) : ASTNode(_t) {};
-  virtual Operand *GenerateOperand() { return NULL; }
+ OperandNode( ASTNode::NODE_TYPE _t ) : ASTNode(_t), nextOperand(NULL) {};
+  virtual Operand *GenerateOperand() const { std::cout << "fail"; return NULL; }
 };
 
 class OperandIterator {

@@ -3,8 +3,11 @@
 
 class ParameterDefNode : public ASTNode {
 public:
-  ParameterDefNode( TokenIterator& );
+ ParameterDefNode( const std::string &_name ) : ASTNode(ParameterDef), name(_name) {};
   void Analyse( Scope* );
+  const std::string& Name() const { return name; }
+ private:
+  const std::string name;
 };
 
 #endif

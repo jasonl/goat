@@ -7,16 +7,16 @@ enum TokenType { RightParen, LeftParen,
 		 Lambda, Colon, Period, Comma, Equals,
 		 Identifier, Integer, String,
 		 If, Else, Return, End, New, Asm,
-		 Class,
-		 Indent, IndentIncrease, IndentDecrease, 
+		 Class, Include,
+		 Indent, IndentIncrease, IndentDecrease,
 		 Newline, Whitespace, Comment,
-		 EndOfFile, 
-		 
+		 EndOfFile,
+
 		 // Assembly-only tokens
 		 RightSquare, LeftSquare,
 		 Plus, Minus, Multiply,
 		 HashString, AddressString,
-		 Label		 
+		 Label
 };
 
 class Token {
@@ -30,11 +30,11 @@ public:
   int LineNumber() { return lineNumber; }
   TokenType Type() { return type; }
   void SetType( TokenType _type ) { type = _type; }
+	void TransformKeyword(std::string, TokenType);
 private:
   TokenType type;
   int lineNumber;
   std::string content;
-  Token *next;
 };
 
 #endif

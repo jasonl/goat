@@ -3,10 +3,12 @@
 
 class ClassDefinitionNode : public ASTNode {
 public:
-  ClassDefinitionNode( Token& );
+  ClassDefinitionNode( const std::string &_name ) : ASTNode(ClassDefinition), name(_name) {};
   AssemblyBlock *GenerateCode();
   AssemblyBlock *GetAuxiliaryCode();
   void Analyse( Scope* );
+ private:
+  const std::string name;
 };
 
 #endif

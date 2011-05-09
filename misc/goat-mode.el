@@ -2,7 +2,7 @@
 
 (defconst goat-font-lock-keywords
   (list
-   '("\\<\\(asm\\|class\\|e\\(lse\\|nd\\)\\|if\\|return\\)\\>" (1 font-lock-keyword-face)))
+   '("\\<\\(asm\\|class\\|e\\(lse\\|nd\\)\\|i\\(f\\|nclude\\)\\|return\\)\\>" (1 font-lock-keyword-face)))
   "Keyword highlighting for goat-mode")
 
 (defconst goat-font-lock-functions

@@ -6,7 +6,6 @@
 
 ASTNode::ASTNode( enum NODE_TYPE _type) {
   type = _type;
-  token = NULL;
   firstChild = NULL;
   parent = NULL;
   nextSibling = NULL;
@@ -36,7 +35,7 @@ void ASTNode::Analyse( Scope* _scope) {
 AssemblyBlock* ASTNode::GetAuxiliaryCode() {
   ASTIterator end(NULL);
   AssemblyBlock *a = new AssemblyBlock;
-  
+
   for( ASTIterator i = ChildNodes(); i != end; i++) {
     a->AppendBlock( i->GetAuxiliaryCode() );
   }
@@ -46,15 +45,19 @@ AssemblyBlock* ASTNode::GetAuxiliaryCode() {
 
 void ASTNode::append( ASTNode *child ) {
   ASTNode *lastSibling = this->firstChild;
+  ASTNode *lastChildNode = child;
 
-  child->parent = this;
+  while(lastChildNode) {
+	  lastChildNode->parent = this;
+	  lastChildNode = lastChildNode->nextSibling;
+  }
 
   if( !this->firstChild ) {
     firstChild = child;
     return;
   }
 
-  // Find the last child node
+  // Find the last existing child node
   while( lastSibling ) {
     if( lastSibling->nextSibling ) {
       lastSibling = lastSibling->nextSibling;
@@ -91,7 +94,7 @@ void ASTNode::InsertFirstChild( ASTNode *child ) {
 void ASTNode::ReplaceChild( ASTNode *childToReplace, ASTNode *newChild ) {
   ASTNode *currentChild = firstChild;
   if( childToReplace == NULL || newChild == NULL ) return;
-  
+
   // Ensure that the childToReplace exists as a child node.
   while( currentChild ) {
     if( currentChild == childToReplace ) break;
@@ -142,7 +145,7 @@ void ASTNode::DetachChild( ASTNode *childNode ) {
 ASTNode *ASTNode::MoveNodeTo( ASTNode *newParent ) {
   ASTNode *nextNode = nextSibling;
   parent->DetachChild(this);
-  newParent->append(this);  
+  newParent->append(this);
   return nextNode;
 }
 
@@ -153,12 +156,8 @@ ASTIterator ASTNode::ChildNodes() {
 // Recursive function to print a tree of the AST
 void ASTNode::print(int depth, int skip, char *prev_cols) {
   ASTIterator end(NULL);
-  
-  std::cout << NODE_TYPES[type];
 
-  if( token ) {
-    std::cout << ":" << token->Content();
-  }
+  std::cout << NODE_TYPES[type];
   std::cout << "\n";
 
   for( ASTIterator i = ChildNodes(); i != end; i++) {

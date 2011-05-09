@@ -2,19 +2,12 @@
 #include "../lexer.h"
 #include "../i386/instruction.h"
 
-InstructionNode::InstructionNode( TokenIterator &_token ): 
-  ASTNode( ASTNode::Instruction ) {
-  token = &(*_token);
-  lastOperand = NULL;
-  firstOperand = NULL;
-}
-
 AssemblyBlock *InstructionNode::GenerateCode() {
   AssemblyBlock *a = new AssemblyBlock;
   ::Instruction *ins = NULL;
   OperandIterator end(NULL);
   Operand *operands[3] = {NULL, NULL, NULL};
-  int j = 0; 
+  int j = 0;
 
   for(OperandIterator i = Operands(); i != end; i++) {
     if( j >= 3 ) {
@@ -26,12 +19,10 @@ AssemblyBlock *InstructionNode::GenerateCode() {
     j++;
   }
 
-  ins = new ::Instruction( Content(), operands[0], operands[1], operands[2]);
+  ins = new ::Instruction(mnemonic, operands[0], operands[1], operands[2]);
 
-  // Set the label if there is one.
-  if( firstChild && firstChild->Type() == ASTNode::Label ) {
-    ins->SetLabel( firstChild->Content() );
-  }
+  if(label.length() > 0)
+    ins->SetLabel( label );
 
   a->AppendInstruction(ins);
   return a;

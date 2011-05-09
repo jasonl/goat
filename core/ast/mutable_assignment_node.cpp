@@ -1,32 +1,28 @@
 #include "../ast_node.h"
 
-MutableAssignmentNode::MutableAssignmentNode( TokenIterator &_token): 
-  ASTNode( ASTNode::MutableAssignment ) {
-  token = &(*_token);
-}
-
 void MutableAssignmentNode::Analyse( Scope *_scope ) {
   scope = _scope;
-  
-  if(!scope->HasVariable( Content() )) {
-    scope->AddLocalVariable( Content() );
+
+  if(!scope->HasVariable(lValue)) {
+    scope->AddLocalVariable(lValue);
   }
-  
-  firstChild->Analyse( scope );  
+
+  firstChild->Analyse( scope );
 }
 
 void MutableAssignmentNode::SetRValue( ASTNode *_rValue ) {
   AppendChild( _rValue );
 }
 
-AssemblyBlock *MutableAssignmentNode::GenerateCode() {
+AssemblyBlock *MutableAssignmentNode::GenerateCode() const
+{
   AssemblyBlock *a = firstChild->GenerateCode();
 
-  a->mov( scope->GeneratePayloadOperand(Content()), eax );
-  a->mov( scope->GenerateTypeHashOperand(Content()), ecx );
-  a->mov( scope->GenerateDispatchOperand(Content()), edx );
-  
-  a->CommentLastInstruction("Assignment to " + Content());
+  a->mov( scope->GeneratePayloadOperand(lValue), eax );
+  a->mov( scope->GenerateTypeHashOperand(lValue), ecx );
+  a->mov( scope->GenerateDispatchOperand(lValue), edx );
+
+  a->CommentLastInstruction("Assignment to " + lValue);
 
   return a;
 }

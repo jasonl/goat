@@ -3,10 +3,12 @@
 
 class VariableNode : public ASTNode {
 public:
-  VariableNode( TokenIterator& );
+  VariableNode( const std::string &_name ) : ASTNode(Variable), name(_name) {};
   void Analyse( Scope* );
   AssemblyBlock *GenerateCode();
   AssemblyBlock *PushOntoStack();
+ private:
+  const std::string name;
 };
 
 #endif

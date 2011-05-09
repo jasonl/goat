@@ -3,10 +3,10 @@
 
 class AddressOperandNode : public OperandNode {
  public:
-  AddressOperandNode( Token& );
-  Operand *GenerateOperand();
+ AddressOperandNode( const std::string &_address ) : OperandNode(AddressOperand), address(_address) {};
+  Operand *GenerateOperand() const;
  private:
-  std::string addressString;
+  const std::string address;
 };
 
 

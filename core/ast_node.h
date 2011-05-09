@@ -15,7 +15,7 @@ class ASTIterator;
 typedef uint32_t Hash;
 Hash goatHash( std::string );
 
-const std::string NODE_TYPES[] = { 
+const std::string NODE_TYPES[] = {
   "SourceFile",
   "\x1b[1;33mBlock\x1b[0;37;00m",
   "StatementGroup", "Statement", "ClassStatement", "My",
@@ -61,8 +61,9 @@ class ASTNode {
   };
 
   ASTNode( enum NODE_TYPE );
-  ASTNode( enum NODE_TYPE, Token* );
   ~ASTNode();
+
+  ASTNode *FirstChild() { return firstChild; }
 
   void append( ASTNode* );
   void AppendChild( ASTNode *_a ) { append(_a); }
@@ -78,13 +79,10 @@ class ASTNode {
   virtual AssemblyBlock* PushOntoStack() { return new AssemblyBlock(); }
 
   void print(int, int, char*);
-  std::string Content() { return token->Content(); }
-  bool HasContent() { return( token != NULL ); }
   enum NODE_TYPE Type() { return type; }
 
  protected:
   enum NODE_TYPE type;
-  Token *token;
   Scope *scope;
   ASTNode *parent;
   ASTNode *firstChild;
@@ -99,13 +97,13 @@ public:
   ASTIterator( const ASTIterator& asti ) : p(asti.p) {}
   ASTIterator operator++() {p = p->nextSibling; return *this;}
   ASTIterator operator++(int) { p = p->nextSibling; return *this;}
+  ASTIterator operator--() {p = p->prevSibling; return *this;}
+  ASTIterator operator--(int) { p = p->prevSibling; return *this;}
   bool operator==( const ASTIterator& asti ) { return asti.p == p; }
   bool operator!=( const ASTIterator& asti ) { return asti.p != p; }
   ASTNode& operator*() { return *p; }
   ASTNode* operator->() { return p; }
 };
-
-
 
 typedef std::list<Token>::iterator TokenIterator;
 
@@ -127,7 +125,6 @@ typedef std::list<Token>::iterator TokenIterator;
 #include "ast/inline_assembly_node.h"
 #include "ast/instruction_node.h"
 #include "ast/integer_literal_node.h"
-#include "ast/ast_label_node.hpp"
 #include "ast/mutable_assignment_node.h"
 #include "ast/null_literal_node.h"
 #include "ast/object_operand_node.h"

@@ -5,7 +5,7 @@
 
 class ASTNode;
 
-// For these macros, INT denotes "intermediate", for matcher functions which 
+// For these macros, INT denotes "intermediate", for matcher functions which
 // don't return a final ASTNode for inclusion in the AST. These functions return
 // a base ASTNode, rather than a specific ASTBlockNode etc
 
@@ -23,13 +23,14 @@ class Parser {
   friend class ParserTest;
  public:
   Parser( std::list<Token> &tokenStream) { currentToken = tokenStream.begin(); endToken = tokenStream.end(); }
-  ASTNode *Parse();
+  ASTNode *Parse( ASTNode* );
   ASTNode *MatchExpression();
   FunctionDefNode *MatchFunctionDef();
   FunctionCallNode *MatchFunctionCall();
   ParameterNode *MatchParameter();
   ParameterDefNode *MatchParameterDef();
   ASTNode *MatchStatement();
+  ASTNode *MatchIncludeStatement();
   BlockNode *MatchBlock();
   ASTNode *MatchAssignment();
   MutableAssignmentNode *MatchMutableAssignment();
