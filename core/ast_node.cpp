@@ -45,15 +45,19 @@ AssemblyBlock* ASTNode::GetAuxiliaryCode() {
 
 void ASTNode::append( ASTNode *child ) {
   ASTNode *lastSibling = this->firstChild;
+  ASTNode *lastChildNode = child;
 
-  child->parent = this;
+  while(lastChildNode) {
+	  lastChildNode->parent = this;
+	  lastChildNode = lastChildNode->nextSibling;
+  }
 
   if( !this->firstChild ) {
     firstChild = child;
     return;
   }
 
-  // Find the last child node
+  // Find the last existing child node
   while( lastSibling ) {
     if( lastSibling->nextSibling ) {
       lastSibling = lastSibling->nextSibling;
