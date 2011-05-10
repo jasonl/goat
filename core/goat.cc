@@ -85,6 +85,11 @@ std::string GetBaseDirectory(const char *relativePath)
   return baseDir.substr(0, baseDir.find_last_of('/'));
 }
 
+bool FileExists(const std::string &fileName)
+{
+	return access(fileName.c_str(), R_OK);
+}
+
 std::string parseCommandLine( int argc, char *argv[], int *verbose, bool *library) {
   int i;
   std::string fileName;
