@@ -34,6 +34,7 @@ public:
   void PrintAsm();
   void AddExternSymbol(std::string);
   std::string AddString(std::string);
+  std::string ResolveIncludedFile(const std::string&) const;
   bool IsLibrary() { return isLibrary; }
   TokenIterator FirstToken() { return tokenStream.begin(); };
   TokenIterator LastToken() { return tokenStream.end(); };

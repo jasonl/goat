@@ -1,9 +1,9 @@
 include "assertions.gt"
 
-include "../lib/integer.gt"
-include "../lib/boolean.gt"
-include "../lib/null.gt"
-include "../lib/string.gt"
+include "integer.gt"
+include "boolean.gt"
+include "null.gt"
+include "string.gt"
 
 main: λ()
   ; Equality

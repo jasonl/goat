@@ -205,7 +205,7 @@ ASTNode *Parser::MatchIncludeStatement() {
 	}
 
 	ASTNode *dummyNode = new SourceFileNode;
-	::SourceFile includedFile( currentToken->Content(), true);
+	::SourceFile includedFile( sourceFile->ResolveIncludedFile(currentToken->Content()), true);
 
 	includedFile.Tokenize();
 	includedFile.ParseOntoNode(dummyNode);

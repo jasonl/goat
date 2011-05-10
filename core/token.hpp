@@ -25,7 +25,7 @@ public:
   Token( TokenType );
   Token( TokenType, std::string );
   void SetContent( std::string _content ) { content = _content; }
-  std::string Content() { return content; }
+  std::string Content() const { return content; }
   void ClearContent() { content.clear(); }
   void SetLineNumber( int _lineNumber ) { lineNumber = _lineNumber; }
   int LineNumber() { return lineNumber; }

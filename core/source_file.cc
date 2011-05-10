@@ -1,4 +1,3 @@
-#include <string>
 #include <iostream>
 #include <sstream>
 #include <cstdio>
@@ -7,11 +6,14 @@
 #include <sys/mman.h> // For mmap
 #include <sys/stat.h>
 
+#include "goat.h"
 #include "ast_node.h"
 #include "lexer.h"
 #include "scope.h"
 #include "parser.h"
 #include "source_file.h"
+
+extern std::string libraryDirectory;
 
 SourceFile::SourceFile( std::string _fileName, bool _isLibrary ) {
   fileName = _fileName;
@@ -208,4 +210,21 @@ std::string SourceFile::AddString( std::string _string ) {
   strCounter++;
 
   return label.str();
+}
+
+std::string SourceFile::ResolveIncludedFile(const std::string &relativePath) const
+{
+	std::string thisDirectory = GetBaseDirectory(fileName.c_str());
+	std::string relativeInclude = thisDirectory + "/" + relativePath;
+
+	if(FileExists(relativeInclude))
+		return relativeInclude;
+
+	std::string libraryInclude = libraryDirectory + "/" + relativePath;
+
+	if(FileExists(libraryInclude))
+		return libraryInclude;
+
+	goatFatalError("Unable to find included file '" + relativePath + "'");
+	return "";
 }

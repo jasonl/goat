@@ -48,6 +48,7 @@ int main(int argc, char** argv) {
 
 void goatFatalError( const std::string msg ) {
   std::cerr << "FATAL ERROR: %s\n" << msg;
+  exit(1);
 }
 
 #ifndef TEST
@@ -71,9 +72,7 @@ std::string GetBaseDirectory(const char *relativePath)
   char *currentWorkingDir = getcwd(NULL, 0);
 
   // Generate the full path of the goatc executable
-  std::string cwd(currentWorkingDir);
-  std::string exe(relativePath);
-  std::string fullPath(cwd + "/" + exe);
+  std::string fullPath(std::string(currentWorkingDir) + "/" + std::string(relativePath));
 
   // And strip of the directory
   char *realBaseCommand = realpath(fullPath.c_str(), NULL);
@@ -87,7 +86,7 @@ std::string GetBaseDirectory(const char *relativePath)
 
 bool FileExists(const std::string &fileName)
 {
-	return access(fileName.c_str(), R_OK);
+	return (access(fileName.c_str(), R_OK) != -1);
 }
 
 std::string parseCommandLine( int argc, char *argv[], int *verbose, bool *library) {
