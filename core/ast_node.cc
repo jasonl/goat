@@ -1,7 +1,4 @@
-#include <string>
 #include <iostream>
-#include "token.hpp"
-#include "lexer.h"
 #include "ast_node.h"
 
 ASTNode::ASTNode( enum NODE_TYPE _type) {

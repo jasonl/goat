@@ -60,9 +60,6 @@
  * digit                 = "0" - "9"
  *
  */
-#include <string.h>
-#include <string>
-#include "lexer.h"
 #include "source_file.h"
 #include "ast_node.h"
 #include "parser.h"
