@@ -35,7 +35,8 @@ public:
   void AddExternSymbol(std::string);
   std::string AddString(std::string);
   bool IsLibrary() { return isLibrary; }
-
+  TokenIterator FirstToken() { return tokenStream.begin(); };
+  TokenIterator LastToken() { return tokenStream.end(); };
   std::list<Token>& GetTokenStream() { return tokenStream; }
   std::stack<int> indentStack;
 private:

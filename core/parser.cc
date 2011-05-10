@@ -63,6 +63,7 @@
 #include <string.h>
 #include <string>
 #include "lexer.h"
+#include "source_file.h"
 #include "ast_node.h"
 #include "parser.h"
 #include "goat.h"
@@ -78,6 +79,12 @@ const char *TOKEN_TYPES[]={ "RightParen", "LeftParen", "Lambda", "Colon", "Perio
 			    "Plus", "Minus", "Multiply",
 			    "Label"
 };
+
+Parser::Parser(::SourceFile* _sourceFile) : sourceFile(_sourceFile)
+{
+	currentToken = sourceFile->FirstToken();
+	endToken = sourceFile->LastToken();
+}
 
 ASTNode * Parser::Parse( ASTNode *astRoot ) {
   ASTNode *newChild;

@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   lexer.h
  * Author: Jason Langenauer <jason@jasonlangenauer.com>
  *
@@ -8,8 +8,10 @@
 #ifndef __LEXER_H
 #define	__LEXER_H
 
-#include <list>
-#include "source_file.h"
+#include "token.hpp"
+
+// Forward declarations
+class SourceFile;
 
 // 32-bit wide integer to hold the code-point value
 typedef unsigned long w_char;

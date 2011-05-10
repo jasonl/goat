@@ -6,6 +6,7 @@
 
 
 #include "goat.h"
+#include "source_file.h"
 #include "lexer.h"
 #include "assembly_lexer.hpp"
 

@@ -2,6 +2,7 @@
 #define __TOKEN_HPP
 
 #include <string>
+#include <list>
 
 enum TokenType { RightParen, LeftParen,
 		 Lambda, Colon, Period, Comma, Equals,
@@ -36,5 +37,7 @@ private:
   int lineNumber;
   std::string content;
 };
+
+typedef std::list<Token>::iterator TokenIterator;
 
 #endif

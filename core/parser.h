@@ -1,7 +1,7 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include <list>
+#include "token.hpp"
 
 class ASTNode;
 
@@ -17,12 +17,10 @@ class ASTNode;
 
 #define MATCH(name) Match##name()
 
-typedef std::list<Token>::iterator TokenIterator;
-
 class Parser {
   friend class ParserTest;
  public:
-  Parser( std::list<Token> &tokenStream) { currentToken = tokenStream.begin(); endToken = tokenStream.end(); }
+  Parser(::SourceFile*);
   ASTNode *Parse( ASTNode* );
   ASTNode *MatchExpression();
   FunctionDefNode *MatchFunctionDef();
@@ -58,6 +56,7 @@ class Parser {
   bool TokenIsNot( TokenType type );
   bool LookAheadFor( TokenType type );
  private:
+  ::SourceFile *sourceFile;
   TokenIterator currentToken;
   TokenIterator endToken;
 };

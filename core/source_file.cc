@@ -67,7 +67,7 @@ void SourceFile::Parse() {
 
 void SourceFile::ParseOntoNode( ASTNode *baseNode ) {
   if( !tokenStream.empty() ) {
-	  Parser parser(tokenStream);
+	  Parser parser(this);
 	  parser.Parse(baseNode);
   } else {
     std::cerr << "Unable to parse source file. No tokens found";
