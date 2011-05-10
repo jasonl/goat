@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   goat.h
  * Author: jason
  *
@@ -20,6 +20,7 @@ class ASTNode;
 #define VERBOSE_SCOPES 0x04
 #define VERBOSE_ASM 0x08
 
+std::string GetBaseDirectory(const char*);
 std::string parseCommandLine( int, char**, int*, bool*);
 void goatFatalError( std::string );
 void goatError( int, std::string, ... );

@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   goat.c
  * Author: Jason Langenauer
  *
@@ -15,9 +15,9 @@
 #include "ast_node.h"
 #include "parser.h"
 #include "goat.h"
-#include "scope.h"
 #include "source_file.h"
 
+std::string libraryDirectory;
 
 #ifndef GOATTEST
 int main(int argc, char** argv) {
@@ -66,9 +66,30 @@ void goatError( int lineNo, const std::string fmt, ... ) {
 
 #endif
 
+std::string GetBaseDirectory(const char *relativePath)
+{
+  char *currentWorkingDir = getcwd(NULL, 0);
+
+  // Generate the full path of the goatc executable
+  std::string cwd(currentWorkingDir);
+  std::string exe(relativePath);
+  std::string fullPath(cwd + "/" + exe);
+
+  // And strip of the directory
+  char *realBaseCommand = realpath(fullPath.c_str(), NULL);
+  std::string baseDir(realBaseCommand);
+
+  free(currentWorkingDir);
+  free(realBaseCommand);
+
+  return baseDir.substr(0, baseDir.find_last_of('/'));
+}
+
 std::string parseCommandLine( int argc, char *argv[], int *verbose, bool *library) {
   int i;
   std::string fileName;
+
+  libraryDirectory = GetBaseDirectory(argv[0]) + "/lib";
 
   if (argc == 1) {
     std::cerr << "Goat - An experimental language\n";
@@ -82,7 +103,7 @@ std::string parseCommandLine( int argc, char *argv[], int *verbose, bool *librar
     std::cerr << "-l                 Compile as library.\n";
     exit(1);
   }
-  
+
   for ( i=1; i <= (argc - 1); ++i) {
 
     if(argv[i][0] == '-') {
