@@ -4,20 +4,43 @@
 #include <string>
 #include <list>
 
-enum TokenType { RightParen, LeftParen,
-		 Lambda, Colon, Period, Comma, Equals,
-		 Identifier, Integer, String,
-		 If, Else, Return, End, New, Asm,
-		 Class, Include,
-		 Indent, IndentIncrease, IndentDecrease,
-		 Newline, Whitespace, Comment,
-		 EndOfFile,
+enum TokenType {
+	Asm,
+	Class,
+	ClassVar,
+	Colon,
+	Comma,
+	Comment,
+	Else,
+	End,
+	EndOfFile,
+	Equals,
+	Identifier,
+	If,
+	Include,
+	Indent,
+	IndentDecrease,
+	IndentIncrease,
+	Integer,
+	Lambda,
+	LeftParen,
+	New,
+	Newline,
+	Period,
+	Return,
+	RightParen,
+	String,
+	Whitespace,
 
-		 // Assembly-only tokens
-		 RightSquare, LeftSquare,
-		 Plus, Minus, Multiply,
-		 HashString, AddressString,
-		 Label
+	// Assembly-only tokens
+	AddressString,
+	HashString,
+	Label,
+	LeftSquare,
+	Minus,
+	Multiply,
+	Plus,
+	RightSquare
 };
 
 class Token {

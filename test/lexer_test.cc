@@ -81,6 +81,9 @@ namespace {
     EXPECT_EQ( IndentDecrease, (++i)->Type() );
     EXPECT_EQ( String, (++i)->Type() );
     EXPECT_EQ( "And Another String", i->Content() );
+	EXPECT_EQ( Newline, (++i)->Type());
+	EXPECT_EQ( ClassVar, (++i)->Type());
+	EXPECT_EQ( "@test", i->Content());
     EXPECT_EQ( EndOfFile, (++i)->Type() );
   }
 

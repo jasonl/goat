@@ -102,6 +102,7 @@ void Lexer::DefaultStateTransitions( CodePoint &cp ) {
     case ';': lexerState = Comment; break;
     case ' ': lexerState = Whitespace; break;
     case '\n': lexerState = Newline; break;
+	case '@': lexerState = ClassVar; StartThunk(cp); break;
     default:
       lexerState = Identifier;
       StartThunk( cp );
@@ -199,9 +200,31 @@ void Lexer::Lex() {
 					case ',':    lexerState = Comma; break;
 					case ';':    lexerState = Comment; break;
 					case '\n':   lexerState = Newline; break;
+					case '@':    lexerState = ClassVar; StartThunk(cp); break;
 					default:     lexerState = Identifier; StartThunk( cp );
 					}
 				break;
+
+	  case ClassVar:
+		  switch(cp.wchar)
+		  {
+		  case '=':    PushToken(); lexerState = Equals; break;
+		  case ' ':    PushToken(); lexerState = Whitespace; break;
+		  case '\t':   PushToken(); lexerState = Whitespace; break;
+		  case '(':    PushToken(); lexerState = LeftParen; break;
+		  case 0x03bb: PushToken(); lexerState = Lambda; break;
+		  case '.':    PushToken(); lexerState = Period; break;
+		  case '"':    PushToken(); lexerState = String; break;
+		  case ':':    PushToken(); lexerState = Colon; break;
+		  case ',':    PushToken(); lexerState = Comma; break;
+		  case ';':    PushToken(); lexerState = Comment; break;
+		  case ')':    PushToken(); lexerState = RightParen; break;
+		  case '\n':   lexerState = PushToken(); break;
+		  default:
+			  thunkEnd += cp.bytes;
+			  break; // If it's not listed above, it's part of the identifier
+		  }
+		  break;
 
       case Identifier:
 				switch(cp.wchar)
