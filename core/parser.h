@@ -19,6 +19,7 @@ class ASTNode;
 
 class Parser {
   friend class ParserTest;
+  friend class AssemblyParserTest;
  public:
   Parser(::SourceFile*);
   ASTNode *Parse( ASTNode* );

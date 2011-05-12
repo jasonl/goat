@@ -7,6 +7,12 @@ class InstructionNode : public ASTNode {
   AssemblyBlock *GenerateCode();
   void AppendOperand( OperandNode* );
   OperandIterator Operands() { return OperandIterator(firstOperand); }
+
+#ifdef GOATTEST
+  std::string Mnemonic() const { return mnemonic; }
+  std::string Label() const { return label; }
+#endif
+
  private:
   const std::string label;
   const std::string mnemonic;

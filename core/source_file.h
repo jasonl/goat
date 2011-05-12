@@ -40,6 +40,11 @@ public:
   TokenIterator LastToken() { return tokenStream.end(); };
   std::list<Token>& GetTokenStream() { return tokenStream; }
   std::stack<int> indentStack;
+#ifdef GOATTEST
+  void AddToken(Token& _token) {
+	  tokenStream.push_back(_token);
+  };
+#endif
 private:
   std::string fileName;
   std::list<Token> tokenStream;

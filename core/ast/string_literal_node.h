@@ -7,6 +7,11 @@ class StringLiteralNode : public ASTNode {
   void Analyse( Scope * );
   AssemblyBlock *GenerateCode();
   AssemblyBlock *PushOntoStack();
+
+#ifdef GOATTEST
+  std::string Contents() const { return contents; }
+#endif
+
  private:
   std::string contents;
   std::string strLabelName;

@@ -7,6 +7,7 @@ class MutableAssignmentNode : public ASTNode {
   void Analyse( Scope* );
   void SetRValue( ASTNode* );
   AssemblyBlock *GenerateCode() const;
+  std::string VariableName() const { return lValue; }
  private:
   const std::string lValue;
 };

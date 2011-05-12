@@ -9,6 +9,11 @@ class FunctionCallNode : public ASTNode {
   void Analyse( Scope* );
   AssemblyBlock *GenerateCode();
   AssemblyBlock *PushOntoStack();
+
+#ifdef GOATTEST
+  std::string Name() const { return name; }
+#endif
+
  private:
   const std::string name;
   ASTNode *receiver;

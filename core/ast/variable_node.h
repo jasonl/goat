@@ -7,6 +7,11 @@ public:
   void Analyse( Scope* );
   AssemblyBlock *GenerateCode();
   AssemblyBlock *PushOntoStack();
+
+#ifdef GOATTEST
+  std::string Name() const { return name; }
+#endif
+
  private:
   const std::string name;
 };
