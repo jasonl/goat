@@ -4,9 +4,11 @@
 class IndirectOperandTermNode : public ASTNode {
 public:
  IndirectOperandTermNode(const std::string &_operation) : ASTNode(IndirectOperandTerm), operation(_operation) {};
+
 #ifdef GOATTEST
 	std::string Operation() const { return operation; }
 #endif
+
  private:
 	const std::string operation;
 };
