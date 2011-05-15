@@ -150,6 +150,15 @@ ASTIterator ASTNode::ChildNodes() {
   return ASTIterator(firstChild);
 }
 
+ASTNode *ASTNode::FindEnclosingNode(enum NODE_TYPE typeToFind)
+{
+	if (type == typeToFind)
+		return this;
+	if (parent == NULL)
+		return NULL;
+	return parent->FindEnclosingNode(typeToFind);
+}
+
 // Recursive function to print a tree of the AST
 void ASTNode::print(int depth, int skip, char *prev_cols) {
   ASTIterator end(NULL);

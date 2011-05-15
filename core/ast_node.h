@@ -73,6 +73,8 @@ class ASTNode {
   ASTNode *MoveNodeTo( ASTNode* );
   virtual ASTIterator ChildNodes();
 
+  ASTNode *FindEnclosingNode(enum NODE_TYPE);
+
   virtual void Analyse( Scope* );
   virtual AssemblyBlock* GenerateCode() { return new AssemblyBlock(); }
   virtual AssemblyBlock* GetAuxiliaryCode();
