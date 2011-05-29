@@ -31,7 +31,7 @@
  *
  * (* An expression is something which evaluates to an object: In the case of
  * a function, it evaluates to a function object *)
- * expression            = identifier | integer | string | function_definition | function_call;
+ * expression            = identifier | class_variable | integer | string | function_definition | function_call;
  *
  * (* Function definitions *)
  * function_definition   = one_line_func_def | block_func_def;
@@ -49,6 +49,7 @@
  *
  * (* Lexical tokens *)
  * (* defined here for completeness, but the tokenizing is done in lexer.c *)
+ * class_variable        = "@", { non_terminating_character };
  * integer               = [ "-" ], digit, { digit };
  * comma                 = ",";
  * period                = ".";
@@ -260,6 +261,12 @@ INT_MATCHER_FOR( Expression ) {
 	  thisNode = new VariableNode( currentToken->Content() );
     ConsumeToken();
     return thisNode;
+  }
+
+  if(TokenIs(ClassVar)) {
+	  thisNode = new ClassVariableNode(currentToken->Content());
+	  ConsumeToken();
+	  return thisNode;
   }
 
   return NULL;

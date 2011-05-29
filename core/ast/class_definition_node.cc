@@ -23,6 +23,23 @@ void ClassDefinitionNode::Analyse( Scope *_scope ) {
   }
 }
 
+void ClassDefinitionNode::AddClassVariable(const std::string &name)
+{
+	classVars[name] = lastVarPosition;
+	lastVarPosition++;
+}
+
+int ClassDefinitionNode::ClassVariablePosition(const std::string &name) const
+{
+	ClassVarMap::const_iterator ci = classVars.find(name);
+	if(ci != classVars.end())
+	{
+		return ci->second;
+	} else {
+		return -1;
+	}
+}
+
 AssemblyBlock *ClassDefinitionNode::GenerateCode() {
   ASTIterator end(NULL);
   AssemblyBlock *a = new AssemblyBlock;

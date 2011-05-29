@@ -71,6 +71,15 @@ namespace {
     EXPECT_EQ( "var_name", dynamic_cast<VariableNode*>(variable)->Name() );
   }
 
+	// Tests a class variable is parsed as an expression
+	TEST_F(ParserTest, ShouldMatchClassVariableAsExpression)
+	{
+		Add(ClassVar, "@test");
+		ASTNode *expr = Parser(sourceFile).MatchExpression();
+		EXPECT_EQ(ASTNode::ClassVariable, expr->Type());
+		EXPECT_EQ("@test", dynamic_cast<ClassVariableNode*>(expr)->Name());
+	}
+
   // Tests a function call is parsed as an expression
   TEST_F( ParserTest, ShouldMatchFunctionCallAsExpression ) {
     Add( Identifier, "function_name");
