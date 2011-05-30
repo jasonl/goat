@@ -2,7 +2,7 @@
 #include "../scope.h"
 #include "../lexer.h"
 
-void ImmutableAssignmentNode::Analyse( Scope *_scope ) {
+void ConstantAssignmentNode::Analyse( Scope *_scope ) {
   scope = _scope;
 
   if(scope->HasVariable(lValue)) {
@@ -14,11 +14,11 @@ void ImmutableAssignmentNode::Analyse( Scope *_scope ) {
   firstChild->Analyse( scope );
 }
 
-void ImmutableAssignmentNode::SetRValue( ASTNode* _rValue ) {
+void ConstantAssignmentNode::SetRValue( ASTNode* _rValue ) {
   AppendChild( _rValue );
 }
 
-AssemblyBlock *ImmutableAssignmentNode::GenerateCode() const
+AssemblyBlock *ConstantAssignmentNode::GenerateCode() const
 {
   AssemblyBlock *a = firstChild->GenerateCode();
 

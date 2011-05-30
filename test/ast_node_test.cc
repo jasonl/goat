@@ -10,7 +10,7 @@ namespace {
 		ClassDefinitionNode *cd = new ClassDefinitionNode("TestClass");
 		sf->AppendChild(cd);
 
-		ImmutableAssignmentNode *ia = new ImmutableAssignmentNode("function");
+		ConstantAssignmentNode *ia = new ConstantAssignmentNode("function");
 		cd->AppendChild(ia);
 
 		FunctionDefNode *fd = new FunctionDefNode();
@@ -26,7 +26,7 @@ namespace {
 		ClassDefinitionNode *cd = new ClassDefinitionNode("TestClass");
 		sf->AppendChild(cd);
 
-		ImmutableAssignmentNode *ia = new ImmutableAssignmentNode("function");
+		ConstantAssignmentNode *ia = new ConstantAssignmentNode("function");
 		cd->AppendChild(ia);
 
 		FunctionDefNode *fd = new FunctionDefNode();

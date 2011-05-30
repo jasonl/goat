@@ -11,7 +11,7 @@ void ClassDefinitionNode::Analyse( Scope *_scope ) {
   // Add a class variable for every assignment (including functions)
   for( ASTIterator i = ChildNodes(); i != end; i++ )
   {
-	  ImmutableAssignmentNode *m = dynamic_cast<ImmutableAssignmentNode*>(&(*i));
+	  ConstantAssignmentNode *m = dynamic_cast<ConstantAssignmentNode*>(&(*i));
 	  // This all depends on the knowledge that only MutableAssignment
 	  // and ImmutableAssignment ASTNodes can be found in a class body
 
@@ -47,7 +47,7 @@ AssemblyBlock *ClassDefinitionNode::GenerateCode() {
   AssemblyBlock *dispatch = new AssemblyBlock;
 
   for(ASTIterator i = ChildNodes(); i != end; i++) {
-	  ImmutableAssignmentNode *m = dynamic_cast<ImmutableAssignmentNode*>(&(*i));
+	  ConstantAssignmentNode *m = dynamic_cast<ConstantAssignmentNode*>(&(*i));
 
 	  if(m)
 	  {

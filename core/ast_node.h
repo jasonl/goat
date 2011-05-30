@@ -19,7 +19,7 @@ const std::string NODE_TYPES[] = {
   "SourceFile",
   "\x1b[1;33mBlock\x1b[0;37;00m",
   "StatementGroup", "Statement", "ClassStatement", "My",
-  "\x1b[0;36mMutableAssignment\x1b[0;37;00m", "\x1b[0;36mImmutableAssignment\x1b[0;37;00m",
+  "\x1b[0;36mMutableAssignment\x1b[0;37;00m", "\x1b[0;36mConstantAssignment\x1b[0;37;00m",
   "\x1b[1;35mConditional\x1b[0;37;00m",
   "ClassDefinition", "ClassVariable", "Self",
   "\x1b[1;31mFunctionDef\x1b[0;37;00m", "OneLineFunctionDef", "BlockFunctionDef",
@@ -43,7 +43,7 @@ class ASTNode {
     SourceFile,
     Block,
     StatementGroup, Statement, ClassStatement, My,
-    MutableAssignment, ImmutableAssignment,
+    MutableAssignment, ConstantAssignment,
     Conditional,
     ClassDefinition, ClassVariable, Self,
     FunctionDef, OneLineFunctionDef, BlockFunctionDef,
@@ -117,12 +117,12 @@ typedef std::list<Token>::iterator TokenIterator;
 #include "ast/class_definition_node.h"
 #include "ast/class_variable_node.h"
 #include "ast/conditional_node.h"
+#include "ast/constant_assignment_node.h"
 #include "ast/direct_operand_node.h"
 #include "ast/function_call_node.h"
 #include "ast/function_def_node.h"
 #include "ast/hash_operand_node.h"
 #include "ast/immediate_operand_node.h"
-#include "ast/immutable_assignment_node.h"
 #include "ast/indirect_operand_node.h"
 #include "ast/indirect_operand_term_node.h"
 #include "ast/inline_assembly_node.h"

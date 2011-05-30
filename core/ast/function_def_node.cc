@@ -89,7 +89,7 @@ AssemblyBlock *FunctionDefNode::GenerateCode() {
 
   bodyAsm->CommentLastInstruction("Move self passed in registers to locals");
 
-  ImmutableAssignmentNode *p = dynamic_cast<ImmutableAssignmentNode*>(parent);
+  ConstantAssignmentNode *p = dynamic_cast<ConstantAssignmentNode*>(parent);
 
   if(p && (p->VariableName().length() > 0)) {
     functionName = p->VariableName();

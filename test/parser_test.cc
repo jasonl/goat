@@ -25,10 +25,10 @@ namespace {
   };
 
   // Tests correct parsing of an immutable assignement as statement
-  TEST_F( ParserTest, ShouldMatchImmutableAssignmentAsStatement ) {
+  TEST_F( ParserTest, ShouldMatchConstantAssignmentAsStatement ) {
     Add( Identifier, "var"); Add( Colon ); Add( Integer, "123" );
     ASTNode* immutable = Parser( sourceFile ).MatchStatement();
-    EXPECT_EQ( ASTNode::ImmutableAssignment, immutable->Type() );
+    EXPECT_EQ( ASTNode::ConstantAssignment, immutable->Type() );
   }
 
   // Tests correct parsing of a mutable assignment as a statement
@@ -275,11 +275,11 @@ namespace {
     EXPECT_EQ( "var", mutableAssignment->VariableName() );
   }
 
-  // ImmutableAssignment Parsing tests
-  TEST_F( ParserTest, ShouldMatchImmutableAssignment ) {
+  // ConstantAssignment Parsing tests
+  TEST_F( ParserTest, ShouldMatchConstantAssignment ) {
     Add( Identifier, "var" ); Add( Colon ); Add( Integer, "123");
-    ImmutableAssignmentNode *immutableAssignment = Parser( sourceFile ).MatchImmutableAssignment();
-    EXPECT_EQ( ASTNode::ImmutableAssignment, immutableAssignment->Type() );
+    ConstantAssignmentNode *immutableAssignment = Parser( sourceFile ).MatchConstantAssignment();
+    EXPECT_EQ( ASTNode::ConstantAssignment, immutableAssignment->Type() );
     EXPECT_EQ( "var", immutableAssignment->VariableName() );
   }
 
@@ -397,7 +397,7 @@ namespace {
     EXPECT_EQ( "Integer", classDef->Name() );
 
     ASTIterator classBody = classDef->ChildNodes();
-    EXPECT_EQ( ASTNode::ImmutableAssignment, classBody->Type() );
+    EXPECT_EQ( ASTNode::ConstantAssignment, classBody->Type() );
   }
 
 }

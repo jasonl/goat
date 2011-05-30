@@ -33,7 +33,7 @@ class Parser {
   BlockNode *MatchBlock();
   ASTNode *MatchAssignment();
   MutableAssignmentNode *MatchMutableAssignment();
-  ImmutableAssignmentNode *MatchImmutableAssignment();
+  ConstantAssignmentNode *MatchConstantAssignment();
   ConditionalNode *MatchConditional();
   FunctionCallNode *MatchMethodInvocation();
   ASTNode *MatchReceiver();

@@ -582,7 +582,7 @@ ConditionalNode *Parser::MatchConditional() {
 
 ASTNode *Parser::MatchAssignment() {
   ASTNode *thisNode = NULL;
-  if( (thisNode = MatchImmutableAssignment()) ) return thisNode;
+  if( (thisNode = MatchConstantAssignment()) ) return thisNode;
   if( (thisNode = MatchMutableAssignment()) ) return thisNode;
   return NULL;
 }
@@ -613,9 +613,9 @@ MutableAssignmentNode *Parser::MatchMutableAssignment() {
   return NULL;
 }
 
-ImmutableAssignmentNode *Parser::MatchImmutableAssignment() {
+ConstantAssignmentNode *Parser::MatchConstantAssignment() {
   TokenIterator variable, savedCurr = currentToken;
-  ImmutableAssignmentNode *thisNode = NULL;
+  ConstantAssignmentNode *thisNode = NULL;
   ASTNode *rValue;
 
   if(TokenIsNot( Identifier )) { return NULL; }
@@ -629,7 +629,7 @@ ImmutableAssignmentNode *Parser::MatchImmutableAssignment() {
   ConsumeToken();
 
   if((rValue = MATCH( Expression ))) {
-	thisNode = new ImmutableAssignmentNode( variable->Content() );
+	thisNode = new ConstantAssignmentNode( variable->Content() );
     thisNode->SetRValue( rValue );
     return thisNode;
   }
