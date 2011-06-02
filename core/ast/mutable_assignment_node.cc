@@ -1,28 +1,36 @@
 #include "../ast_node.h"
 
-void MutableAssignmentNode::Analyse( Scope *_scope ) {
+MutableAssignmentNode::MutableAssignmentNode(AssignmentTargetNode *_target, ASTNode *_rValue) : ASTNode(MutableAssignment)
+{
+	AppendChild(_target);
+	AppendChild(_rValue);
+
+	target = _target;
+	rValue = _rValue;
+}
+
+void MutableAssignmentNode::Analyse( Scope *_scope )
+{
   scope = _scope;
 
-  if(!scope->HasVariable(lValue)) {
-    scope->AddLocalVariable(lValue);
+  if(!scope->HasVariable(VariableName()))
+  {
+	  scope->AddLocalVariable(VariableName());
   }
 
   firstChild->Analyse( scope );
 }
 
-void MutableAssignmentNode::SetRValue( ASTNode *_rValue ) {
-  AppendChild( _rValue );
-}
-
-AssemblyBlock *MutableAssignmentNode::GenerateCode() const
+AssemblyBlock *MutableAssignmentNode::GenerateCode()
 {
-  AssemblyBlock *a = firstChild->GenerateCode();
+	// Move the rValue into eax/ecx/edx
+	AssemblyBlock *a = firstChild->GenerateCode();
 
-  a->mov( scope->GeneratePayloadOperand(lValue), eax );
-  a->mov( scope->GenerateTypeHashOperand(lValue), ecx );
-  a->mov( scope->GenerateDispatchOperand(lValue), edx );
+	// Now we've got the rValue in eax/ecx/edx, assign it.
+	AssemblyBlock *assignmentAsm = target->GenerateAssignmentCode();
 
-  a->CommentLastInstruction("Assignment to " + lValue);
+	a->AppendBlock(assignmentAsm);
+	a->CommentLastInstruction("Assignment to " + VariableName());
 
-  return a;
+	return a;
 }

@@ -1,0 +1,81 @@
+class PiDigitSpigot
+  initialize: λ()
+    @z = new Transformation(1, 0, 0, 1)
+		@x = new Transformation(0, 0, 0, 0)
+		@inverse = new Transformation(0, 0, 0, 0)
+
+  next!: λ()
+	  @y = @z.extract(3)
+		if safe?(@y)
+		  @z = produce(@y)
+			return @y
+		else
+		  @z = consume(@x.next!)
+			return next!
+
+  safe?: λ(digit)
+    return digit ≡ @z.extract(4)
+
+  produce: λ(i)
+	  return @inverse.qrst(10, -10 * i, 0, 1).compose(@z)
+
+	consume: λ(a)
+	  return @z.compose(a)
+
+class Transformation
+  initialize: λ(q, r, s, t)
+	  @q = q
+		@r = r
+ 		@s = s
+		@t = t
+		@k = 0
+
+	q: λ()
+	  return @q
+
+  r: λ()
+	  return @r
+
+	s: λ()
+	  return @s
+
+	t: λ()
+	  return @t
+
+  next!: λ()
+	  @k = @k + 1
+	  @q = @k
+		@r = (4 * @k) + 2
+		@s = 0
+		@t = (2 * @k) + 1
+		return self
+
+	extract: λ(j)
+	  return ((@q * j) + @r) / ((@s * j) + @t)
+
+	compose: λ(a)
+	  return new Transformation(@q * a.q, (@q * a.r)+(@r * a.t), (@s * a.q)+(t * a.s), (@s * a.r) + (@t * a.t))
+
+	qrst: λ(q, r, s, t)
+	  initialize(q, r, s, t)
+		return self
+
+main: λ()
+  WIDTH = 10 ; Digits to print in each line
+  n = 100    ; Number of total digits to print
+  j = 0
+
+  digits = new PiDigitSpigot
+
+  while n > 0
+    if n ≥ WIDTH
+		  WIDTH.times(λ())
+			  print digits.next!
+		else
+		  n.times(λ())
+			  print digits.next!
+			(WIDTH - n).times(λ())
+			  print " "
+			j = j + n
+		print "\t" + j.as_string + "\n"
+    n = n - WIDTH

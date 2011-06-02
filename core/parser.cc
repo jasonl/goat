@@ -19,8 +19,9 @@
  * include_statement     = include, string_literal;
  *
  * assignment            = mutable_assignment | immutable_assignment;
- * mutable_assignment    = identifier, equals, expression;
- * immutable_assignment  = identifier, colon, expression;
+ * mutable_assignment    = assignment_target, equals, expression;
+ * assignment_target     = identifier | class_variable
+ * constant_assignment   = identifier, colon, expression;
  *
  * conditional           = if, expression, newline, block, [ else, newline, block ];
  *
@@ -173,16 +174,16 @@ BlockNode *Parser::MatchBlock() {
   return thisNode;
 }
 
-INT_MATCHER_FOR( Statement )
+ASTNode* Parser::MatchStatement()
 {
   ASTNode *thisNode;
 
-  if((thisNode = MATCH( Assignment )) ||
+  if((thisNode = MatchAssignment()) ||
      (thisNode = MATCH( FunctionCall )) ||
      (thisNode = MATCH( Conditional )) ||
      (thisNode = MATCH( InlineAssembly )) ||
      (thisNode = MATCH( ClassDefinition )) ||
-		 (thisNode = MatchIncludeStatement()) ||
+	 (thisNode = MatchIncludeStatement()) ||
      (thisNode = MatchReturnStatement())) {
     return thisNode;
   }
@@ -587,30 +588,48 @@ ASTNode *Parser::MatchAssignment() {
   return NULL;
 }
 
-MutableAssignmentNode *Parser::MatchMutableAssignment() {
-  TokenIterator variable, savedCurr = currentToken;
-  MutableAssignmentNode *thisNode;
-  ASTNode *rValue;
+AssignmentTargetNode* Parser::MatchAssignmentTarget()
+{
+	if(TokenIs(Identifier))
+	{
+		return new VariableNode(currentToken->Content());
+	}
 
-  if(TokenIsNot( Identifier )) { return NULL; }
-  variable = currentToken;
-  ConsumeToken();
+	if(TokenIs(ClassVar))
+	{
+		return new ClassVariableNode(currentToken->Content());
+	}
 
-  if(TokenIsNot( Equals )) {
-    ResetTokenPosition( savedCurr );
-    return NULL;
-  }
-  ConsumeToken();
+	return NULL;
+}
 
-  if((rValue = MATCH( Expression ))) {
-	thisNode = new MutableAssignmentNode(variable->Content());
-    thisNode->SetRValue( rValue );
-    return thisNode;
-  }
+MutableAssignmentNode *Parser::MatchMutableAssignment()
+{
+	TokenIterator variable, savedCurr = currentToken;
+	AssignmentTargetNode *target = MatchAssignmentTarget();;
+	ASTNode *rValue;
 
-  goatError(CurrentSourcePosition(), "Unexpected token %s found after equals sign in a mutable assignment.", TOKEN_TYPES[currentToken->Type()]);
-  ResetTokenPosition( savedCurr );
-  return NULL;
+	if(target == NULL)
+		return NULL;
+
+	ConsumeToken();
+
+	if(TokenIsNot( Equals ))
+	{
+		ResetTokenPosition( savedCurr );
+		return NULL;
+	}
+
+	ConsumeToken();
+
+	if((rValue = MatchExpression()))
+	{
+		return new MutableAssignmentNode(target, rValue);
+	}
+
+	goatError(CurrentSourcePosition(), "Unexpected token %s found after equals sign in a mutable assignment.", TOKEN_TYPES[currentToken->Type()]);
+	ResetTokenPosition( savedCurr );
+	return NULL;
 }
 
 ConstantAssignmentNode *Parser::MatchConstantAssignment() {
@@ -693,7 +712,7 @@ ClassDefinitionNode *Parser::MatchClassDefinition() {
   }
   ConsumeToken();
 
-  while((newNode = MATCH(Assignment)) || TokenIs(Newline) ) {
+  while((newNode = MatchConstantAssignment()) || TokenIs(Newline)) {
     if( newNode ) {
       thisNode->append(newNode);
     } else if( TokenIs( Newline )) {

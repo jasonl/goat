@@ -34,6 +34,7 @@ class Parser {
   ASTNode *MatchAssignment();
   MutableAssignmentNode *MatchMutableAssignment();
   ConstantAssignmentNode *MatchConstantAssignment();
+  AssignmentTargetNode *MatchAssignmentTarget();
   ConditionalNode *MatchConditional();
   FunctionCallNode *MatchMethodInvocation();
   ASTNode *MatchReceiver();

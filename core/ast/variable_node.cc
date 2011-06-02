@@ -17,7 +17,7 @@ void VariableNode::Analyse( Scope *_scope ) {
   }
 }
 
-AssemblyBlock *VariableNode::GenerateCode() {
+AssemblyBlock *VariableNode::GenerateCode(){
   AssemblyBlock *a = new AssemblyBlock();
 
   a->mov( eax, scope->GeneratePayloadOperand(name) );
@@ -29,7 +29,18 @@ AssemblyBlock *VariableNode::GenerateCode() {
   return a;
 }
 
-AssemblyBlock *VariableNode::PushOntoStack() {
+AssemblyBlock *VariableNode::GenerateAssignmentCode()
+{
+	AssemblyBlock *a = new AssemblyBlock;
+
+	a->mov(scope->GeneratePayloadOperand(name), eax);
+	a->mov(scope->GenerateTypeHashOperand(name), edx);
+	a->mov(scope->GenerateDispatchOperand(name), ecx);
+
+	return a;
+}
+
+AssemblyBlock *VariableNode::PushOntoStack(){
   AssemblyBlock *a = new AssemblyBlock();
 
   a->push( Dword(scope->GenerateTypeHashOperand(name)) );

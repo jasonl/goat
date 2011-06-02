@@ -6,22 +6,22 @@
 #define TYPE_OFFSET 8
 
 class ClassDefinitionNode;
+class AssignmentTargetNode;
 
-class ClassVariableNode : public ASTNode
+class ClassVariableNode : public AssignmentTargetNode
 {
   public:
-    ClassVariableNode(std::string _name) : ASTNode(ClassVariable), name(_name) {};
+    ClassVariableNode(std::string _name) : AssignmentTargetNode(ClassVariable), name(_name) {};
 	void Analyse(Scope*);
 	AssemblyBlock *GenerateCode();
+	AssemblyBlock *GenerateAssignmentCode();
 	AssemblyBlock *PushOntoStack();
-	int32_t TypeHashOffset();
-	int32_t DispatchOffset();
-	int32_t PayloadOffset();
-	ClassDefinitionNode *EnclosingClassDefinition();
-
-#ifdef GOATTEST
+	int32_t TypeHashOffset() const;
+	int32_t DispatchOffset() const;
+	int32_t PayloadOffset() const;
+	ClassDefinitionNode* MutableEnclosingClassDefinition();
+	const ClassDefinitionNode* EnclosingClassDefinition() const;
 	std::string Name() const { return name; }
-#endif
  private:
    const std::string name;
 };

@@ -1,0 +1,6 @@
+class Test
+  init: λ()
+    print(@var1)
+
+  test: λ()
+    return @var2

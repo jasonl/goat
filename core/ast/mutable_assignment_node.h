@@ -1,15 +1,18 @@
 #ifndef __MUTABLE_ASSIGNMENT_NODE_H
 #define __MUTABLE_ASSIGNMENT_NODE_H
 
-class MutableAssignmentNode : public ASTNode {
- public:
- MutableAssignmentNode(const std::string &_lValue) : ASTNode(MutableAssignment), lValue(_lValue) {};
-  void Analyse( Scope* );
-  void SetRValue( ASTNode* );
-  AssemblyBlock *GenerateCode() const;
-  std::string VariableName() const { return lValue; }
- private:
-  const std::string lValue;
+class AssignmentTargetNode;
+
+class MutableAssignmentNode : public ASTNode
+{
+  public:
+	MutableAssignmentNode(AssignmentTargetNode*, ASTNode*);
+	void Analyse( Scope* );
+	AssemblyBlock *GenerateCode();
+	std::string VariableName() const { return target->Name(); }
+  private:
+	AssignmentTargetNode *target;
+	const ASTNode *rValue;
 };
 
 #endif

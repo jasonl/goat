@@ -1,19 +1,20 @@
 #ifndef __VARIABLE_NODE_H
 #define __VARIABLE_NODE_H
 
-class VariableNode : public ASTNode {
-public:
-  VariableNode( const std::string &_name ) : ASTNode(Variable), name(_name) {};
-  void Analyse( Scope* );
-  AssemblyBlock *GenerateCode();
-  AssemblyBlock *PushOntoStack();
+class AssignmentTargetNode;
 
-#ifdef GOATTEST
-  std::string Name() const { return name; }
-#endif
+class VariableNode : public AssignmentTargetNode
+{
+  public:
+    VariableNode( const std::string &_name ) : AssignmentTargetNode(Variable), name(_name) {};
+	void Analyse( Scope* );
+	AssemblyBlock *GenerateCode();
+	AssemblyBlock *GenerateAssignmentCode();
+	AssemblyBlock *PushOntoStack();
+	std::string Name() const { return name; }
 
  private:
-  const std::string name;
+	const std::string name;
 };
 
 #endif

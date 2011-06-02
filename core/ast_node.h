@@ -73,7 +73,8 @@ class ASTNode {
   ASTNode *MoveNodeTo( ASTNode* );
   virtual ASTIterator ChildNodes();
 
-  ASTNode *FindEnclosingNode(enum NODE_TYPE);
+  ASTNode* MutableFindEnclosingNode(enum NODE_TYPE);
+  const ASTNode *FindEnclosingNode(enum NODE_TYPE) const;
 
   virtual void Analyse( Scope* );
   virtual AssemblyBlock* GenerateCode() { return new AssemblyBlock(); }
@@ -113,6 +114,7 @@ typedef std::list<Token>::iterator TokenIterator;
 
 // Include the derived classes here for convenience
 #include "ast/address_operand_node.h"
+#include "ast/assignment_target_node.h"
 #include "ast/block_node.h"
 #include "ast/class_definition_node.h"
 #include "ast/class_variable_node.h"
