@@ -283,6 +283,26 @@ namespace {
     EXPECT_EQ( "var", immutableAssignment->VariableName() );
   }
 
+	TEST_F(ParserTest, ShouldMatchMethodAssignment)
+	{
+		Add(Identifier, "method");
+		Add(Colon);
+		Add(Lambda);
+		Add(LeftParen);
+		Add(RightParen);
+		Add(Newline);
+		Add(IndentIncrease);
+		Add(Return);
+		Add(Integer, "123");
+		Add(Newline);
+		Add(IndentDecrease);
+
+		MethodAssignmentNode *methodAssignment = Parser(sourceFile).MatchMethodAssignment();
+
+		EXPECT_EQ(ASTNode::MethodAssignment, methodAssignment->Type());
+		EXPECT_EQ("method", methodAssignment->Name());;
+	}
+
   // Conditional parsing tests
   //----------------------------------------------------------------------------
   TEST_F( ParserTest, ShouldNotMatchConditionalNotStartingWithIf ) {

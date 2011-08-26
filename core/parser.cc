@@ -18,17 +18,19 @@
  *
  * include_statement     = include, string_literal;
  *
- * assignment            = mutable_assignment | immutable_assignment;
- * mutable_assignment    = assignment_target, equals, expression;
+ * assignment            = assignment_target, equals, expression;
  * assignment_target     = identifier | class_variable
  * constant_assignment   = identifier, colon, expression;
+ *
+ * method_assignment     = identifier, colon, expression
+ * class_method_assignment = self, period, identifier, colon, expression
  *
  * conditional           = if, expression, newline, block, [ else, newline, block ];
  *
  * return_statement      = return, [expression];
  *
  * (* Class Definition *)
- * class_def             = class, identifier, indent_increase, { assignment }, indent_decrease
+ * class_def             = class, identifier, indent_increase, { method_assignment | class_method_assignment }, indent_decrease
  *
  * (* An expression is something which evaluates to an object: In the case of
  * a function, it evaluates to a function object *)
@@ -658,6 +660,10 @@ ConstantAssignmentNode *Parser::MatchConstantAssignment() {
   return NULL;
 }
 
+
+
+
+
 ReturnStatementNode *Parser::MatchReturnStatement() {
   ReturnStatementNode *thisNode;
   ASTNode *returnExpr;
@@ -733,4 +739,35 @@ ClassDefinitionNode *Parser::MatchClassDefinition() {
     ResetTokenPosition( savedCurr );
     return NULL;
   }
+}
+
+MethodAssignmentNode *Parser::MatchMethodAssignment()
+{
+	TokenIterator variable, savedCurr = currentToken;
+	MethodAssignmentNode *thisNode = NULL;
+	ASTNode *rValue;
+
+	if(TokenIsNot(Identifier))
+		return NULL;
+
+	variable = currentToken;
+	ConsumeToken();
+
+	if(TokenIsNot(Colon))
+	{
+		ResetTokenPosition(savedCurr);
+		return NULL;
+	}
+	ConsumeToken();
+
+	if((rValue = MATCH(Expression)))
+	{
+		thisNode = new MethodAssignmentNode(variable->Content());
+		thisNode->SetRValue(rValue);
+		return thisNode;
+	}
+
+	goatError(CurrentSourcePosition(), "Unexpected token %s found after colon sign in method assignment", TOKEN_TYPES[currentToken->Type()]);
+	ResetTokenPosition(savedCurr);
+	return NULL;
 }

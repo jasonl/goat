@@ -45,7 +45,7 @@ class ASTNode {
     StatementGroup, Statement, ClassStatement, My,
     MutableAssignment, ConstantAssignment,
     Conditional,
-    ClassDefinition, ClassVariable, Self,
+    ClassDefinition, ClassVariable, Self, MethodAssignment,
     FunctionDef, OneLineFunctionDef, BlockFunctionDef,
     ParameterDef,
     FunctionCall, Parameter, NamedParameter,
@@ -130,6 +130,7 @@ typedef std::list<Token>::iterator TokenIterator;
 #include "ast/inline_assembly_node.h"
 #include "ast/instruction_node.h"
 #include "ast/integer_literal_node.h"
+#include "ast/method_assignment_node.h"
 #include "ast/mutable_assignment_node.h"
 #include "ast/null_literal_node.h"
 #include "ast/object_operand_node.h"
