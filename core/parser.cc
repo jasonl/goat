@@ -34,7 +34,7 @@
  *
  * (* An expression is something which evaluates to an object: In the case of
  * a function, it evaluates to a function object *)
- * expression            = identifier | class_variable | integer | string | function_definition | function_call;
+ * expression            = identifier | class_variable | integer | string | function_definition | function_call | self;
  *
  * (* Function definitions *)
  * function_definition   = one_line_func_def | block_func_def;
@@ -268,6 +268,13 @@ INT_MATCHER_FOR( Expression ) {
 
   if(TokenIs(ClassVar)) {
 	  thisNode = new ClassVariableNode(currentToken->Content());
+	  ConsumeToken();
+	  return thisNode;
+  }
+
+  if(TokenIs(Self))
+  {
+	  thisNode = new SelfNode();
 	  ConsumeToken();
 	  return thisNode;
   }
