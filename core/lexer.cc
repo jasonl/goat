@@ -304,14 +304,13 @@ void Lexer::TranslateKeywordToken( Token &token ) {
   if( token.Type() != Identifier ) return;
 
 	token.TransformKeyword("if", If);
-	token.TransformKeyword("if", If);
 	token.TransformKeyword("else", Else);
 	token.TransformKeyword("class", Class);
 	token.TransformKeyword("new", New);
 	token.TransformKeyword("return", Return);
 	token.TransformKeyword("asm", Asm);
 	token.TransformKeyword("include", Include);
-
+	token.TransformKeyword("self", Self);
 }
 
 

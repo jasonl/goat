@@ -29,6 +29,7 @@ enum TokenType {
 	Period,
 	Return,
 	RightParen,
+	Self,
 	String,
 	Whitespace,
 

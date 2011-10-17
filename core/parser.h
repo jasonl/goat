@@ -43,7 +43,7 @@ class Parser {
   // Class declarations
   ClassDefinitionNode *MatchClassDefinition();
   MethodAssignmentNode *MatchMethodAssignment();
-
+  ClassMethodAssignmentNode *MatchClassMethodAssignment();
   // Assembly Language Matchers
   InlineAssemblyNode * MatchInlineAssembly();
   InstructionNode* MatchInstruction();

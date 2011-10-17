@@ -300,7 +300,29 @@ namespace {
 		MethodAssignmentNode *methodAssignment = Parser(sourceFile).MatchMethodAssignment();
 
 		EXPECT_EQ(ASTNode::MethodAssignment, methodAssignment->Type());
-		EXPECT_EQ("method", methodAssignment->Name());;
+		EXPECT_EQ("method", methodAssignment->Name());
+	}
+
+	TEST_F(ParserTest, ShouldMatchClassMethodAssignment)
+	{
+		Add(Self);
+		Add(Period);
+		Add(Identifier, "class_method");
+		Add(Colon);
+		Add(Lambda);
+		Add(LeftParen);
+		Add(RightParen);
+		Add(Newline);
+		Add(IndentIncrease);
+		Add(Return);
+		Add(Integer, "123");
+		Add(Newline);
+		Add(IndentDecrease);
+
+		ClassMethodAssignmentNode *classMethodAssignment = Parser(sourceFile).MatchClassMethodAssignment();
+
+		EXPECT_EQ(ASTNode::ClassMethodAssignment, classMethodAssignment->Type());
+		EXPECT_EQ("class_method", classMethodAssignment->Name());
 	}
 
   // Conditional parsing tests

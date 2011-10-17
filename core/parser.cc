@@ -771,3 +771,46 @@ MethodAssignmentNode *Parser::MatchMethodAssignment()
 	ResetTokenPosition(savedCurr);
 	return NULL;
 }
+
+ClassMethodAssignmentNode *Parser::MatchClassMethodAssignment()
+{
+	TokenIterator variable, savedCurr = currentToken;
+	ClassMethodAssignmentNode *thisNode = NULL;
+	ASTNode *rValue;
+
+	if(TokenIsNot(Self))
+		return NULL;
+
+	ConsumeToken();
+
+	if(TokenIsNot(Period))
+	{
+		ResetTokenPosition(savedCurr);
+		return NULL;
+	}
+	ConsumeToken();
+
+	if(TokenIsNot(Identifier))
+		return NULL;
+
+	variable = currentToken;
+	ConsumeToken();
+
+	if(TokenIsNot(Colon))
+	{
+		ResetTokenPosition(savedCurr);
+		return NULL;
+	}
+	ConsumeToken();
+
+	if((rValue = MATCH(Expression)))
+	{
+		thisNode = new ClassMethodAssignmentNode(variable->Content());
+		thisNode->SetRValue(rValue);
+		return thisNode;
+	}
+
+	goatError(CurrentSourcePosition(), "Unexpected token %s found after colon sign in method assignment", TOKEN_TYPES[currentToken->Type()]);
+	ResetTokenPosition(savedCurr);
+	return NULL;
+}
