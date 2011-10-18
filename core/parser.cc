@@ -725,7 +725,9 @@ ClassDefinitionNode *Parser::MatchClassDefinition() {
   }
   ConsumeToken();
 
-  while((newNode = MatchConstantAssignment()) || TokenIs(Newline)) {
+  while((newNode = MatchMethodAssignment()) ||
+		(newNode = MatchClassMethodAssignment()) ||
+		TokenIs(Newline)) {
     if( newNode ) {
       thisNode->append(newNode);
     } else if( TokenIs( Newline )) {

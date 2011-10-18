@@ -439,7 +439,7 @@ namespace {
     EXPECT_EQ( "Integer", classDef->Name() );
 
     ASTIterator classBody = classDef->ChildNodes();
-    EXPECT_EQ( ASTNode::ConstantAssignment, classBody->Type() );
+    EXPECT_EQ( ASTNode::MethodAssignment, classBody->Type() );
   }
 
 }
