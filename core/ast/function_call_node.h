@@ -3,8 +3,8 @@
 
 class FunctionCallNode : public ASTNode {
  public:
- FunctionCallNode(const std::string &_name) : ASTNode(FunctionCall), name(_name), receiver(NULL) {};
-  ASTNode *Receiver() { return receiver; }
+ FunctionCallNode(const std::string &_name) : ASTNode(FunctionCall), name(_name) {};
+  ASTNode *Receiver() { return firstChild; }
   void AddReceiver( ASTNode* );
   void Analyse( Scope* );
   AssemblyBlock *GenerateCode();
@@ -16,7 +16,6 @@ class FunctionCallNode : public ASTNode {
 
  private:
   const std::string name;
-  ASTNode *receiver;
 };
 
 #endif

@@ -193,6 +193,16 @@ void SourceFile::PrintAsm() {
   }
 }
 
+void SourceFile::RegisterClass(std::string className)
+{
+	classNames.insert(className);
+}
+
+bool SourceFile::ClassExists(std::string className)
+{
+	return(classNames.count(className) > 0);
+}
+
 void SourceFile::AddExternSymbol( std::string symbol) {
   externSymbols.insert(symbol);
 }

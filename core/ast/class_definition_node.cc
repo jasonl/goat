@@ -1,5 +1,6 @@
 #include "../ast_node.h"
 #include "../lexer.h"
+#include "../source_file.h"
 
 std::string GenerateFunctionLabel(const std::string, const std::string);
 std::string GenerateClassMethodLabel(const std::string, const std::string);

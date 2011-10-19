@@ -697,6 +697,7 @@ ClassDefinitionNode *Parser::MatchClassDefinition() {
   ClassDefinitionNode *thisNode;
   ASTNode *newNode;
   TokenIterator savedCurr = currentToken;
+  std::string className;
 
   if( TokenIsNot( Class )) {
     return NULL;
@@ -704,6 +705,7 @@ ClassDefinitionNode *Parser::MatchClassDefinition() {
   ConsumeToken();
 
   if( TokenIs( Identifier )) {
+	  className = currentToken->Content();
 	  thisNode = new ClassDefinitionNode( currentToken->Content() );
   } else {
     goatError(CurrentSourcePosition(), "Unexpected token %s found after class keyword. Identifier expected", TOKEN_TYPES[currentToken->Type()]);
@@ -741,6 +743,7 @@ ClassDefinitionNode *Parser::MatchClassDefinition() {
 
   if( TokenIs( IndentDecrease )) {
     ConsumeToken();
+	sourceFile->RegisterClass(className);
     return thisNode;
   } else {
     goatError(CurrentSourcePosition(), "Unexpected token %s found when indent decrease to close class definition block expected.", TOKEN_TYPES[currentToken->Type()]);

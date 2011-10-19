@@ -1,7 +1,21 @@
 #include "../ast_node.h"
+#include "../source_file.h"
 
 void VariableNode::Analyse( Scope *_scope ) {
   scope = _scope;
+
+  // If the identifer exists as a classname, transform the receiver into
+  // a ClassLiteral node, which the FunctionCall node will use to generate
+  // the correct code.
+  if(scope->GetSourceFile()->ClassExists(name))
+  {
+	  ClassLiteralNode *cl = new ClassLiteralNode(name);
+	  parent->ReplaceChild(this,cl);
+	  cl->Analyse(scope);
+
+	  delete this;
+	  return;
+  }
 
   // If the variable doesn't exist, transform it into a function call
   // and deal with it at runtime.

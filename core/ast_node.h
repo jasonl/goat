@@ -15,49 +15,78 @@ class ASTIterator;
 typedef uint32_t Hash;
 Hash goatHash( std::string );
 
+const std::string red = "\x1b[1;31m";
+const std::string yellow = "\x1b[1;33m";
+const std::string cyan = "\x1b[0;36m";
+const std::string reset = "\x1b[0;37;00m";
+
 const std::string NODE_TYPES[] = {
-  "SourceFile",
-  "\x1b[1;33mBlock\x1b[0;37;00m",
-  "StatementGroup", "Statement", "ClassStatement", "My",
-  "\x1b[0;36mMutableAssignment\x1b[0;37;00m", "\x1b[0;36mConstantAssignment\x1b[0;37;00m",
-  "\x1b[1;35mConditional\x1b[0;37;00m",
-  "ClassDefinition", "ClassVariable", "Self",
-  "\x1b[1;31mFunctionDef\x1b[0;37;00m", "OneLineFunctionDef", "BlockFunctionDef",
-  "ParameterDef",
-  "\x1b[1;34mFunctionCall\x1b[0;37;00m", "Parameter", "NamedParameter",
-  "IntegerLiteral", "Variable", "StringLiteral", "NullLiteral",
-  "\x1b[1;32mReturnStatement\x1b[0;37;00m",
-  "\x1b[1;34mInlineAssembly\x1b[0;37;00m",
+  "AddressOperand",
+  "Block",
+  "ClassDefinition",
+  "ClassLiteral",
+  "ClassMethodAssignment",
+  "ClassVariable",
+  "Conditional",
+  "ConstantAssignment",
+  "DirectOperand",
+  "FunctionCall",
+  "FunctionDef",
+  "HashOperand",
+  "ImmediateOperand",
+  "IndirectOperand",
+  "IndirectOperandTerm",
+  "InlineAssembly",
   "Instruction",
+  "IntegerLiteral",
   "Label",
-  "DirectOperand", "ImmediateOperand",
-  "IndirectOperand", "IndirectOperandTerm",
-  "HashOperand", "AddressOperand",
-  "ObjectOperand"
+  "MethodAssignment",
+  "MutableAssignment",
+  "NullLiteral",
+  "ObjectOperand",
+  "Parameter",
+  "ParameterDef",
+  "ReturnStatement",
+  "Self",
+  "SourceFile",
+  "StringLiteral",
+  "Variable"
 };
 
 class ASTNode {
   friend class ASTIterator;
  public:
   enum NODE_TYPE {
-    SourceFile,
-    Block,
-    StatementGroup, Statement, ClassStatement, My,
-    MutableAssignment, ConstantAssignment,
+	AddressOperand,
+	Block,
+    ClassDefinition,
+	ClassLiteral,
+	ClassMethodAssignment,
+	ClassVariable,
     Conditional,
-    ClassDefinition, ClassVariable, Self, MethodAssignment, ClassMethodAssignment,
-    FunctionDef, OneLineFunctionDef, BlockFunctionDef,
-    ParameterDef,
-    FunctionCall, Parameter, NamedParameter,
-    IntegerLiteral, Variable, StringLiteral, NullLiteral,
-    ReturnStatement,
+	ConstantAssignment,
+    DirectOperand,
+    FunctionCall,
+    FunctionDef,
+    HashOperand,
+	ImmediateOperand,
+    IndirectOperand,
+	IndirectOperandTerm,
     InlineAssembly,
     Instruction,
+    IntegerLiteral,
     Label,
-    DirectOperand, ImmediateOperand,
-    IndirectOperand, IndirectOperandTerm,
-    HashOperand, AddressOperand,
-    ObjectOperand
+	MethodAssignment,
+    MutableAssignment,
+	NullLiteral,
+    ObjectOperand,
+	Parameter,
+    ParameterDef,
+    ReturnStatement,
+	Self,
+    SourceFile,
+	StringLiteral,
+	Variable
   };
 
   ASTNode( enum NODE_TYPE );
@@ -117,6 +146,7 @@ typedef std::list<Token>::iterator TokenIterator;
 #include "ast/assignment_target_node.h"
 #include "ast/block_node.h"
 #include "ast/class_definition_node.h"
+#include "ast/class_literal_node.h"
 #include "ast/class_method_assignment_node.h"
 #include "ast/class_variable_node.h"
 #include "ast/conditional_node.h"

@@ -1,10 +1,13 @@
 #include "../ast_node.h"
+#include "../source_file.h"
+
+extern std::string GenerateClassMethodLabel(const std::string, const std::string);
 
 void FunctionCallNode::Analyse(Scope *_scope) {
   ASTIterator end(NULL);
   scope = _scope;
 
-  // Add the implicit this receiver if it doesn't exist
+  // Add the implicit self receiver if it doesn't exist
   if( Receiver() == NULL ) {
     SelfNode *self = new SelfNode();
     AddReceiver( self );
@@ -19,7 +22,6 @@ void FunctionCallNode::Analyse(Scope *_scope) {
 void FunctionCallNode::AddReceiver( ASTNode *_receiver ) {
   // TODO: This should check that there isn't already a receiver
   InsertFirstChild( _receiver );
-  receiver = _receiver;
 }
 
 AssemblyBlock *FunctionCallNode::GenerateCode()
@@ -36,17 +38,30 @@ AssemblyBlock *FunctionCallNode::GenerateCode()
     }
   }
 
-  // Put the receiver (i.e. this ) onto eax/ecx/edx
-  a->AppendBlock( receiver->GenerateCode() );
+  std::cerr << Receiver()->Type(); std::cerr.flush();
 
-  a->mov( ebx, Dword(goatHash(name)));
-  a->call( edx );
-  a->CommentLastInstruction( "Function Call: " + name );
+  // Determine if we're making a normal method call or a class method call
+  // TODO: Reify classes?
+  if(Receiver()->Type() == ASTNode::ClassLiteral)
+  {
+	  std::cerr << "CL\n"; std::cerr.flush();
+
+	  ClassLiteralNode *classNode = dynamic_cast<ClassLiteralNode*>(Receiver());
+      std::string cmLabel = GenerateClassMethodLabel(name, classNode->Name());
+      a->call(*new Operand(cmLabel));
+  } else {
+	// Put the receiver (i.e. this ) onto eax/ecx/edx
+	a->AppendBlock( Receiver()->GenerateCode() );
+
+	a->mov( ebx, Dword(goatHash(name)));
+	a->call( edx );
+	a->CommentLastInstruction( "Function Call: " + name );
+  }
 
   // If we've passed any parameters on the stack, release the space on return
   if(paramCount > 0) {
     a->add(esp, *new Operand(paramCount * 12));
-  }
+	}
   return a;
 }
 

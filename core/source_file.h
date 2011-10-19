@@ -33,6 +33,8 @@ public:
   void PrintAST();
   void PrintAsm();
   void AddExternSymbol(std::string);
+  void RegisterClass(std::string);
+  bool ClassExists(std::string);
   std::string AddString(std::string);
   std::string ResolveIncludedFile(const std::string&) const;
   bool IsLibrary() { return isLibrary; }
@@ -56,6 +58,7 @@ private:
   Scope *lobby;
   AssemblyBlock *assembly;
   SymbolTable externSymbols;
+  SymbolTable classNames;
   bool isLibrary;
   int strCounter;
 };
