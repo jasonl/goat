@@ -1,1 +1,66 @@
-An experimental language.
+Goat is a dynamically-typed, Ruby-like language that compiles to native x86 code.
+
+It features (at present):
+- Fully object orientated (including basic types like Integer and Null)
+- Dynamic-typing with runtime dispatch of methods
+- A concise Ruby-inspired syntax, but with significant whitespace
+- First-class functions
+- An inline assembler, with syntax extensions to integrate with goat code.
+
+Currently under development:
+- Memory management (most likely reference counted)
+- String and Array basic types
+
+Installing Goat
+---------------
+At present, Goat is only tested to compile and run under Mac OS X, though it should compile
+without much hassle under *nix systems as well.
+
+To install, clone the repository to a suitable location, and run 'make debug'.
+
+As Goat doesn't have an internal assembler (yet), it requires an external assembler capable of
+assembling Intel-syntax NASM-compatible assembly source files, and obviously, a linker.
+
+Command Line Parameters
+-----------------------
+The Goat compiler, goatc, accepts the following command line parameters, useful for debugging:
+
+-vl - Output the list of tokens produced by the lexer to STDOUT
+-vt - Output the abstract-syntax tree produced by the parser to STDOUT
+-vm - Output the generated assembly code to STDOUT
+-l - Assemble the object as a library, without the standard system prologue and epilogue code.
+
+At present, compiling requires directing the assembly code to a file on disk, and manually assembling and linking this file.
+
+Methods
+-------
+The lambda character (Unicode: 0x03bb) is used to define a function in Goat, which are, by default anonymous functions. These functions may be passed (anonymously) to other functions, or bound to a variable. The following code example shows a function being bound to the variable "fn".
+
+  adds_one = λ(param1)
+    return param1 + 1
+
+  print adds_one(3)
+
+Where a function is defined, the body of a it is defined on the lines immediately after, indented a constant distance from the line on which the function is defined.
+
+A function can return a value be use of the 'return' keyword.
+
+Note: Parameters are normally optional when calling a function, except where a function has been bound to a local variable. In that case, parameter must be explicitly used to indicate to the parser that the function is to be called, rather than accessed as an object.
+
+Note: At present, the functions created are not closures, though in future they are intended to be, thus the choice of the lambda character.
+
+Classes
+-------
+Objects in Goat are instances of classes, much like Ruby. Classes are declared using the "class"
+keyword. Indented within the class declaration, instance methods and class methods for the class
+can be defined.
+
+  class Car
+    self.new: λ(number_of_wheels)
+      @num_wheels = number_of_wheels
+
+    drive!: λ()
+      print "Driving!"
+
+Note: At present, as the memory allocator is not yet complete, it's not possible to instantiate
+any class which uses memory beyond the 4-bytes contained in the object structure itself.
