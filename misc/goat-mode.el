@@ -14,6 +14,12 @@
 (defvar goat-mode-syntax-table nil
   "Goat-mode syntax table")
 
+(defun goat-mode-insert-lambda ()
+  "Inserts a λ() sequence"
+  (interactive)
+  (insert "λ()")
+  (backward-char))
+
 (if goat-mode-syntax-table
     ()
   (setq goat-mode-syntax-table (make-syntax-table))
@@ -32,6 +38,8 @@
   (message "goat-mode font")
   (setq major-mode 'goat-mode)
   (setq mode-name "Goat")
-  (run-hooks 'goat-mode-hook))
+  (run-hooks 'goat-mode-hook)
+  (global-set-key (kbd "C-c l") 'goat-mode-insert-lambda)
+  )
 
 (provide 'goat-mode)
