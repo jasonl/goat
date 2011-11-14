@@ -9,6 +9,7 @@ class ClassMethodAssignmentNode : public ASTNode
 	void SetRValue( ASTNode* );
 	const std::string& Name() const { return lValue; }
 	AssemblyBlock *GenerateCode() const;
+	std::string PrintableIdentifier() { return ": " + lValue; }
   private:
 	const std::string lValue;
 };

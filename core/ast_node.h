@@ -110,6 +110,8 @@ class ASTNode {
   virtual AssemblyBlock* GetAuxiliaryCode();
   virtual AssemblyBlock* PushOntoStack() { return new AssemblyBlock(); }
 
+  virtual std::string PrintableIdentifier() { return ""; }
+
   void print(int, int, char*);
   enum NODE_TYPE Type() { return type; }
 

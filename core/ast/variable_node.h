@@ -12,7 +12,7 @@ class VariableNode : public AssignmentTargetNode
 	AssemblyBlock *GenerateAssignmentCode();
 	AssemblyBlock *PushOntoStack();
 	std::string Name() const { return name; }
-
+	std::string PrintableIdentifier() { return ": " + name; }
  private:
 	const std::string name;
 };

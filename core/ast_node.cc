@@ -173,6 +173,7 @@ void ASTNode::print(int depth, int skip, char *prev_cols) {
   ASTIterator end(NULL);
 
   std::cout << NODE_TYPES[type];
+  std::cout << this->PrintableIdentifier();
   std::cout << "\n";
 
   for( ASTIterator i = ChildNodes(); i != end; i++) {
