@@ -109,6 +109,7 @@ OperandNode *Parser::MatchOperand() {
      (thisNode = MatchAddressOperand()) ||
      (thisNode = MATCH(DirectOperand)) ||
      (thisNode = MatchIndirectOperand()) ||
+	 (thisNode = MatchExternLabel()) ||
      (thisNode = MatchImmediateOperand())) {
     return thisNode;
   }
@@ -122,6 +123,17 @@ DirectOperandNode *Parser::MatchDirectOperand() {
     ConsumeToken();
   }
   return thisNode;
+}
+
+ExternLabelNode *Parser::MatchExternLabel()
+{
+	ExternLabelNode *thisNode = NULL;
+	if(TokenIs(String))
+	{
+		thisNode = new ExternLabelNode(currentToken->Content());
+		ConsumeToken();
+	}
+	return thisNode;
 }
 
 ImmediateOperandNode *Parser::MatchImmediateOperand() {

@@ -18,6 +18,7 @@ void AssemblyLexer::AssemblyStateTransitions( CodePoint &cp ) {
   case '+':  StartThunk(cp); lexerState = Plus; break;
   case '-':  StartThunk(cp); lexerState = Minus; break;
   case '*':  StartThunk(cp); lexerState = Multiply; break;
+  case '"':  StartThunkAtNext(cp); lexerState = String; break;
   case '\n': lexerState = Newline; break;
   case '0': case '1': case '2': case '3': case '4':
   case '5': case '6': case '7': case '8': case '9':
@@ -160,6 +161,20 @@ void AssemblyLexer::Lex() {
       }
       break;
 
+	case String:
+		if (cp.wchar == '"')
+		{
+			thunkEnd--;
+			PushToken();
+			GetNextCodePoint(&cp);
+			AssemblyStateTransitions(cp);
+			break;
+		} else {
+			thunkEnd += cp.bytes;
+			break;
+		}
+
+
     case Identifier:
       switch(cp.wchar) {
       case ' ':  PushToken(); lexerState = Whitespace; break;
@@ -188,6 +203,7 @@ void AssemblyLexer::Lex() {
   case Identifier:
   case Label:
   case Integer:
+  case String:
     PushToken();
   default:
     break;

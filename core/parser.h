@@ -55,6 +55,7 @@ class Parser {
   AddressOperandNode *MatchAddressOperand();
   IndirectOperandNode *MatchIndirectOperand();
   IndirectOperandTermNode *MatchIndirectOperandTerm();
+  ExternLabelNode *MatchExternLabel();
   void ConsumeToken() { currentToken++; }
   void ResetTokenPosition( TokenIterator savedCurr ) { currentToken = savedCurr; }
   int CurrentSourcePosition() { return currentToken->LineNumber(); }
