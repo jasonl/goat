@@ -69,16 +69,44 @@
 #include "parser.h"
 #include "goat.h"
 
-const char *TOKEN_TYPES[]={ "RightParen", "LeftParen", "Lambda", "Colon", "Period",
-			    "Comma", "Equals", "Identifier", "Integer", "String",
-			    "If", "Else", "Return", "End", "New",
-			    "Asm", "Class", "Indent", "IndentIncrease", "IndentDecrease",
-			    "Newline", "Whitespace", "Comment", "EndOfFile",
+const char *TOKEN_TYPES[]={
+	"Asm",
+	"Class",
+	"ClassVar",
+	"Colon",
+	"Comma",
+	"Comment",
+	"Else",
+	"End",
+	"EndOfFile",
+	"Equals",
+	"Identifier",
+	"If",
+	"Include",
+	"Indent",
+	"IndentDecrease",
+	"IndentIncrease",
+	"Integer",
+	"Lambda",
+	"LeftParen",
+	"New",
+	"Newline",
+	"Period",
+	"Return",
+	"RightParen",
+	"Self",
+	"String",
+	"Whitespace",
 
-			    // Assembly-only tokens
-			    "RightSquare", "LeftSquare",
-			    "Plus", "Minus", "Multiply",
-			    "Label"
+	// Assembly-only tokens
+	"AddressString",
+	"HashString",
+	"Label",
+	"LeftSquare",
+	"Minus",
+	"Multiply",
+	"Plus",
+	"RightSquare"
 };
 
 Parser::Parser(::SourceFile* _sourceFile) : sourceFile(_sourceFile)
@@ -442,7 +470,7 @@ FunctionDefNode *Parser::MatchFunctionDef() {
   ParameterDefNode *parameter;
   ASTNode *functionBody;
   TokenIterator savedCurr = currentToken;
-  int must_match = FALSE;
+  bool must_match = false;
 
 
   if( TokenIsNot( Lambda )) { return NULL; }
@@ -462,12 +490,13 @@ FunctionDefNode *Parser::MatchFunctionDef() {
 
     // So if we match a right Parenthesis, that's a complete function call
     if( TokenIs( RightParen )) {
+	  must_match = false;
       break;
     }
 
     // If we match a comma, then we must match another parameter.
-    if( TokenIs( Comma ) && ! must_match) {
-      must_match = TRUE;
+    if( TokenIs( Comma )) {
+      must_match = true;
       ConsumeToken();
       continue;
     }
@@ -478,7 +507,14 @@ FunctionDefNode *Parser::MatchFunctionDef() {
     return NULL;
   }
 
-  if( TokenIsNot( RightParen)) {
+  if(must_match)
+  {
+	  goatError(CurrentSourcePosition(), "FunctionDefinition: Expected to find another parameter after comma.");
+	  delete thisNode;
+	  return NULL;
+  }
+
+  if(TokenIsNot(RightParen)) {
     goatError(CurrentSourcePosition(), "FunctionDefinition: Unexpected %s found when a right parenthesis ')' was expected.", TOKEN_TYPES[currentToken->Type()]);
     delete thisNode;
     return NULL;
