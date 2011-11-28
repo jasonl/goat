@@ -20,6 +20,16 @@
   (insert "λ()")
   (backward-char))
 
+(defun goat-mode-insert-equals ()
+  "Inserts a ≡ character"
+  (interactive)
+  (insert "≡"))
+
+(defun goat-mode-insert-not-equals ()
+  "Inserts a ≢ character"
+  (interactive)
+  (insert "≢"))
+
 (if goat-mode-syntax-table
     ()
   (setq goat-mode-syntax-table (make-syntax-table))
@@ -40,6 +50,8 @@
   (setq mode-name "Goat")
   (run-hooks 'goat-mode-hook)
   (global-set-key (kbd "C-c l") 'goat-mode-insert-lambda)
+  (global-set-key (kbd "C-c =") 'goat-mode-insert-equals)
+  (global-set-key (kbd "C-c !") 'goat-mode-insert-not-equals)
   )
 
 (provide 'goat-mode)
