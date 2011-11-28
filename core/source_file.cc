@@ -97,7 +97,9 @@ void SourceFile::GenerateCode() {
     assembly->AppendBlock(astRoot->GetAuxiliaryCode());
 
     for( SymbolTable::iterator i = externSymbols.begin(); i != externSymbols.end(); i++) {
-      assembly->AppendItem(new ExternSymbol(*i));
+		if(globalSymbols.count(*i) == 0) {
+			assembly->AppendItem(new ExternSymbol(*i));
+		}
     }
 
     assembly->SetSegment(".data");
@@ -205,6 +207,11 @@ bool SourceFile::ClassExists(std::string className)
 
 void SourceFile::AddExternSymbol( std::string symbol) {
   externSymbols.insert(symbol);
+}
+
+void SourceFile::AddGlobalSymbol(std::string symbol)
+{
+	globalSymbols.insert(symbol);
 }
 
 std::string SourceFile::AddString( std::string _string ) {

@@ -33,6 +33,7 @@ public:
   void PrintAST();
   void PrintAsm();
   void AddExternSymbol(std::string);
+  void AddGlobalSymbol(std::string);
   void RegisterClass(std::string);
   bool ClassExists(std::string);
   std::string AddString(std::string);
@@ -58,6 +59,7 @@ private:
   Scope *lobby;
   AssemblyBlock *assembly;
   SymbolTable externSymbols;
+  SymbolTable globalSymbols;
   SymbolTable classNames;
   bool isLibrary;
   int strCounter;

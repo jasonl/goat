@@ -72,7 +72,7 @@ AssemblyBlock *ClassDefinitionNode::GenerateCode() {
 		  fn = c->GetAuxiliaryCode();
 		  fn->LabelFirstInstruction(cfnLabel);
 		  fn->PrependItem(new GlobalSymbol(cfnLabel));
-
+		  scope->GetSourceFile()->AddGlobalSymbol(cfnLabel);
 		  a->AppendBlock(fn);
 	  }
   }
@@ -86,8 +86,11 @@ AssemblyBlock *ClassDefinitionNode::GenerateCode() {
 
   dispatch->CommentLastInstruction("Exit with code 5 if not found");
 
+  std::string dispatchLabel = DispatchLabelNameFor(name);
+
   dispatch->LabelFirstInstruction(DispatchLabelNameFor(name));
-  dispatch->PrependItem(new GlobalSymbol(DispatchLabelNameFor(name)));
+  dispatch->PrependItem(new GlobalSymbol(dispatchLabel));
+  scope->GetSourceFile()->AddGlobalSymbol(dispatchLabel);
 
   dispatch->AppendBlock(a);
   return dispatch;
