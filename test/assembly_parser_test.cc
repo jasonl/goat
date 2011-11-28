@@ -127,6 +127,19 @@ namespace {
     EXPECT_EQ( "int", instruction->Mnemonic() );
   }
 
+	TEST_F(AssemblyParserTest, ShouldMatchInstructionWithModifiedOperand)
+	{
+		Add(Identifier, "push"); Add(Identifier, "dword"); Add(Integer, "0"); Add(Newline);
+		InstructionNode *instruction = Parser(sourceFile).MatchInstruction();
+		ASSERT_TRUE(instruction);
+		EXPECT_EQ(ASTNode::Instruction, instruction->Type());
+		EXPECT_EQ("push", instruction->Mnemonic());
+
+		ASTIterator operands = instruction->ChildNodes();
+		EXPECT_EQ(ASTNode::ImmediateOperand, operands->Type());
+		EXPECT_EQ("0", dynamic_cast<ImmediateOperandNode*>(&(*operands))->Content());
+	}
+
   TEST_F( AssemblyParserTest, ShouldMatchInstructionWithDirectOperand ) {
     Add( Identifier, "push" ); Add( Identifier, "eax" ); Add( Newline );
     InstructionNode *instruction = Parser( sourceFile ).MatchInstruction();
