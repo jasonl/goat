@@ -48,6 +48,7 @@ class Parser {
   InlineAssemblyNode * MatchInlineAssembly();
   InstructionNode* MatchInstruction();
   OperandNode *MatchOperand();
+  OperandNode *MatchModifiedOperand();
   DirectOperandNode *MatchDirectOperand();
   ImmediateOperandNode *MatchImmediateOperand();
   ObjectOperandNode *MatchObjectOperand();

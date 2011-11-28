@@ -36,5 +36,7 @@ Operand *DirectOperandNode::GenerateOperand() const
   }
 
   // Assume its a label
-  return new Operand(reg);
+  Operand *op = new Operand(reg);
+  op->SetSize(size);
+  return op;
 }

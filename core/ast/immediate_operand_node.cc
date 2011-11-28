@@ -3,5 +3,7 @@
 
 Operand *ImmediateOperandNode::GenerateOperand() const
 {
-  return new Operand( atol(content.c_str()), Operand::Dword );
+	Operand *op = new Operand( atol(content.c_str()), Operand::Dword );
+	op->SetSize(size);
+	return op;
 }

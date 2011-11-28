@@ -72,24 +72,39 @@ InstructionNode *Parser::MatchInstruction() {
   }
 
   if( TokenIs(Identifier) ) {
-	thisNode = new InstructionNode(label, currentToken->Content());
-    ConsumeToken();
+	  thisNode = new InstructionNode(label, currentToken->Content());
+	  ConsumeToken();
 
-    while((operand = MATCH(Operand))) {
-      thisNode->AppendOperand( operand );
+	  while((operand = MATCH(Operand))) {
+		  thisNode->AppendOperand( operand );
 
-      if( TokenIs(Comma) ) {
-	must_match = true;
-	ConsumeToken();
-	continue;
-      }
-      must_match = false;
-    }
+		  if( TokenIs(Comma) ) {
+			  must_match = true;
+			  ConsumeToken();
+			  continue;
+		  }
 
-    if( !must_match && TokenIs(Newline) ) {
-      ConsumeToken();
-      return thisNode;
-    }
+		  if(TokenIs(Newline))
+		  {
+			  must_match = false;
+			  break;
+		  }
+
+		  goatError(CurrentSourcePosition(), "ASM Instruction: Unexpected token found: %s", TOKEN_TYPES[currentToken->Type()]);
+		  ResetTokenPosition( savedPos );
+		  return NULL;
+	  }
+
+	  if(must_match) {
+		  goatError(CurrentSourcePosition(), "ASM Instruction: Expected to find another operand after a comma");
+		  ResetTokenPosition( savedPos );
+		  return NULL;
+	  }
+
+	  if(TokenIs(Newline)) {
+		  ConsumeToken();
+		  return thisNode;
+	  }
 
     // We expected to find another operand but didn't
     goatError(CurrentSourcePosition(), "ASM Instruction: Expected to find another operand, but found %s instead.", TOKEN_TYPES[currentToken->Type()]);
@@ -104,7 +119,8 @@ InstructionNode *Parser::MatchInstruction() {
 
 OperandNode *Parser::MatchOperand() {
   OperandNode *thisNode = NULL;
-  if((thisNode = MatchObjectOperand()) ||
+  if((thisNode = MatchModifiedOperand()) ||
+	 (thisNode = MatchObjectOperand()) ||
      (thisNode = MatchHashOperand()) ||
      (thisNode = MatchAddressOperand()) ||
      (thisNode = MATCH(DirectOperand)) ||
@@ -114,6 +130,44 @@ OperandNode *Parser::MatchOperand() {
     return thisNode;
   }
   return NULL;
+}
+
+OperandNode *Parser::MatchModifiedOperand()
+{
+	TokenIterator savedPos = currentToken;
+	OperandNode *thisNode = NULL;
+	std::string modifier;
+
+	if(TokenIsNot(Identifier)) return NULL;
+	modifier = currentToken->Content();
+	ConsumeToken();
+
+	if((thisNode = MatchObjectOperand()) ||
+	   (thisNode = MatchHashOperand()) ||
+	   (thisNode = MatchAddressOperand()) ||
+	   (thisNode = MATCH(DirectOperand)) ||
+	   (thisNode = MatchIndirectOperand()) ||
+	   (thisNode = MatchExternLabel()) ||
+	   (thisNode = MatchImmediateOperand())) {
+
+		if(modifier == "dword") {
+			thisNode->SetSize(Operand::Dword);
+		} else if (modifier == "word") {
+			thisNode->SetSize(Operand::Word);
+		} else if (modifier == "byte") {
+			thisNode->SetSize(Operand::Byte);
+		} else {
+			goatError(CurrentSourcePosition(), "Unexpected operand modifier %s found.", modifier.c_str());
+			delete thisNode;
+			ResetTokenPosition(savedPos);
+			return NULL;
+		}
+
+		return thisNode;
+	}
+
+	ResetTokenPosition(savedPos);
+	return NULL;
 }
 
 DirectOperandNode *Parser::MatchDirectOperand() {

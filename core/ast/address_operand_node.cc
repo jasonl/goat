@@ -1,5 +1,7 @@
 #include "../ast_node.h"
 
 Operand *AddressOperandNode::GenerateOperand() const {
-  return DispatchOperandFor(address, scope->GetSourceFile());
+  Operand *op =  DispatchOperandFor(address, scope->GetSourceFile());
+  op->SetSize(size);
+  return op;
 }
