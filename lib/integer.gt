@@ -67,7 +67,7 @@ class Integer
       mov ecx, factor.type   ; Load type hash of first argument into ECX
       cmp ecx, #Integer      ; test that divisor is an Integer
       jne Integer_u2a_incorrect_type
-      imul factor.payload    ; This instance's value is already in eax
+      imul dword factor.payload    ; This instance's value is already in eax
       mov edx, &Integer      ; dispatch function
       mov ecx, #Integer      ; Integer type hash
       add esp, 12
@@ -86,7 +86,7 @@ class Integer
       cmp ecx, #Integer      ; test that divisor is an Integer
       jne Integer_u25_incorrect_type
       cdq                    ; sign extend EAX into EDX:EAX
-      idiv divisor.payload
+      idiv dword divisor.payload
       mov eax, edx           ; remainder in edx, we want to return it in eax
       mov edx, &Integer      ; dispatch function
       mov ecx, #Integer      ; Integer type hash
