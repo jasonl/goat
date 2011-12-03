@@ -25,8 +25,8 @@ public:
   ~SourceFile();
   void Tokenize();
   void Parse();
-	void ParseOntoNode(ASTNode*);
-	void RetainAST();
+  void ParseOntoNode(ASTNode*);
+  void RetainAST();
   void Analyse();
   void GenerateCode();
   void PrintTokens();

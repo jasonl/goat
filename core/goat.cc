@@ -11,6 +11,7 @@
 #include <iostream>
 #include <string>
 
+#include "build_set.h"
 #include "lexer.h"
 #include "ast_node.h"
 #include "parser.h"
@@ -24,24 +25,19 @@ int main(int argc, char** argv) {
   int verbose = 0;
   bool library = false;
   std::string sourceFileName;
-  SourceFile *sourceFile = NULL;
+  BuildSet buildSet;
 
   sourceFileName = parseCommandLine( argc, argv, &verbose, &library );
 
-  sourceFile = new SourceFile( sourceFileName, library );
+  SourceFile sourceFile( sourceFileName, library );
 
-  sourceFile->Tokenize();
-  if( verbose & VERBOSE_TOKENS ) sourceFile->PrintTokens();
+  buildSet.AddSourceFile(sourceFile);
 
-  sourceFile->Parse();
+  buildSet.Tokenize(verbose & VERBOSE_TOKENS);
+  buildSet.Parse();
+  buildSet.Analyse(verbose & VERBOSE_AST);
+  buildSet.GenerateCode(verbose & VERBOSE_ASM);
 
-  sourceFile->Analyse();
-  if( verbose & VERBOSE_AST ) sourceFile->PrintAST();
-
-  sourceFile->GenerateCode();
-  if( verbose & VERBOSE_ASM ) sourceFile->PrintAsm();
-
-  delete sourceFile;
   return EXIT_SUCCESS;
 }
 #endif
