@@ -63,6 +63,20 @@ namespace {
     EXPECT_EQ( "12345", dynamic_cast<IntegerLiteralNode*>(integerLiteral)->Contents() );
   }
 
+	TEST_F(ParserTest, ShouldMatchTrueLiteralAsExpression)
+	{
+		Add(True);
+		ASTNode* trueLiteral = Parser(sourceFile).MatchExpression();
+		EXPECT_EQ(ASTNode::TrueLiteral, trueLiteral->Type());
+	}
+
+	TEST_F(ParserTest, ShouldMatchFalseLiteralAsExpression)
+	{
+		Add(False);
+		ASTNode* falseLiteral = Parser(sourceFile).MatchExpression();
+		EXPECT_EQ(ASTNode::FalseLiteral, falseLiteral->Type());
+	}
+
   // Tests a variable is parsed as an expression
   TEST_F( ParserTest, ShouldMatchVariableAsExpression ) {
     Add( Identifier, "var_name" );

@@ -31,6 +31,7 @@ const std::string NODE_TYPES[] = {
   "ConstantAssignment",
   "DirectOperand",
   "ExternLabel",
+  "FalseLiteral",
   "FunctionCall",
   "FunctionDef",
   "HashOperand",
@@ -51,6 +52,7 @@ const std::string NODE_TYPES[] = {
   "Self",
   "SourceFile",
   "StringLiteral",
+  "TrueLiteral",
   "Variable"
 };
 
@@ -68,6 +70,7 @@ class ASTNode {
 	ConstantAssignment,
     DirectOperand,
 	ExternLabel,
+	FalseLiteral,
     FunctionCall,
     FunctionDef,
     HashOperand,
@@ -88,6 +91,7 @@ class ASTNode {
 	Self,
     SourceFile,
 	StringLiteral,
+	TrueLiteral,
 	Variable
   };
 
@@ -157,6 +161,7 @@ typedef std::list<Token>::iterator TokenIterator;
 #include "ast/constant_assignment_node.h"
 #include "ast/direct_operand_node.h"
 #include "ast/extern_label_node.h"
+#include "ast/false_literal_node.h"
 #include "ast/function_call_node.h"
 #include "ast/function_def_node.h"
 #include "ast/hash_operand_node.h"
@@ -176,6 +181,7 @@ typedef std::list<Token>::iterator TokenIterator;
 #include "ast/self_node.h"
 #include "ast/source_file_node.h"
 #include "ast/string_literal_node.h"
+#include "ast/true_literal_node.h"
 #include "ast/variable_node.h"
 
 #endif

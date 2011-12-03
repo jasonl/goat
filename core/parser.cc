@@ -300,6 +300,18 @@ INT_MATCHER_FOR( Expression ) {
 	  return thisNode;
   }
 
+  if(TokenIs(True)) {
+	  thisNode = new TrueLiteralNode();
+	  ConsumeToken();
+	  return thisNode;
+  }
+
+  if(TokenIs(False)) {
+	  thisNode = new FalseLiteralNode();
+	  ConsumeToken();
+	  return thisNode;
+  }
+
   if(TokenIs(Self))
   {
 	  thisNode = new SelfNode();

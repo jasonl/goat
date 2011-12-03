@@ -311,6 +311,8 @@ void Lexer::TranslateKeywordToken( Token &token ) {
 	token.TransformKeyword("asm", Asm);
 	token.TransformKeyword("include", Include);
 	token.TransformKeyword("self", Self);
+	token.TransformKeyword("true", True);
+	token.TransformKeyword("false", False);
 }
 
 

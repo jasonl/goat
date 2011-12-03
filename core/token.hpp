@@ -15,6 +15,7 @@ enum TokenType {
 	End,
 	EndOfFile,
 	Equals,
+	False,
 	Identifier,
 	If,
 	Include,
@@ -31,6 +32,7 @@ enum TokenType {
 	RightParen,
 	Self,
 	String,
+	True,
 	Whitespace,
 
 	// Assembly-only tokens
