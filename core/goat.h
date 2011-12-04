@@ -21,6 +21,7 @@ class ASTNode;
 #define VERBOSE_ASM 0x08
 
 std::string GetBaseDirectory(const char*);
+std::string GetBaseFileName(const char*);
 bool FileExists(const std::string&);
 std::string parseCommandLine( int, char**, int*, bool*);
 void goatFatalError( std::string );

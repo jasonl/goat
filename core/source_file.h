@@ -5,6 +5,7 @@
 #include <list>
 #include <stack>
 #include <set>
+#include <iostream>
 #include "token.hpp"
 #include "i386/assembly_block.h"
 
@@ -31,7 +32,7 @@ public:
   void GenerateCode();
   void PrintTokens();
   void PrintAST();
-  void PrintAsm();
+  void PrintAsm(std::ostream&);
   void AddExternSymbol(std::string);
   void AddGlobalSymbol(std::string);
   void RegisterClass(std::string);
@@ -43,6 +44,7 @@ public:
   TokenIterator LastToken() { return tokenStream.end(); };
   std::list<Token>& GetTokenStream() { return tokenStream; }
   std::stack<int> indentStack;
+  std::string BaseFileName() const;
 #ifdef GOATTEST
   void AddToken(Token& _token) {
 	  tokenStream.push_back(_token);

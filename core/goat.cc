@@ -10,6 +10,7 @@
 #include <string.h>
 #include <iostream>
 #include <string>
+#include <libgen.h>
 
 #include "build_set.h"
 #include "lexer.h"
@@ -37,7 +38,8 @@ int main(int argc, char** argv) {
   buildSet.Parse();
   buildSet.Analyse(verbose & VERBOSE_AST);
   buildSet.GenerateCode(verbose & VERBOSE_ASM);
-
+  buildSet.Assemble();
+  buildSet.Link("a.out");
   return EXIT_SUCCESS;
 }
 #endif
@@ -78,6 +80,21 @@ std::string GetBaseDirectory(const char *relativePath)
   free(realBaseCommand);
 
   return baseDir.substr(0, baseDir.find_last_of('/'));
+}
+
+// Returns the name of the file, without extension.
+std::string GetBaseFileName(const char *relativePath)
+{
+	std::string baseName(basename(const_cast<char*>(relativePath)));
+
+	size_t pos = baseName.rfind(".");
+    if(pos == std::string::npos)  //No extension.
+        return baseName;
+
+    if(pos == 0)    //. is at the front. Not an extension.
+        return baseName;
+
+    return baseName.substr(0, pos);
 }
 
 bool FileExists(const std::string &fileName)

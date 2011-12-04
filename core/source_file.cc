@@ -185,12 +185,12 @@ void SourceFile::PrintAST() {
   }
 }
 
-void SourceFile::PrintAsm() {
+void SourceFile::PrintAsm(std::ostream &stream) {
   AssemblerItemIterator end(NULL);
 
   if( assembly ) {
     for(AssemblerItemIterator i = assembly->Instructions(); i != end; i++) {
-      std::cout << *i << "\n";
+      stream << *i << "\n";
     }
   }
 }
@@ -244,4 +244,9 @@ std::string SourceFile::ResolveIncludedFile(const std::string &relativePath) con
 
 	goatFatalError("Unable to find included file '" + relativePath + "'");
 	return "";
+}
+
+std::string SourceFile::BaseFileName() const
+{
+	return GetBaseFileName(fileName.c_str());
 }
