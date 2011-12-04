@@ -1,10 +1,11 @@
 class Boolean
   as_boolean: λ()
-    asm
-      mov eax, 0
-      mov ecx, #Boolean
-      mov edx, &Boolean
-      add esp, 12
-      pop ebp
-      ret
+    return self
+
+  as_string: λ()
+    if self
+      return "true"
+    else
+      return "false"
+
 end
