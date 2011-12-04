@@ -1,4 +1,3 @@
-- Remove reference to Token in ASTNode classes, replace with std::string (incl in constructor)
 - Change linked lists in ASTNode to std::list
 - Change Variable lookup to std::map
 - Change .cpp extensions to .cc
@@ -8,3 +7,6 @@
 - Add namespace to all files
 - Collect string to register function into one place from DirectOperandNode, IndirectOperandNode
 - Remove ASTNode::Type from class
+
+- Add true and false boolean literals
+- Add null literals
