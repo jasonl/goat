@@ -160,18 +160,20 @@ ASTIterator ASTNode::ChildNodes() {
 }
 
 
-ASTNode *ASTNode::MutableFindEnclosingNode(enum NODE_TYPE typeToFind)
+ASTNode *ASTNode::MutableFindEnclosingNode(const std::string &typeToFind)
 {
-	if (type == typeToFind)
+	if (typeid(*this).name() == typeToFind)
 		return this;
 	if (parent == NULL)
 		return NULL;
 	return parent->MutableFindEnclosingNode(typeToFind);
 }
 
-const ASTNode *ASTNode::FindEnclosingNode(enum NODE_TYPE typeToFind) const
+const ASTNode *ASTNode::FindEnclosingNode(const std::string &typeToFind) const
 {
-	if (type == typeToFind)
+	std::cout << typeid(*this).name() << std::endl;
+
+	if (typeid(*this).name() == typeToFind)
 		return this;
 	if (parent == NULL)
 		return NULL;

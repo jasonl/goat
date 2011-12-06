@@ -110,8 +110,8 @@ class ASTNode {
   ASTNode *MoveNodeTo( ASTNode* );
   virtual ASTIterator ChildNodes();
 
-  ASTNode* MutableFindEnclosingNode(enum NODE_TYPE);
-  const ASTNode *FindEnclosingNode(enum NODE_TYPE) const;
+  ASTNode* MutableFindEnclosingNode(const std::string&);
+  const ASTNode *FindEnclosingNode(const std::string&) const;
 
   virtual void Analyse( Scope* );
   virtual AssemblyBlock* GenerateCode() { return new AssemblyBlock(); }

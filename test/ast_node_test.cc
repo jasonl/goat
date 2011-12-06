@@ -17,7 +17,7 @@ namespace {
 		ia->AppendChild(fd);
 
 		// It should find the enclosing node if it exists;
-		EXPECT_EQ(cd, fd->FindEnclosingNode(ASTNode::ClassDefinition));
+		EXPECT_EQ(cd, fd->FindEnclosingNode(typeid(ClassDefinitionNode).name()));
 	}
 
 	TEST_F(ASTNodeTest, ShouldNotFindNonExistingEnclosingNode)
@@ -33,7 +33,7 @@ namespace {
 		ia->AppendChild(fd);
 
 		// It should return NULL if it doesn't
-		EXPECT_EQ(NULL, fd->FindEnclosingNode(ASTNode::Conditional));
+		EXPECT_EQ(NULL, fd->FindEnclosingNode(typeid(ConditionalNode).name()));
 	}
 
 }

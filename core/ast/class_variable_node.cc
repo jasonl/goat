@@ -75,7 +75,7 @@ int32_t ClassVariableNode::DispatchOffset() const
 
 ClassDefinitionNode* ClassVariableNode::MutableEnclosingClassDefinition()
 {
-	ASTNode *cd = MutableFindEnclosingNode(ClassDefinition);
+	ASTNode *cd = MutableFindEnclosingNode(typeid(ClassDefinitionNode).name());
 
 	if(cd == NULL) {
 		return NULL; // Won't be reached
@@ -86,7 +86,7 @@ ClassDefinitionNode* ClassVariableNode::MutableEnclosingClassDefinition()
 
 const ClassDefinitionNode* ClassVariableNode::EnclosingClassDefinition() const
 {
-	const ASTNode *cd = FindEnclosingNode(ClassDefinition);
+	const ASTNode *cd = FindEnclosingNode(typeid(ClassDefinitionNode).name());
 
 	if(cd == NULL) {
 		return NULL; // Won't be reached
