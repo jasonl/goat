@@ -1,9 +1,6 @@
 #include "../ast_node.h"
 #include "../source_file.h"
 
-SourceFileNode::SourceFileNode() : ASTNode( ASTNode::SourceFile ) {
-}
-
 void SourceFileNode::Analyse( Scope *_scope ) {
   ASTNode *nextNode;
   ASTIterator end(NULL);

@@ -12,6 +12,7 @@ public:
   BlockNode *IfBlock() { return ifBlock; }
   BlockNode *ElseBlock() { return elseBlock; }
   AssemblyBlock *GenerateCode();
+  std::string Print() const { return "Conditional"; }
 private:
   ASTNode *expression;
   BlockNode *elseBlock, *ifBlock;

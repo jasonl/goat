@@ -3,9 +3,11 @@
 
 class IntegerLiteralNode : public ASTNode {
  public:
- IntegerLiteralNode( const std::string &_contents ) : ASTNode(IntegerLiteral), contents(_contents) {};
+ IntegerLiteralNode( const std::string &_contents ) : contents(_contents) {};
   AssemblyBlock *GenerateCode();
   AssemblyBlock *PushOntoStack();
+  std::string Print() const { return "IntegerLiteral: " + contents; }
+
 #ifdef GOATTEST
   std::string Contents() const { return contents; }
 #endif

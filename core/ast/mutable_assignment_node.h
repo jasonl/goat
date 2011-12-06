@@ -10,6 +10,7 @@ class MutableAssignmentNode : public ASTNode
 	void Analyse( Scope* );
 	AssemblyBlock *GenerateCode();
 	std::string VariableName() const { return target->Name(); }
+	std::string Print() const { return "MutableAssignment"; }
   private:
 	AssignmentTargetNode *target;
 	const ASTNode *rValue;

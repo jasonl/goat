@@ -1,9 +1,5 @@
 #include "../ast_node.h"
 
-SelfNode::SelfNode() : ASTNode( ASTNode::Self ) {
-}
-
-
 void SelfNode::Analyse( Scope *_scope ) {
   scope = _scope;
 }

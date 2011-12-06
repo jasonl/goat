@@ -1,8 +1,5 @@
 #include "../ast_node.h"
 
-TrueLiteralNode::TrueLiteralNode(): ASTNode(ASTNode::TrueLiteral) {
-}
-
 void TrueLiteralNode::Analyse(Scope *_scope)
 {
 	scope = _scope;

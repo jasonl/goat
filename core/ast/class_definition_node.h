@@ -7,13 +7,15 @@ typedef std::map<std::string,int> ClassVarMap;
 
 class ClassDefinitionNode : public ASTNode {
 public:
- ClassDefinitionNode( const std::string &_name ) : ASTNode(ClassDefinition), name(_name), lastVarPosition(0) {};
+ ClassDefinitionNode( const std::string &_name ) : name(_name), lastVarPosition(0) {};
   AssemblyBlock *GenerateCode();
   AssemblyBlock *GetAuxiliaryCode();
   void Analyse( Scope* );
 
   void AddClassVariable(const std::string&);
   int ClassVariablePosition(const std::string&) const;
+
+  std::string Print() const { return "ClassDefinition: " + name; }
 
 #ifdef GOATTEST
   std::string Name() const { return name; }

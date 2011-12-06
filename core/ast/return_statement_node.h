@@ -3,12 +3,13 @@
 
 class ReturnStatementNode : public ASTNode {
 public:
-  ReturnStatementNode();
-  void SetReturnValue( ASTNode* );
-  ASTNode *ReturnExpr() { return returnValue; }
-  ASTIterator ChildNodes();
-  void Analyse( Scope* );
-  AssemblyBlock *GenerateCode();
+	ReturnStatementNode() {};
+	void SetReturnValue( ASTNode* );
+	ASTNode *ReturnExpr() { return returnValue; }
+	ASTIterator ChildNodes();
+	void Analyse( Scope* );
+	AssemblyBlock *GenerateCode();
+	std::string Print() const { return "ReturnStatement"; }
 private:
   ASTNode *returnValue;
 };

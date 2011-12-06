@@ -4,6 +4,7 @@
 #include <list>
 #include <string>
 #include <stdint.h>
+#include <iostream>
 #include "token.hpp"
 #include "scope.h"
 
@@ -95,6 +96,7 @@ class ASTNode {
 	Variable
   };
 
+  ASTNode();
   ASTNode( enum NODE_TYPE );
   ~ASTNode();
 
@@ -116,7 +118,7 @@ class ASTNode {
   virtual AssemblyBlock* GetAuxiliaryCode();
   virtual AssemblyBlock* PushOntoStack() { return new AssemblyBlock(); }
 
-  virtual std::string PrintableIdentifier() { return ""; }
+  virtual std::string Print() const { return "Unimplemented"; }
 
   void print(int, int, char*);
   enum NODE_TYPE Type() { return type; }
@@ -146,6 +148,8 @@ public:
 };
 
 typedef std::list<Token>::iterator TokenIterator;
+
+std::ostream& operator<<(std::ostream&, const ASTNode&);
 
 #include "ast/operand_node.h"
 

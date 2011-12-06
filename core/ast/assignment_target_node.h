@@ -1,7 +1,7 @@
 class AssignmentTargetNode : public ASTNode
 {
   public:
-    AssignmentTargetNode(enum NODE_TYPE _type) : ASTNode(_type) {};
+    AssignmentTargetNode() {};
 	virtual void Analyse(Scope*) = 0;
 	virtual AssemblyBlock* GenerateCode() = 0;
 	virtual AssemblyBlock* PushOntoStack() = 0;;

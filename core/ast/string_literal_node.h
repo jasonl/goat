@@ -3,10 +3,11 @@
 
 class StringLiteralNode : public ASTNode {
  public:
-  StringLiteralNode(const std::string &_contents) : ASTNode(StringLiteral), contents(_contents) {};
+  StringLiteralNode(const std::string &_contents) : contents(_contents) {};
   void Analyse( Scope * );
   AssemblyBlock *GenerateCode();
   AssemblyBlock *PushOntoStack();
+  std::string Print() const { return "StringLiteral: \"" + contents + "\""; }
 
 #ifdef GOATTEST
   std::string Contents() const { return contents; }

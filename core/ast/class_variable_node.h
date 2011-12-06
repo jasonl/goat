@@ -11,7 +11,7 @@ class AssignmentTargetNode;
 class ClassVariableNode : public AssignmentTargetNode
 {
   public:
-    ClassVariableNode(std::string _name) : AssignmentTargetNode(ClassVariable), name(_name) {};
+    ClassVariableNode(std::string _name) : name(_name) {};
 	void Analyse(Scope*);
 	AssemblyBlock *GenerateCode();
 	AssemblyBlock *GenerateAssignmentCode();
@@ -21,6 +21,7 @@ class ClassVariableNode : public AssignmentTargetNode
 	int32_t PayloadOffset() const;
 	ClassDefinitionNode* MutableEnclosingClassDefinition();
 	const ClassDefinitionNode* EnclosingClassDefinition() const;
+	std::string Print() const { return "ClassVariable: " + name; }
 	std::string Name() const { return name; }
  private:
    const std::string name;

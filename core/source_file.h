@@ -45,6 +45,7 @@ public:
   std::list<Token>& GetTokenStream() { return tokenStream; }
   std::stack<int> indentStack;
   std::string BaseFileName() const;
+  std::string FileName() const { return fileName; }
 #ifdef GOATTEST
   void AddToken(Token& _token) {
 	  tokenStream.push_back(_token);

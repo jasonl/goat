@@ -9,9 +9,10 @@
   - A Block node, which contains the function's body.
 */
 
-FunctionDefNode::FunctionDefNode() : ASTNode( ASTNode::FunctionDef ) {
-  scope = NULL;
-  bodyAsm = new AssemblyBlock;
+FunctionDefNode::FunctionDefNode()
+{
+	scope = NULL;
+	bodyAsm = new AssemblyBlock;
 }
 
 FunctionDefNode::~FunctionDefNode() {

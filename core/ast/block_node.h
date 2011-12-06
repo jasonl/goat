@@ -4,9 +4,10 @@
 class BlockNode : public ASTNode
 {
   public:
-    BlockNode() : ASTNode(Block) {};
+    BlockNode() {};
 	void Analyse( Scope* );
 	AssemblyBlock *GenerateCode();
+	std::string Print() const { return "Block"; }
 };
 
 #endif

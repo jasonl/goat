@@ -3,9 +3,10 @@
 
 class ParameterNode : public ASTNode {
 public:
-  ParameterNode();
+	ParameterNode() {};
   void Analyse( Scope* );
   AssemblyBlock *PushOntoStack();
+  std::string Print() const { return "Parameter"; }
 };
 
 #endif

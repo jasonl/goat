@@ -1,6 +1,15 @@
 #include <iostream>
 #include "ast_node.h"
 
+
+ASTNode::ASTNode()
+{
+	firstChild = NULL;
+	parent = NULL;
+	nextSibling = NULL;
+	prevSibling = NULL;
+}
+
 ASTNode::ASTNode( enum NODE_TYPE _type) {
   type = _type;
   firstChild = NULL;
@@ -150,6 +159,7 @@ ASTIterator ASTNode::ChildNodes() {
   return ASTIterator(firstChild);
 }
 
+
 ASTNode *ASTNode::MutableFindEnclosingNode(enum NODE_TYPE typeToFind)
 {
 	if (type == typeToFind)
@@ -168,12 +178,19 @@ const ASTNode *ASTNode::FindEnclosingNode(enum NODE_TYPE typeToFind) const
 	return parent->FindEnclosingNode(typeToFind);
 }
 
+
+std::ostream& operator<<(std::ostream &stream, const ASTNode &node)
+{
+	stream << node.Print();
+
+	return stream;
+}
+
 // Recursive function to print a tree of the AST
 void ASTNode::print(int depth, int skip, char *prev_cols) {
   ASTIterator end(NULL);
 
-  std::cout << NODE_TYPES[type];
-  std::cout << this->PrintableIdentifier();
+  std::cout << *this;
   std::cout << "\n";
 
   for( ASTIterator i = ChildNodes(); i != end; i++) {

@@ -4,8 +4,9 @@
 class ObjectOperandNode : public OperandNode {
  public:
   ObjectOperandNode(const std::string &_variable, const std::string &_propertyName) :
-	OperandNode(ObjectOperand), variable(_variable), propertyName(_propertyName) {};
+	variable(_variable), propertyName(_propertyName) {};
   Operand *GenerateOperand() const;
+  std::string Print() const { return "ObjectOperand: " + variable + "." + propertyName; }
  private:
   const std::string variable;
   const std::string propertyName;

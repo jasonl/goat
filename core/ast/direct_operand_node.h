@@ -3,9 +3,9 @@
 
 class DirectOperandNode : public OperandNode {
 public:
- DirectOperandNode(const std::string &_reg) : OperandNode(DirectOperand), reg(_reg) {};
+ DirectOperandNode(const std::string &_reg) : OperandNode(), reg(_reg) {};
   Operand *GenerateOperand() const;
-  std::string PrintableIdentifier() { return ": " + reg; }
+  std::string Print() const { return "DirectOperand: " + reg; }
 #ifdef GOATTEST
   std::string Register() const { return reg; }
 #endif

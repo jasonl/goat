@@ -2,10 +2,6 @@
 
 // An ASTNode corresponding to a return statement. It has exactly one child
 // node - either the return expression, or an Null literal.
-
-ReturnStatementNode::ReturnStatementNode() : ASTNode( ASTNode::ReturnStatement ) {
-}
-
 void ReturnStatementNode::SetReturnValue( ASTNode *_returnValue ) {
   AppendChild(_returnValue);
   returnValue = _returnValue;

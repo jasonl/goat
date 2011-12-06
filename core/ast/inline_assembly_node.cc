@@ -1,9 +1,5 @@
 #include "../ast_node.h"
 
-InlineAssemblyNode::InlineAssemblyNode(): 
-  ASTNode( ASTNode::InlineAssembly ) {  
-}
-
 void InlineAssemblyNode::Analyse( Scope *_scope) {
   ASTIterator end(NULL);
 

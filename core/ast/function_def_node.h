@@ -12,6 +12,7 @@ public:
   void AddParameterDef( ASTNode* );
   AssemblyBlock *GenerateCode();
   AssemblyBlock *GetAuxiliaryCode();
+  std::string Print() const { return "FunctionDef"; }
 private:
   AssemblyBlock *bodyAsm;
   ASTNode *body;

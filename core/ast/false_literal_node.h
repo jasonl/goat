@@ -4,10 +4,11 @@
 class FalseLiteralNode : public ASTNode
 {
   public:
-	FalseLiteralNode(): ASTNode(ASTNode::FalseLiteral) {};
+	FalseLiteralNode() {};
 	void Analyse(Scope*);
 	AssemblyBlock *GenerateCode();
 	AssemblyBlock *PushOntoStack();
+	std::string Print() const { return "FalseLiteral"; }
 };
 
 #endif

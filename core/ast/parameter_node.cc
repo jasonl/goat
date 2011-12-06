@@ -1,8 +1,5 @@
 #include "../ast_node.h"
 
-ParameterNode::ParameterNode() : ASTNode( ASTNode::Parameter ) {
-}
-
 void ParameterNode::Analyse( Scope *_scope ) {
   ASTIterator end(NULL);
 
@@ -13,7 +10,7 @@ void ParameterNode::Analyse( Scope *_scope ) {
   }
 }
 
-// Generates the code to push the parameter onto the stack for a 
+// Generates the code to push the parameter onto the stack for a
 // function call.
 AssemblyBlock *ParameterNode::PushOntoStack() {
   return ChildNodes()->PushOntoStack();

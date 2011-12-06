@@ -8,7 +8,7 @@ class OperandNode : public ASTNode {
  protected:
     Operand::OperandSize size;
  public:
- OperandNode( ASTNode::NODE_TYPE _t ) : ASTNode(_t), nextOperand(NULL), size(Operand::None) {};
+ OperandNode() : ASTNode(), nextOperand(NULL), size(Operand::None) {};
   void SetSize(Operand::OperandSize _size) { size = _size; }
   virtual Operand *GenerateOperand() const { std::cout << "fail"; return NULL; }
 };

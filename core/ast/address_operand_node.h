@@ -3,9 +3,9 @@
 
 class AddressOperandNode : public OperandNode {
  public:
- AddressOperandNode( const std::string &_address ) : OperandNode(AddressOperand), address(_address) {};
+ AddressOperandNode( const std::string &_address ) : address(_address) {};
   Operand *GenerateOperand() const;
-  std::string PrintableIdentifier() { return ": " + address; }
+  std::string Print() { return "AddressOperand: " + address; }
  private:
   const std::string address;
 };

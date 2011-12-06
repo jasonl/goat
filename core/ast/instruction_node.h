@@ -3,11 +3,11 @@
 
 class InstructionNode : public ASTNode {
  public:
- InstructionNode(const std::string &_label, const std::string &_mnemonic) : ASTNode(Instruction), label(_label), mnemonic(_mnemonic), firstOperand(NULL), lastOperand(NULL) {};
+ InstructionNode(const std::string &_label, const std::string &_mnemonic) : label(_label), mnemonic(_mnemonic), firstOperand(NULL), lastOperand(NULL) {};
   AssemblyBlock *GenerateCode();
   void AppendOperand( OperandNode* );
   OperandIterator Operands() { return OperandIterator(firstOperand); }
-
+  std::string Print() const { return "Instruction: " + mnemonic; }
 #ifdef GOATTEST
   std::string Mnemonic() const { return mnemonic; }
   std::string Label() const { return label; }

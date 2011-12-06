@@ -3,9 +3,10 @@
 
 class InlineAssemblyNode : public ASTNode {
  public:
-  InlineAssemblyNode();
-  void Analyse( Scope* );
-  AssemblyBlock *GenerateCode();
+	InlineAssemblyNode() {};
+	void Analyse( Scope* );
+	AssemblyBlock *GenerateCode();
+	std::string Print() const { return "InlineAssembly"; }
 };
 
 #endif
