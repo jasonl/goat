@@ -1,6 +1,6 @@
 #include "../ast_node.h"
 
-MutableAssignmentNode::MutableAssignmentNode(AssignmentTargetNode *_target, ASTNode *_rValue) : ASTNode(MutableAssignment)
+MutableAssignmentNode::MutableAssignmentNode(AssignmentTargetNode *_target, ASTNode *_rValue)
 {
 	AppendChild(_target);
 	AppendChild(_rValue);

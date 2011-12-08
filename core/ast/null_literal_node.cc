@@ -1,9 +1,5 @@
 #include "../ast_node.h"
 
-NullLiteralNode::NullLiteralNode(): 
-  ASTNode( ASTNode::NullLiteral ) {
-}
-
 void NullLiteralNode::Analyse( Scope *_scope ) {
   scope = _scope;
 }

@@ -9,6 +9,7 @@ public:
   const std::string& VariableName() const { return lValue; }
   AssemblyBlock *GenerateCode() const;
   std::string Print() const { return "ConstantAssignment: " + lValue; }
+  bool IsRelocatedToGlobalObject() const { return true; }
  private:
   const std::string lValue;
 };

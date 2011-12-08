@@ -21,83 +21,10 @@ const std::string yellow = "\x1b[1;33m";
 const std::string cyan = "\x1b[0;36m";
 const std::string reset = "\x1b[0;37;00m";
 
-const std::string NODE_TYPES[] = {
-  "AddressOperand",
-  "Block",
-  cyan + "ClassDefinition" + reset,
-  "ClassLiteral",
-  "ClassMethodAssignment",
-  "ClassVariable",
-  yellow + "Conditional" + reset,
-  "ConstantAssignment",
-  "DirectOperand",
-  "ExternLabel",
-  "FalseLiteral",
-  "FunctionCall",
-  "FunctionDef",
-  "HashOperand",
-  "ImmediateOperand",
-  "IndirectOperand",
-  "IndirectOperandTerm",
-  "InlineAssembly",
-  "Instruction",
-  "IntegerLiteral",
-  "Label",
-  "MethodAssignment",
-  "MutableAssignment",
-  "NullLiteral",
-  "ObjectOperand",
-  "Parameter",
-  "ParameterDef",
-  red + "ReturnStatement" + reset,
-  "Self",
-  "SourceFile",
-  "StringLiteral",
-  "TrueLiteral",
-  "Variable"
-};
-
 class ASTNode {
   friend class ASTIterator;
  public:
-  enum NODE_TYPE {
-	AddressOperand,
-	Block,
-    ClassDefinition,
-	ClassLiteral,
-	ClassMethodAssignment,
-	ClassVariable,
-    Conditional,
-	ConstantAssignment,
-    DirectOperand,
-	ExternLabel,
-	FalseLiteral,
-    FunctionCall,
-    FunctionDef,
-    HashOperand,
-	ImmediateOperand,
-    IndirectOperand,
-	IndirectOperandTerm,
-    InlineAssembly,
-    Instruction,
-    IntegerLiteral,
-    Label,
-	MethodAssignment,
-    MutableAssignment,
-	NullLiteral,
-    ObjectOperand,
-	Parameter,
-    ParameterDef,
-    ReturnStatement,
-	Self,
-    SourceFile,
-	StringLiteral,
-	TrueLiteral,
-	Variable
-  };
-
   ASTNode();
-  ASTNode( enum NODE_TYPE );
   ~ASTNode();
 
   ASTNode *FirstChild() { return firstChild; }
@@ -119,12 +46,10 @@ class ASTNode {
   virtual AssemblyBlock* PushOntoStack() { return new AssemblyBlock(); }
 
   virtual std::string Print() const { return "Unimplemented"; }
-
+  virtual bool IsRelocatedToGlobalObject() const { return false; }
   void print(int, int, char*);
-  enum NODE_TYPE Type() { return type; }
 
  protected:
-  enum NODE_TYPE type;
   Scope *scope;
   ASTNode *parent;
   ASTNode *firstChild;

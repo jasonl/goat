@@ -30,23 +30,22 @@ AssemblyBlock *FunctionCallNode::GenerateCode()
   ASTIterator end(NULL);
   uint32_t paramCount = 0;
 
-  // Push the parameters onto the stack
-  for( ASTIterator i = ChildNodes(); i != end; i++ ) {
-    if( i->Type() == ASTNode::Parameter ) {
-      a->AppendBlock( i->PushOntoStack() );
-      paramCount++;
-    }
-  }
+  ASTIterator i = ChildNodes();
+  i++; // Ignore the first node, which is the receiver
 
-  std::cerr << Receiver()->Type(); std::cerr.flush();
+  // Push the parameters onto the stack
+  while(i != end) {
+      a->AppendBlock(i->PushOntoStack());
+      paramCount++;
+	  i++;
+  }
 
   // Determine if we're making a normal method call or a class method call
   // TODO: Reify classes?
-  if(Receiver()->Type() == ASTNode::ClassLiteral)
-  {
-	  std::cerr << "CL\n"; std::cerr.flush();
+  ClassLiteralNode *classNode = dynamic_cast<ClassLiteralNode*>(Receiver());
 
-	  ClassLiteralNode *classNode = dynamic_cast<ClassLiteralNode*>(Receiver());
+  if(classNode)
+  {
       std::string cmLabel = GenerateClassMethodLabel(name, classNode->Name());
       a->call(*new Operand(cmLabel));
   } else {

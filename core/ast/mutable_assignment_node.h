@@ -11,6 +11,7 @@ class MutableAssignmentNode : public ASTNode
 	AssemblyBlock *GenerateCode();
 	std::string VariableName() const { return target->Name(); }
 	std::string Print() const { return "MutableAssignment"; }
+	bool IsRelocatedToGlobalObject() const { return true; }
   private:
 	AssignmentTargetNode *target;
 	const ASTNode *rValue;

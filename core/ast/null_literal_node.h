@@ -3,10 +3,11 @@
 
 class NullLiteralNode : public ASTNode {
 public:
-  NullLiteralNode();
-  void Analyse( Scope* );
-  AssemblyBlock *GenerateCode();
-  AssemblyBlock *PushOntoStack();
+	NullLiteralNode() {}
+	void Analyse( Scope* );
+	AssemblyBlock *GenerateCode();
+	AssemblyBlock *PushOntoStack();
+	std::string Print() const { return "NullLiteral"; }
 };
 
 #endif

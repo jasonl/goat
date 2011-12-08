@@ -15,12 +15,12 @@ void SourceFileNode::Analyse( Scope *_scope ) {
     ASTIterator i = ChildNodes();
 
     while( i != end ) {
-      if( i->Type() == MutableAssignment || i->Type() == ConstantAssignment ) {
-	nextNode = i->MoveNodeTo(globalObject);
-	i = ASTIterator(nextNode);
-      } else {
-	i++;
-      }
+		if(i->IsRelocatedToGlobalObject()) {
+			nextNode = i->MoveNodeTo(globalObject);
+			i = ASTIterator(nextNode);
+		} else {
+			i++;
+		}
     }
   }
 

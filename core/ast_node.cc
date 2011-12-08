@@ -10,14 +10,6 @@ ASTNode::ASTNode()
 	prevSibling = NULL;
 }
 
-ASTNode::ASTNode( enum NODE_TYPE _type) {
-  type = _type;
-  firstChild = NULL;
-  parent = NULL;
-  nextSibling = NULL;
-  prevSibling = NULL;
-}
-
 ASTNode::~ASTNode() {
   ASTNode *childNode = NULL, *tempNode = NULL;
 
