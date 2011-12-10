@@ -16,7 +16,13 @@ class FunctionCallNode : public ASTNode {
 #endif
 
  private:
+  enum FC_TYPE {FunctionObjectCall, ClassMethodCall, MethodCall } type;
   const std::string name;
+
+  void GenerateClassMethodCall(AssemblyBlock*);
+  void GenerateFunctionObjectCall(AssemblyBlock*);
+  void GenerateMethodCall(AssemblyBlock*);
+  int PushParametersOntoStack(AssemblyBlock*, bool);
 };
 
 #endif
