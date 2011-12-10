@@ -7,7 +7,7 @@ public:
   void Analyse( Scope* );
   void SetRValue( ASTNode* );
   const std::string& VariableName() const { return lValue; }
-  AssemblyBlock *GenerateCode() const;
+  AssemblyBlock *GenerateCode();
   std::string Print() const { return "ConstantAssignment: " + lValue; }
   bool IsRelocatedToGlobalObject() const { return true; }
  private:
