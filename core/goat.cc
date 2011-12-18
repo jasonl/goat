@@ -68,16 +68,23 @@ void goatError( int lineNo, const std::string fmt, ... ) {
 std::string GetBaseDirectory(const char *relativePath)
 {
   char *currentWorkingDir = getcwd(NULL, 0);
+  char *realBaseCommand;
+  std::string baseDir;
 
-  // Generate the full path of the goatc executable
-  std::string fullPath(std::string(currentWorkingDir) + "/" + std::string(relativePath));
+  if(relativePath[0] == '/') {
+	  // When running under GDB, the relative path is the full path. Who knows why.
+	  realBaseCommand = realpath(relativePath, NULL);
+  } else {
+	  // Generate the full path of the goatc executable
+	  std::string fullPath(std::string(currentWorkingDir) + "/" + std::string(relativePath));
 
-  // And strip of the directory
-  char *realBaseCommand = realpath(fullPath.c_str(), NULL);
-  std::string baseDir(realBaseCommand);
+	  // And strip of the directory
+	  realBaseCommand = realpath(fullPath.c_str(), NULL);
+  }
 
-  free(currentWorkingDir);
+  baseDir = realBaseCommand;
   free(realBaseCommand);
+  free(currentWorkingDir);
 
   return baseDir.substr(0, baseDir.find_last_of('/'));
 }
@@ -168,5 +175,3 @@ std::string parseCommandLine( int argc, char *argv[], int *verbose, bool *librar
 
   return fileName;
 }
-
-
