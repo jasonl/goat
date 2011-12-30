@@ -23,6 +23,7 @@ const std::string reset = "\x1b[0;37;00m";
 
 class ASTNode {
   friend class ASTIterator;
+  friend class ASTNodeTest;
  public:
   ASTNode();
   ~ASTNode();
@@ -50,6 +51,9 @@ class ASTNode {
   void print(int, int, char*);
 
  protected:
+#ifdef GOATTEST
+ public:
+#endif
   Scope *scope;
   ASTNode *parent;
   ASTNode *firstChild;

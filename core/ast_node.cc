@@ -45,6 +45,8 @@ void ASTNode::append( ASTNode *child ) {
   ASTNode *lastSibling = this->firstChild;
   ASTNode *lastChildNode = child;
 
+  if(!child) return;
+
   while(lastChildNode) {
 	  lastChildNode->parent = this;
 	  lastChildNode = lastChildNode->nextSibling;
@@ -73,6 +75,8 @@ void ASTNode::append( ASTNode *child ) {
 // the last one.
 void ASTNode::InsertFirstChild( ASTNode *child ) {
   ASTNode *secondChild;
+
+  if (!child) return;
 
   child->parent = this;
 

@@ -2,7 +2,103 @@
 #include "ast_node.h"
 
 namespace {
-	class ASTNodeTest : public ::testing::Test {};
+	class ASTNodeTest : public ::testing::Test {
+	};
+
+	TEST_F(ASTNodeTest, ShouldAppendNodeToNodeWithNoChildren)
+	{
+		SourceFileNode *sf = new SourceFileNode;
+		ClassDefinitionNode *cd = new ClassDefinitionNode("TestClass");
+
+		sf->AppendChild(cd);
+
+		EXPECT_EQ(sf->firstChild, cd);
+		EXPECT_EQ(cd->parent, sf);
+
+		EXPECT_EQ(NULL, cd->nextSibling);
+		EXPECT_EQ(NULL, cd->prevSibling);
+		EXPECT_EQ(NULL, cd->firstChild);
+	}
+
+	TEST_F(ASTNodeTest, ShouldAppendNodeToNodeWithChildren)
+	{
+		SourceFileNode *sf = new SourceFileNode;
+		ClassDefinitionNode *cd1 = new ClassDefinitionNode("TestClass1");
+		ClassDefinitionNode *cd2 = new ClassDefinitionNode("TestClass2");
+
+		sf->AppendChild(cd1);
+		sf->AppendChild(cd2);
+
+		EXPECT_EQ(sf->firstChild, cd1);
+		EXPECT_EQ(cd2->parent, sf);
+
+		EXPECT_EQ(NULL, cd1->prevSibling);
+		EXPECT_EQ(cd1->nextSibling, cd2);
+		EXPECT_EQ(cd2->prevSibling, cd1);
+		EXPECT_EQ(NULL, cd2->nextSibling);
+	}
+
+	TEST_F(ASTNodeTest, ShouldAppendNullNode)
+	{
+		SourceFileNode *sf = new SourceFileNode;
+		ClassDefinitionNode *cd1 = new ClassDefinitionNode("TestClass1");
+
+		sf->AppendChild(cd1);
+		sf->AppendChild(NULL);
+
+		EXPECT_EQ(sf->firstChild, cd1);
+		EXPECT_EQ(cd1->parent, sf);
+
+		EXPECT_EQ(NULL, cd1->prevSibling);
+		EXPECT_EQ(NULL, cd1->nextSibling);
+	}
+
+	TEST_F(ASTNodeTest, ShouldPrependNodeToNodeWithNoChildren)
+	{
+		SourceFileNode *sf = new SourceFileNode;
+		ClassDefinitionNode *cd1 = new ClassDefinitionNode("TestClass1");
+
+		sf->InsertFirstChild(cd1);
+
+		EXPECT_EQ(cd1->parent, sf);
+		EXPECT_EQ(sf->firstChild, cd1);
+
+		EXPECT_EQ(NULL, cd1->nextSibling);
+		EXPECT_EQ(NULL, cd1->prevSibling);
+	}
+
+	TEST_F(ASTNodeTest, ShouldPrependToNodeWithChildren)
+	{
+		SourceFileNode *sf = new SourceFileNode;
+		ClassDefinitionNode *cd1 = new ClassDefinitionNode("TestClass1");
+		ClassDefinitionNode *cd2 = new ClassDefinitionNode("TestClass2");
+
+		sf->AppendChild(cd1);
+		sf->InsertFirstChild(cd2);
+
+		EXPECT_EQ(sf->firstChild, cd2);
+		EXPECT_EQ(cd2->parent, sf);
+
+		EXPECT_EQ(NULL, cd2->prevSibling);
+		EXPECT_EQ(cd2->nextSibling, cd1);
+		EXPECT_EQ(cd1->prevSibling, cd2);
+		EXPECT_EQ(NULL, cd1->nextSibling);
+	}
+
+	TEST_F(ASTNodeTest, ShouldHandlePrependingOfNullNode)
+	{
+		SourceFileNode *sf = new SourceFileNode;
+		ClassDefinitionNode *cd1 = new ClassDefinitionNode("TestClass1");
+
+		sf->AppendChild(cd1);
+		sf->InsertFirstChild(NULL);
+
+		EXPECT_EQ(sf->firstChild, cd1);
+		EXPECT_EQ(cd1->parent, sf);
+
+		EXPECT_EQ(NULL, cd1->prevSibling);
+		EXPECT_EQ(NULL, cd1->nextSibling);
+	}
 
 	TEST_F(ASTNodeTest, ShouldFindEnclosingNode)
 	{
