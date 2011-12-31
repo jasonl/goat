@@ -32,6 +32,7 @@ void FunctionCallNode::Analyse(Scope *_scope) {
 void FunctionCallNode::AddReceiver( ASTNode *_receiver ) {
   // TODO: This should check that there isn't already a receiver
   InsertFirstChild( _receiver );
+  receiver = _receiver;
 }
 
 AssemblyBlock *FunctionCallNode::GenerateCode()
@@ -79,6 +80,7 @@ void FunctionCallNode::GenerateMethodCall(AssemblyBlock *a)
 	}
 
 	// Put the receiver (i.e. this ) onto eax/ecx/edx
+	std::cout << Receiver()->Print() << std::flush;
 	a->AppendBlock(Receiver()->GenerateCode());
 
 	a->mov(ebx, Dword(goatHash(name)));
