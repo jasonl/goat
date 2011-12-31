@@ -34,6 +34,8 @@ class ASTNode {
   void InsertFirstChild( ASTNode* );
   void ReplaceChild( ASTNode*, ASTNode* );
   void DetachChild( ASTNode* );
+  void SetParent(ASTNode* p) { parent = p; }
+  void SetFirstChild(ASTNode *fc) { firstChild = fc; }
   ASTNode *MoveNodeTo( ASTNode* );
   virtual ASTIterator ChildNodes();
 

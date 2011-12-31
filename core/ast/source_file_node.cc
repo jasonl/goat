@@ -17,6 +17,27 @@ void SourceFileNode::Analyse( Scope *_scope ) {
     while( i != end ) {
 		if(i->IsRelocatedToGlobalObject()) {
 			nextNode = i->MoveNodeTo(globalObject);
+			// We need to change ConstantAssignments to MethodAssignments
+			ConstantAssignmentNode *c = dynamic_cast<ConstantAssignmentNode*>(&(*i));
+
+			if (c) {
+				MethodAssignmentNode *m = new MethodAssignmentNode(c->VariableName());
+
+				ASTIterator j = i->ChildNodes();
+
+				if (j != end) {
+					m->SetFirstChild(&(*j));
+					i->SetFirstChild(NULL);
+				}
+
+				while(j != end) {
+					j->SetParent(m);
+					j++;
+				}
+
+				globalObject->ReplaceChild(&(*i), m);
+			}
+
 			i = ASTIterator(nextNode);
 		} else {
 			i++;

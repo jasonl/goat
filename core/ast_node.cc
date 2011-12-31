@@ -189,7 +189,7 @@ const ASTNode *ASTNode::FindEnclosingNode(const std::string &typeToFind) const
 
 std::ostream& operator<<(std::ostream &stream, const ASTNode &node)
 {
-	stream << node.Print();
+	stream << node.Print() << std::flush;
 
 	return stream;
 }
