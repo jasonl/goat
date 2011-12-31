@@ -100,6 +100,91 @@ namespace {
 		EXPECT_EQ(NULL, cd1->nextSibling);
 	}
 
+	TEST_F(ASTNodeTest, ShouldDetachNodeFromParentWithOnlyChild)
+	{
+		SourceFileNode *sf = new SourceFileNode;
+		ClassDefinitionNode *cd1 = new ClassDefinitionNode("TestClass1");
+
+		sf->AppendChild(cd1);
+		sf->DetachChild(cd1);
+
+		EXPECT_EQ(NULL, sf->firstChild);
+
+		EXPECT_EQ(NULL, cd1->parent);
+		EXPECT_EQ(NULL, cd1->prevSibling);
+		EXPECT_EQ(NULL, cd1->nextSibling);
+	}
+
+	TEST_F(ASTNodeTest, ShouldDetachFirstNodeFromParentWithMultipleChildren)
+	{
+		SourceFileNode *sf = new SourceFileNode;
+		ClassDefinitionNode *cd1 = new ClassDefinitionNode("TestClass1");
+		ClassDefinitionNode *cd2 = new ClassDefinitionNode("TestClass2");
+
+		sf->AppendChild(cd1);
+		sf->AppendChild(cd2);
+		sf->DetachChild(cd1);
+
+		EXPECT_EQ(cd2, sf->firstChild);
+
+		EXPECT_EQ(NULL, cd2->prevSibling);
+		EXPECT_EQ(NULL, cd2->nextSibling);
+
+		EXPECT_EQ(NULL, cd1->parent);
+		EXPECT_EQ(NULL, cd1->prevSibling);
+		EXPECT_EQ(NULL, cd1->nextSibling);
+	}
+
+	TEST_F(ASTNodeTest, ShouldDetachLastNodeFromParentWithMultipleChildren)
+	{
+		SourceFileNode *sf = new SourceFileNode;
+		ClassDefinitionNode *cd1 = new ClassDefinitionNode("TestClass1");
+		ClassDefinitionNode *cd2 = new ClassDefinitionNode("TestClass2");
+
+		sf->AppendChild(cd1);
+		sf->AppendChild(cd2);
+		sf->DetachChild(cd2);
+
+		EXPECT_EQ(cd1, sf->firstChild);
+
+		EXPECT_EQ(NULL, cd1->prevSibling);
+		EXPECT_EQ(NULL, cd1->nextSibling);
+
+		EXPECT_EQ(NULL, cd2->parent);
+		EXPECT_EQ(NULL, cd2->prevSibling);
+		EXPECT_EQ(NULL, cd2->nextSibling);
+	}
+
+	TEST_F(ASTNodeTest, ShouldDetachNullNodeFromParent)
+	{
+		SourceFileNode *sf = new SourceFileNode;
+		ClassDefinitionNode *cd1 = new ClassDefinitionNode("TestClass1");
+
+		sf->AppendChild(cd1);
+		sf->DetachChild(NULL);
+
+		EXPECT_EQ(cd1, sf->firstChild);
+
+		EXPECT_EQ(sf, cd1->parent);
+		EXPECT_EQ(NULL, cd1->prevSibling);
+		EXPECT_EQ(NULL, cd1->nextSibling);
+	}
+
+	TEST_F(ASTNodeTest, ShouldNotDetachNodeFromNonParentNode)
+	{
+		ClassDefinitionNode *cd1 = new ClassDefinitionNode("TestClass1");
+		ClassDefinitionNode *cd2 = new ClassDefinitionNode("TestClass2");
+		MethodAssignmentNode *ma = new MethodAssignmentNode("method");
+
+		cd1->AppendChild(ma);
+		cd2->DetachChild(ma);
+
+		EXPECT_EQ(cd1, ma->parent);
+		EXPECT_EQ(ma, cd1->firstChild);
+
+		EXPECT_EQ(NULL, cd2->firstChild);
+	}
+
 	TEST_F(ASTNodeTest, ShouldFindEnclosingNode)
 	{
 		SourceFileNode *sf = new SourceFileNode;

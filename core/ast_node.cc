@@ -126,21 +126,31 @@ void ASTNode::ReplaceChild( ASTNode *childToReplace, ASTNode *newChild ) {
   return;
 }
 
-void ASTNode::DetachChild( ASTNode *childNode ) {
-  ASTNode *currentChild = firstChild, *prevChild = NULL;
+void ASTNode::DetachChild( ASTNode *childNode )
+{
+	ASTNode *currentChild = firstChild, *prevChild = NULL;
 
-  while( currentChild ) {
-    if(currentChild == childNode) {
-      if(prevChild) {
-	prevChild->nextSibling = currentChild->nextSibling;
-      }
-      currentChild->nextSibling = NULL;
-      currentChild->parent = NULL;
-      return;
-    }
-    prevChild = currentChild;
-    currentChild = currentChild->nextSibling;
-  }
+	while (currentChild) {
+		if (currentChild == childNode) {
+			if (prevChild)
+				prevChild->nextSibling = currentChild->nextSibling;
+
+			if (currentChild->parent->firstChild == currentChild)
+				currentChild->parent->firstChild = currentChild->nextSibling;
+
+			if (currentChild->nextSibling)
+				currentChild->nextSibling->prevSibling = prevChild;
+
+			currentChild->nextSibling = NULL;
+			currentChild->prevSibling = NULL;
+			currentChild->parent = NULL;
+
+			return;
+		}
+
+		prevChild = currentChild;
+		currentChild = currentChild->nextSibling;
+	}
 
 }
 
