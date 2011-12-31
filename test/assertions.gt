@@ -18,11 +18,11 @@ assert_equal: λ(item1, item2)
 
 print: λ(str)
   asm
-    push 1              ; length of string
-    push str.payload    ; string
-    push 1              ; file descriptor (STDOUT)
-    mov  eax, 4         ; System call number
-    sub  esp, 4         ; 4 bytes for OSX
-    int  128            ; System Call
+    push 1                      ; length of string
+    push dword str.payload      ; string
+    push 1                      ; file descriptor (STDOUT)
+    mov  eax, 4                 ; System call number
+    sub  esp, 4                 ; 4 bytes for OSX
+    int  128                    ; System Call
     add  esp, 16
   return 0
