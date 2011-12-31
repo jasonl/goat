@@ -16,13 +16,11 @@ void ReturnStatementNode::Analyse( Scope *_scope ) {
   if(returnValue) returnValue->Analyse( scope );
 }
 
-AssemblyBlock *ReturnStatementNode::GenerateCode() {
-  AssemblyBlock *a = returnValue->GenerateCode();
-  a->add( esp, *new Operand(scope->GetLocalVariableCount() * 12));
-  a->mov( esp, ebp );
-  a->pop( ebp );
-  a->ret();
-  return a;
+AssemblyBlock *ReturnStatementNode::GenerateCode()
+{
+	AssemblyBlock *a = returnValue->GenerateCode();
+	a->mov(esp, ebp);
+	a->pop(ebp);
+	a->ret();
+	return a;
 }
-
-
