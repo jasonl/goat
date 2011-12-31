@@ -126,8 +126,8 @@ ASTNode * Parser::Parse( ASTNode *astRoot ) {
 
 
   while((newChild = MATCH(Statement)) || TokenIs(Newline)) {
-    if( newChild) {
-      astRoot->append(newChild);
+    if(newChild) {
+      astRoot->AppendChild(newChild);
     } else if ( TokenIs(Newline) ) {
       ConsumeToken();
     } else if( TokenIs( EndOfFile)) {
@@ -425,7 +425,7 @@ FunctionCallNode *Parser::MatchMethodInvocation() {
   thisNode = new FunctionCallNode( functionName->Content() );
 
   while((newChild = MATCH( Parameter ))) {
-    thisNode->append(newChild);
+    thisNode->AppendChild(newChild);
 
     // So if we match a right Parenthesis, that's a complete function call
     if (TokenIs( RightParen ) && must_match_paren ) {
@@ -571,7 +571,7 @@ ParameterNode *Parser::MatchParameter() {
   //TODO: Add matching for named parameters
   if(( newChild = MATCH( Expression ))) {
     thisNode = new ParameterNode;
-    thisNode->append(newChild);
+    thisNode->AppendChild(newChild);
     return thisNode;
   }
 
@@ -779,7 +779,7 @@ ClassDefinitionNode *Parser::MatchClassDefinition() {
 		(newNode = MatchClassMethodAssignment()) ||
 		TokenIs(Newline)) {
     if( newNode ) {
-      thisNode->append(newNode);
+      thisNode->AppendChild(newNode);
     } else if( TokenIs( Newline )) {
       ConsumeToken();
     } else {

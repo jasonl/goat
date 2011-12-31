@@ -7,17 +7,17 @@ ConditionalNode::ConditionalNode() : ASTNode()
 }
 
 void ConditionalNode::AddExpression( ASTNode *_expr ) {
-  append( _expr );
+  AppendChild( _expr );
   expression = _expr;
 }
 
 void ConditionalNode::AddIfBlock( BlockNode *_ifBlock ) {
-  append( _ifBlock );
+  AppendChild( _ifBlock );
   ifBlock = _ifBlock;
 }
 
 void ConditionalNode::AddElseBlock( BlockNode *_elseBlock ) {
-  append( _elseBlock );
+  AppendChild( _elseBlock );
   elseBlock = _elseBlock;
 }
 

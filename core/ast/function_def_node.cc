@@ -29,12 +29,14 @@ ASTIterator FunctionDefNode::BodyNodes() {
 }
 
 void FunctionDefNode::AddBody( ASTNode* _body ) {
-  append( _body );
+  AppendChild( _body );
   body = _body;
 }
 
-void FunctionDefNode::AddParameterDef( ASTNode *_param ) {
-  append( _param );
+void FunctionDefNode::AddParameterDef( ASTNode *_param )
+{
+	// Assumes the body has yet to be added
+	AppendChild( _param );
 }
 
 void FunctionDefNode::Analyse( Scope *_scope ) {

@@ -41,7 +41,7 @@ AssemblyBlock* ASTNode::GetAuxiliaryCode() {
   return a;
 }
 
-void ASTNode::append( ASTNode *child ) {
+void ASTNode::AppendChild( ASTNode *child ) {
   ASTNode *lastSibling = this->firstChild;
   ASTNode *lastChildNode = child;
 
@@ -147,7 +147,7 @@ void ASTNode::DetachChild( ASTNode *childNode ) {
 ASTNode *ASTNode::MoveNodeTo( ASTNode *newParent ) {
   ASTNode *nextNode = nextSibling;
   parent->DetachChild(this);
-  newParent->append(this);
+  newParent->AppendChild(this);
   return nextNode;
 }
 

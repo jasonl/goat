@@ -30,8 +30,7 @@ class ASTNode {
 
   ASTNode *FirstChild() { return firstChild; }
 
-  void append( ASTNode* );
-  void AppendChild( ASTNode *_a ) { append(_a); }
+  void AppendChild(ASTNode*);
   void InsertFirstChild( ASTNode* );
   void ReplaceChild( ASTNode*, ASTNode* );
   void DetachChild( ASTNode* );
