@@ -5,4 +5,7 @@ class Null
 
   as_string: λ()
     return "null"
+
+  as_integer: λ()
+    return 0
 end

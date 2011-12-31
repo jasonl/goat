@@ -8,4 +8,24 @@ class Boolean
     else
       return "false"
 
+  ≡: λ(term)
+    asm
+      mov ecx, term.type
+      cmp ecx, #Boolean
+      jne Boolean_u2261_not_equal
+      cmp eax, term.payload
+      jne Boolean_u2261_not_equal
+      mov eax, 1
+      mov edx, &Boolean
+      mov ecx, #Boolean
+      mov esp, ebp
+      pop ebp
+      ret
+      Boolean_u2261_not_equal:
+      mov eax, 0
+      mov edx, &Boolean
+      mov ecx, #Boolean
+      mov esp, ebp
+      pop ebp
+      ret
 end

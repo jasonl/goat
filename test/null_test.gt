@@ -1,0 +1,11 @@
+include "assertions.gt"
+
+include "integer.gt"
+include "boolean.gt"
+include "null.gt"
+include "string.gt"
+
+main: λ()
+  assert_equal(0, null.as_integer)
+  assert_equal(false, null.as_boolean)
+  assert_false(0 ≡ null)
