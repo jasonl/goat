@@ -80,7 +80,6 @@ void FunctionCallNode::GenerateMethodCall(AssemblyBlock *a)
 	}
 
 	// Put the receiver (i.e. this ) onto eax/ecx/edx
-	std::cout << Receiver()->Print() << std::flush;
 	a->AppendBlock(Receiver()->GenerateCode());
 
 	a->mov(ebx, Dword(goatHash(name)));
