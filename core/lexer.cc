@@ -313,6 +313,7 @@ void Lexer::TranslateKeywordToken( Token &token ) {
 	token.TransformKeyword("self", Self);
 	token.TransformKeyword("true", True);
 	token.TransformKeyword("false", False);
+	token.TransformKeyword("null", Null);
 }
 
 

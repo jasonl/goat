@@ -27,6 +27,7 @@ enum TokenType {
 	LeftParen,
 	New,
 	Newline,
+	Null,
 	Period,
 	Return,
 	RightParen,

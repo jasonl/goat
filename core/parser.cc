@@ -312,8 +312,13 @@ INT_MATCHER_FOR( Expression ) {
 	  return thisNode;
   }
 
-  if(TokenIs(Self))
-  {
+  if (TokenIs(Null)) {
+	  thisNode = new NullLiteralNode;
+	  ConsumeToken();
+	  return thisNode;
+  }
+
+  if(TokenIs(Self)) {
 	  thisNode = new SelfNode();
 	  ConsumeToken();
 	  return thisNode;
@@ -364,6 +369,12 @@ INT_MATCHER_FOR( Receiver ) {
 	thisNode = new IntegerLiteralNode( currentToken->Content() );
     ConsumeToken();
     return thisNode;
+  }
+
+  if (TokenIs(Null)) {
+	  thisNode = new NullLiteralNode;
+	  ConsumeToken();
+	  return thisNode;
   }
 
   return NULL;

@@ -84,6 +84,13 @@ namespace {
 		EXPECT_EQ(TYPE(FalseLiteralNode), TYPE(*falseLiteral));
 	}
 
+	TEST_F(ParserTest, ShouldMatchNullLiteralAsExpression)
+	{
+		Add(Null);
+		ASTNode* nullLiteral = Parser(sourceFile).MatchExpression();
+		EXPECT_EQ(TYPE(NullLiteralNode), TYPE(*nullLiteral));
+	}
+
 	// Tests a variable is parsed as an expression
 	TEST_F( ParserTest, ShouldMatchVariableAsExpression )
 	{

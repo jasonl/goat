@@ -101,6 +101,7 @@ namespace {
     EXPECT_EQ( Return, (++i)->Type() );
 	EXPECT_EQ( Include, (++i)->Type() );
 	EXPECT_EQ(Self, (++i)->Type());
+	EXPECT_EQ(Null, (++i)->Type());
   }
 
   // Tests correct tokenization of inline assembly
