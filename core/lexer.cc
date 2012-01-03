@@ -175,6 +175,7 @@ void Lexer::Lex() {
 				while(cp.wchar == '\n' && sourceNext < sourceEnd) {
 					sourceCurr = sourceNext; // Save the address of the current character
 					GetNextCodePoint(&cp);
+					currentLine++;
 				}
 
 				PushEmptyToken();
