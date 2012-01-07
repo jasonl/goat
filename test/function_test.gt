@@ -1,0 +1,19 @@
+include "assertions.gt"
+
+include "integer.gt"
+include "boolean.gt"
+include "null.gt"
+include "string.gt"
+
+main: λ()
+  double = λ(x)
+    return 2 * x
+
+  ; Should be able to call a function object
+  assert_equal(4, double(2))
+
+  apply = λ(x, fn)
+    return fn(x)
+
+  ; should be able to pass a function object to another function
+  assert_equal(4, apply(2, double))

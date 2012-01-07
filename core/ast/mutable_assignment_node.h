@@ -14,7 +14,7 @@ class MutableAssignmentNode : public ASTNode
 	bool IsRelocatedToGlobalObject() const { return true; }
   private:
 	AssignmentTargetNode *target;
-	const ASTNode *rValue;
+	ASTNode *rValue;
 };
 
 #endif
