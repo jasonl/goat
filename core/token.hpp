@@ -32,6 +32,7 @@ enum TokenType {
 	Return,
 	RightParen,
 	Self,
+	Singleton,
 	String,
 	True,
 	Whitespace,

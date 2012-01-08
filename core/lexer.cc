@@ -315,6 +315,7 @@ void Lexer::TranslateKeywordToken( Token &token ) {
 	token.TransformKeyword("true", True);
 	token.TransformKeyword("false", False);
 	token.TransformKeyword("null", Null);
+	token.TransformKeyword("singleton", Singleton);
 }
 
 

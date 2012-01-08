@@ -92,16 +92,18 @@ namespace {
   //
   // Contents of test/keywords.gt
   // if else class return
-  TEST_F( LexerTest, ShouldTokenizeKeywords ) {
-    TokenIterator i = LoadAndTokenize( "fixtures/keywords.gt" );
+  TEST_F(LexerTest, ShouldTokenizeKeywords)
+  {
+	  TokenIterator i = LoadAndTokenize("fixtures/keywords.gt");
 
-    EXPECT_EQ( If, i->Type() );
-    EXPECT_EQ( Else, (++i)->Type() );
-    EXPECT_EQ( Class, (++i)->Type() );
-    EXPECT_EQ( Return, (++i)->Type() );
-	EXPECT_EQ( Include, (++i)->Type() );
-	EXPECT_EQ(Self, (++i)->Type());
-	EXPECT_EQ(Null, (++i)->Type());
+	  EXPECT_EQ(If, i->Type());
+	  EXPECT_EQ(Else, (++i)->Type());
+	  EXPECT_EQ(Class, (++i)->Type());
+	  EXPECT_EQ(Return, (++i)->Type());
+	  EXPECT_EQ(Include, (++i)->Type());
+	  EXPECT_EQ(Self, (++i)->Type());
+	  EXPECT_EQ(Null, (++i)->Type());
+	  EXPECT_EQ(Singleton, (++i)->Type());
   }
 
   // Tests correct tokenization of inline assembly
