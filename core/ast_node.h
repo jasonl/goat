@@ -3,6 +3,7 @@
 
 #include <list>
 #include <string>
+#include <map>
 #include <stdint.h>
 #include <iostream>
 #include "token.hpp"
@@ -14,6 +15,8 @@
 class ASTIterator;
 
 typedef uint32_t Hash;
+typedef std::map<std::string,int> ClassVarMap;
+
 Hash goatHash( std::string );
 
 const std::string red = "\x1b[1;31m";
@@ -113,6 +116,7 @@ std::ostream& operator<<(std::ostream&, const ASTNode&);
 #include "ast/parameter_def_node.h"
 #include "ast/return_statement_node.h"
 #include "ast/self_node.h"
+#include "ast/singleton_definition_node.h"
 #include "ast/source_file_node.h"
 #include "ast/string_literal_node.h"
 #include "ast/true_literal_node.h"

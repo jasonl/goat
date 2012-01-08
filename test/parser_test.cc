@@ -511,4 +511,49 @@ namespace {
 		ASTIterator classBody = classDef->ChildNodes();
 		EXPECT_EQ(TYPE(MethodAssignmentNode), TYPE(*classBody));
 	}
+
+	// Singleton Definition Parsing
+	//-----------------------------------------------------------------------------
+
+	TEST_F(ParserTest, ShouldNotMatchSingletonDefinitionNotStartingWithSingleton)
+	{
+		Add(Identifier, "rah");
+		SingletonDefinitionNode* sd = Parser(sourceFile).MatchSingletonDefinition();
+
+		EXPECT_FALSE(sd);
+	}
+
+	TEST_F(ParserTest, ShouldNotMatchSingletonDefinitionWithoutIdentifier)
+	{
+		Add(Singleton); Add(RightParen);
+		SingletonDefinitionNode* sd = Parser(sourceFile).MatchSingletonDefinition();
+
+		EXPECT_FALSE(sd);
+	}
+
+	TEST_F(ParserTest, ShouldMatchEmptySingletonDefinition)
+	{
+		Add(Singleton); Add(Identifier, "Test"), Add(Newline);
+		SingletonDefinitionNode* sd = Parser(sourceFile).MatchSingletonDefinition();
+
+		ASSERT_TRUE(sd);
+		EXPECT_EQ(TYPE(SingletonDefinitionNode), TYPE(*sd));
+		EXPECT_EQ("Test", sd->Name());
+	}
+
+	TEST_F(ParserTest, ShouldMatchSingletonDefinitionWithMethodAssignment)
+	{
+		Add(Singleton); Add(Identifier, "Test"); Add(Newline);
+		Add(IndentIncrease); Add(Identifier, "method"); Add(Colon);
+		Add(Lambda); Add(LeftParen); Add(RightParen); Add(Newline);
+		Add(IndentIncrease); Add(Return); Add(Null); Add(Newline);
+		Add(IndentDecrease);
+		Add(IndentDecrease);
+
+		SingletonDefinitionNode* sd = Parser(sourceFile).MatchSingletonDefinition();
+
+		ASSERT_TRUE(sd);
+		EXPECT_EQ(TYPE(SingletonDefinitionNode), TYPE(*sd));
+		EXPECT_EQ("Test", sd->Name());
+	}
 }

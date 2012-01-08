@@ -812,6 +812,66 @@ ClassDefinitionNode *Parser::MatchClassDefinition() {
   }
 }
 
+SingletonDefinitionNode *Parser::MatchSingletonDefinition()
+{
+	SingletonDefinitionNode *thisNode;
+	ASTNode *newNode;
+	TokenIterator savedCurr = currentToken;
+	std::string singletonName;
+
+	if (TokenIsNot(Singleton))
+		return NULL;
+
+	ConsumeToken();
+
+	if (TokenIs(Identifier)) {
+		singletonName = currentToken->Content();
+		thisNode = new SingletonDefinitionNode(currentToken->Content());
+	} else {
+		goatError(CurrentSourcePosition(), "Unexpected token %s found after singleton keyword. Identifier expected", TOKEN_TYPES[currentToken->Type()]);
+		ResetTokenPosition(savedCurr);
+		return NULL;
+	}
+
+	ConsumeToken();
+
+	if ( TokenIsNot( Newline )) {
+		goatError(CurrentSourcePosition(), "Unexpected token %s found after class name. Newline expected", TOKEN_TYPES[currentToken->Type()]);
+		ResetTokenPosition(savedCurr);
+		return NULL;
+	}
+
+	ConsumeToken();
+
+	if (TokenIsNot(IndentIncrease))
+		return thisNode;
+
+	ConsumeToken();
+
+	while ((newNode = MatchMethodAssignment()) || TokenIs(Newline)) {
+		if (newNode) {
+			thisNode->AppendChild(newNode);
+		} else if (TokenIs(Newline)) {
+			ConsumeToken();
+		} else {
+			goatError(CurrentSourcePosition(), "Unexpected token %s found in singleton definition block. Could not match assignment", TOKEN_TYPES[currentToken->Type()]);
+			ResetTokenPosition( savedCurr );
+			return NULL;
+		}
+	}
+
+	if (TokenIs(IndentDecrease)) {
+		ConsumeToken();
+		sourceFile->RegisterClass(singletonName);
+		return thisNode;
+	} else {
+		goatError(CurrentSourcePosition(), "Unexpected token %s found when indent decrease to close singleton definition block expected.", TOKEN_TYPES[currentToken->Type()]);
+		delete thisNode;
+		ResetTokenPosition(savedCurr);
+		return NULL;
+	}
+}
+
 MethodAssignmentNode *Parser::MatchMethodAssignment()
 {
 	TokenIterator variable, savedCurr = currentToken;
