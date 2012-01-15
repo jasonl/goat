@@ -10,7 +10,7 @@ class SingletonDefinitionNode : public ASTNode
 	void Analyse(Scope*);
 
 	void AddInstanceVariable(const std::string&);
-
+	int InstanceVariablePosition(const std::string&) const;
 	std::string Print() const { return "SingletonDefinition: " + name; }
 
 #ifdef GOATTEST

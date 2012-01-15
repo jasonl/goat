@@ -7,7 +7,7 @@
  * -----------------------------------------------------------------------------
  * block                 = indent_increase,{ statement_group }, indent_decrease;
  * statement_group       = statement, { statement }
- * statement             = [ assignment | function_call | conditional | class_def | return_statement | inline_assembly | include_statement ], newline;
+ * statement             = [ assignment | function_call | conditional | class_def | singleton_def | return_statement | inline_assembly | include_statement ], newline;
  *
  *
  * inline_assembly_block = asm, indent_increase, assembly_statement, {assembly_statement}, indent_decrease
@@ -31,6 +31,7 @@
  *
  * (* Class Definition *)
  * class_def             = class, identifier, indent_increase, { method_assignment | class_method_assignment }, indent_decrease
+ * singleton_def         = singleton, identifier, indent_increase, { method_assignment }, indent_decrease
  *
  * (* An expression is something which evaluates to an object: In the case of
  * a function, it evaluates to a function object *)
@@ -213,6 +214,7 @@ ASTNode* Parser::MatchStatement()
      (thisNode = MATCH( Conditional )) ||
      (thisNode = MATCH( InlineAssembly )) ||
      (thisNode = MATCH( ClassDefinition )) ||
+	 (thisNode = MatchSingletonDefinition()) ||
 	 (thisNode = MatchIncludeStatement()) ||
      (thisNode = MatchReturnStatement())) {
     return thisNode;

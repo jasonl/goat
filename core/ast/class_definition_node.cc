@@ -1,9 +1,7 @@
 #include "../ast_node.h"
 #include "../lexer.h"
 #include "../source_file.h"
-
-std::string GenerateFunctionLabel(const std::string, const std::string);
-std::string GenerateClassMethodLabel(const std::string, const std::string);
+#include "../i386/function_labels.h"
 
 void ClassDefinitionNode::Analyse( Scope *_scope ) {
   ASTIterator end(NULL);
