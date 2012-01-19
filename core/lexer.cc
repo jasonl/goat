@@ -241,6 +241,7 @@ void Lexer::Lex() {
 					case ',':    PushToken(); lexerState = Comma; break;
 					case ';':    PushToken(); lexerState = Comment; break;
 					case ')':    PushToken(); lexerState = RightParen; break;
+					case '@':    PushToken(); lexerState = ClassVar; StartThunk(cp); break;
 					case '\n':   lexerState = PushToken(); break;
 					default:
 						thunkEnd += cp.bytes;
