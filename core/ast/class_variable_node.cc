@@ -6,21 +6,33 @@ void ClassVariableNode::Analyse(Scope *_scope)
 	scope = _scope;
 	ClassDefinitionNode *cd = MutableEnclosingClassDefinition();
 
-	if(cd == NULL) {
-		goatError(0, "Class Variable referenced outside Class Definition");
+	if (cd) {
+		cd->AddClassVariable(name);
+		type = CLASS_IVAR;
 	    return;
 	}
 
-	cd->AddClassVariable(name);
+	SingletonDefinitionNode *sd = MutableEnclosingSingletonDefinition();
+
+	if (sd) {
+		sd->AddInstanceVariable(name);
+		type = SINGLETON_IVAR;
+		return;
+	}
+
+	goatError(0, "Class Variable referenced outside Class Definition");
 }
 
 AssemblyBlock *ClassVariableNode::GenerateCode()
 {
-	std::cout << "Blah";
-
 	AssemblyBlock *a = new AssemblyBlock();
 
-	a->mov(ebx, scope->GeneratePayloadOperand("self"));
+	if (type == CLASS_IVAR) {
+		a->mov(ebx, scope->GeneratePayloadOperand("self"));
+	} else {
+		const SingletonDefinitionNode* sd = EnclosingSingletonDefinition();
+		a->mov(ebx, *new Operand(sd->PayloadLabelName()));
+	}
 	a->mov(eax, _[ebx + PayloadOffset()]);
 	a->mov(edx, _[ebx + DispatchOffset()]);
 	a->mov(ecx, _[ebx + TypeHashOffset()]);
@@ -54,23 +66,26 @@ AssemblyBlock *ClassVariableNode::PushOntoStack()
 
 int32_t ClassVariableNode::TypeHashOffset() const
 {
-	const ClassDefinitionNode *cn = EnclosingClassDefinition();
-
-	return cn->ClassVariablePosition(name) * OBJECT_SIZE + TYPE_OFFSET;
+	return InstanceVariablePosition() * OBJECT_SIZE + TYPE_OFFSET;
 }
 
 int32_t ClassVariableNode::PayloadOffset() const
 {
-	const ClassDefinitionNode *cn = EnclosingClassDefinition();
-
-	return cn->ClassVariablePosition(name) * OBJECT_SIZE + PAYLOAD_OFFSET;
+	return InstanceVariablePosition() * OBJECT_SIZE + PAYLOAD_OFFSET;
 }
 
 int32_t ClassVariableNode::DispatchOffset() const
 {
-	const ClassDefinitionNode *cn = EnclosingClassDefinition();
+	return InstanceVariablePosition() * OBJECT_SIZE + DISPATCH_OFFSET;
+}
 
-	return cn->ClassVariablePosition(name) * OBJECT_SIZE + DISPATCH_OFFSET;
+int32_t ClassVariableNode::InstanceVariablePosition() const
+{
+	if (type == CLASS_IVAR) {
+		return EnclosingClassDefinition()->ClassVariablePosition(name);
+	} else {
+		return EnclosingSingletonDefinition()->InstanceVariablePosition(name);
+	}
 }
 
 ClassDefinitionNode* ClassVariableNode::MutableEnclosingClassDefinition()
@@ -93,4 +108,24 @@ const ClassDefinitionNode* ClassVariableNode::EnclosingClassDefinition() const
 	} else {
 		return dynamic_cast<const ClassDefinitionNode*>(cd);
 	}
+}
+
+SingletonDefinitionNode* ClassVariableNode::MutableEnclosingSingletonDefinition()
+{
+	ASTNode *sd = MutableFindEnclosingNode(typeid(SingletonDefinitionNode).name());
+
+	if (sd)
+		return dynamic_cast<SingletonDefinitionNode*>(sd);
+
+	return NULL; // Won't be reached
+}
+
+const SingletonDefinitionNode* ClassVariableNode::EnclosingSingletonDefinition() const
+{
+	const ASTNode *sd = FindEnclosingNode(typeid(SingletonDefinitionNode).name());
+
+	if (sd)
+		return dynamic_cast<const SingletonDefinitionNode*>(sd);
+
+	return NULL; // Won't be reached
 }

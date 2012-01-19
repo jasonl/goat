@@ -11,6 +11,8 @@ class SingletonDefinitionNode : public ASTNode
 
 	void AddInstanceVariable(const std::string&);
 	int InstanceVariablePosition(const std::string&) const;
+	std::string PayloadLabelName() const { return "__" + name + "_ivars"; }
+
 	std::string Print() const { return "SingletonDefinition: " + name; }
 
 #ifdef GOATTEST

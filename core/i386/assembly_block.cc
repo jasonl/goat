@@ -836,6 +836,11 @@ void AssemblyBlock::dw( uint32_t val ) {
   AppendItem( new NumericDataBlock(val, 32) );
 }
 
+void AssemblyBlock::dw(std::string val)
+{
+  AppendItem(new NumericDataBlock(val));
+}
+
 AssemblyBlock::AssemblyBlock() {
   first = NULL;
   last = NULL;

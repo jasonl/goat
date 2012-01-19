@@ -177,8 +177,6 @@ ASTNode *ASTNode::MutableFindEnclosingNode(const std::string &typeToFind)
 
 const ASTNode *ASTNode::FindEnclosingNode(const std::string &typeToFind) const
 {
-	std::cout << typeid(*this).name() << std::endl;
-
 	if (typeid(*this).name() == typeToFind)
 		return this;
 	if (parent == NULL)

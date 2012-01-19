@@ -65,5 +65,20 @@ AssemblyBlock *SingletonDefinitionNode::GenerateCode()
 
 AssemblyBlock *SingletonDefinitionNode::GetAuxiliaryCode()
 {
-	return new AssemblyBlock;
+	AssemblyBlock *a = new AssemblyBlock;
+	AssemblyBlock *b = new AssemblyBlock;
+	a->SetSegment(".data");
+
+	for (uint32_t i = 0; i < classVars.size(); i++) {
+		b->dw(0);
+		b->dw("Null_dispatch");
+		b->dw(goatHash("Null"));
+	}
+
+	b->LabelFirstInstruction(PayloadLabelName());
+	a->AppendBlock(b);
+
+	a->SetSegment(".text");
+
+	return a;
 }

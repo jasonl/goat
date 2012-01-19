@@ -220,6 +220,7 @@ public:
   void _xor( Operand&, Operand& );
   void db( std::string );
   void dw( uint32_t );
+  void dw(std::string);
   AssemblyBlock();
   void AppendBlock( AssemblyBlock* );
   void AppendItem( AssemblerItem* );

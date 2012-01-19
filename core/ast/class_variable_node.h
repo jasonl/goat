@@ -6,6 +6,7 @@
 #define TYPE_OFFSET 8
 
 class ClassDefinitionNode;
+class SingletonDefinitionNode;
 class AssignmentTargetNode;
 
 class ClassVariableNode : public AssignmentTargetNode
@@ -16,13 +17,20 @@ class ClassVariableNode : public AssignmentTargetNode
 	AssemblyBlock *GenerateCode();
 	AssemblyBlock *GenerateAssignmentCode();
 	AssemblyBlock *PushOntoStack();
+
 	int32_t TypeHashOffset() const;
 	int32_t DispatchOffset() const;
 	int32_t PayloadOffset() const;
+	int32_t InstanceVariablePosition() const;
+
 	ClassDefinitionNode* MutableEnclosingClassDefinition();
 	const ClassDefinitionNode* EnclosingClassDefinition() const;
+	SingletonDefinitionNode* MutableEnclosingSingletonDefinition();
+	const SingletonDefinitionNode* EnclosingSingletonDefinition() const;
+
 	std::string Print() const { return "ClassVariable: " + name; }
 	std::string Name() const { return name; }
  private:
    const std::string name;
+   enum {CLASS_IVAR, SINGLETON_IVAR} type;
 };
