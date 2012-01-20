@@ -1,3 +1,4 @@
+#include "../goat.h"
 #include "../ast_node.h"
 
 // Generate the operand from the source string. Note, only accepts

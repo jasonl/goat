@@ -1,10 +1,11 @@
 #include <stdint.h>
-#include <string>
+
+#include "goat.h"
 #include "ast_node.h"
 
 // This is an implementation of the Foller/Noll/Vo Hash algorithm
 // described at:
-// 
+//
 // http://isthe.com/chongo/tech/comp/fnv/
 //
 // As this algorithm is in the public domain, the code in this file

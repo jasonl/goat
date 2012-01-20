@@ -1,13 +1,10 @@
 #ifndef AST_NODE_H
 #define AST_NODE_H
 
-#include <list>
-#include <string>
-#include <map>
 #include <stdint.h>
-#include <iostream>
 #include "token.hpp"
 #include "scope.h"
+#include "source_file.h"
 
 #include "i386/operand.h"
 #include "i386/assembly_block.h"

@@ -1,3 +1,6 @@
+#ifndef __VARIABLE_H
+#define __VARIABLE_H
+
 typedef signed long offset;
 
 class Variable {
@@ -16,3 +19,5 @@ class Variable {
   std::string name;
   Variable *next;
 };
+
+#endif

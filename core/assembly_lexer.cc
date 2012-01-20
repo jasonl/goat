@@ -1,5 +1,4 @@
-#include <iostream>
-
+#include "goat.h"
 #include "lexer.h"
 #include "assembly_lexer.hpp"
 

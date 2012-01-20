@@ -1,3 +1,4 @@
+#include "../goat.h"
 #include "../ast_node.h"
 
 void ParameterDefNode::Analyse( Scope *_scope ) {
@@ -9,4 +10,3 @@ void ParameterDefNode::Analyse( Scope *_scope ) {
     scope->AddParameterVariable(name);
   }
 }
-

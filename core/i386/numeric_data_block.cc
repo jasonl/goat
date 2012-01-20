@@ -1,3 +1,4 @@
+#include "../goat.h"
 #include "numeric_data_block.h"
 
 NumericDataBlock::NumericDataBlock( uint32_t _value, int _bits ) {

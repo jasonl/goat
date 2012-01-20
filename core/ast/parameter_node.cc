@@ -1,3 +1,4 @@
+#include "../goat.h"
 #include "../ast_node.h"
 
 void ParameterNode::Analyse( Scope *_scope ) {

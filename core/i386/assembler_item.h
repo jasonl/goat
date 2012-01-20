@@ -1,8 +1,6 @@
 #ifndef __ASSEMBLER_ITEM_H
 #define __ASSEMBLER_ITEM_H
 
-#include <string>
-#include <iostream>
 #include "asm_label.h"
 
 class AssemblerItem {

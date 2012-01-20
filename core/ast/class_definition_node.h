@@ -1,8 +1,6 @@
 #ifndef __CLASS_DEFINITION_NODE_H
 #define __CLASS_DEFINITION_NODE_H
 
-#include <map>
-
 typedef std::map<std::string,int> ClassVarMap;
 
 class ClassDefinitionNode : public ASTNode {

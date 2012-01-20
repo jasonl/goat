@@ -1,3 +1,4 @@
+#include "../goat.h"
 #include "instruction.h"
 
 Instruction::Instruction( std::string _mnemonic ) {
@@ -22,7 +23,7 @@ Instruction::Instruction( std::string _mnemonic,  Operand *op1,
   operand3 = NULL;
 }
 
-Instruction::Instruction( std::string _mnemonic, Operand* op1, 
+Instruction::Instruction( std::string _mnemonic, Operand* op1,
 			  Operand* op2, Operand* op3 ) {
   mnemonic = _mnemonic;
   operand1 = op1;
@@ -35,7 +36,7 @@ void Instruction::Print( std::ostream& stream ) const {
   if( operand1 ) stream << " " << *operand1;
   if( operand2 ) stream << ", " << *operand2;
   if( operand3 ) stream << ", " << *operand3;
-} 
+}
 
 Instruction::~Instruction() {
   if (operand1->isPrototype()) delete operand1;

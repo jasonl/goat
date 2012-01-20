@@ -1,6 +1,6 @@
 #include <stdint.h>
-#include <iostream>
 #include <sstream>
+#include "../goat.h"
 #include "instructions.h"
 #include "operand.h"
 
@@ -94,7 +94,7 @@ Operand& Operand::Prototype(const Register base) {
 
 // This is designed to be used with the special _ constructor
 // to allow simulation of the syntax of indirect operands
-// 
+//
 // This works as a constructor for new Operands generated from
 // the prototype register operands, which are left untouched.
 //e.g.
@@ -132,7 +132,7 @@ Operand& Operand::operator+(const int32_t displacement) {
     this_op.base = this->base;
     return this_op;
   } else {
-    Operand &this_op = *this;  
+    Operand &this_op = *this;
     this_op.displacement = displacement;
     return this_op;
   }
@@ -163,11 +163,11 @@ Operand& Operand::operator-(const int32_t displacement) {
 //
 // N.B. This is not commutative - it always acts in the form of
 // [base + offset] or [base + offset * scale] or
-// [base + offset + disp]. Using forms such as 
+// [base + offset + disp]. Using forms such as
 // [offset * scale + base] will not work, despite being able to
-// be correctly represented as a SIB byte. 
+// be correctly represented as a SIB byte.
 Operand& Operand::operator+( Operand &offset ) {
-  
+
   if( offset.prototype ) {
     Operand &this_op = *new Operand( Null );
     this_op.offset = offset.base;

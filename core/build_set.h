@@ -1,12 +1,7 @@
 #ifndef __BUILD_SET_H
 #define __BUILD_SET_H
 
-#include <list>
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <set>
-#include "source_file.h"
+class SourceFile;
 
 #define ASM_DIRECTORY "/asm/"
 #define OBJ_DIRECTORY "/o/"

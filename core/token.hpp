@@ -1,9 +1,6 @@
 #ifndef __TOKEN_HPP
 #define __TOKEN_HPP
 
-#include <string>
-#include <list>
-
 enum TokenType {
 	Asm,
 	Class,

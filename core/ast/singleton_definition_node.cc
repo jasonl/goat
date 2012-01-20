@@ -1,6 +1,4 @@
-#include <string>
-#include <map>
-
+#include "../goat.h"
 #include "../ast_node.h"
 #include "../i386/dispatch_function.h"
 #include "../i386/function_labels.h"

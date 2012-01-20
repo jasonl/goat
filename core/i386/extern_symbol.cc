@@ -1,3 +1,4 @@
+#include "../goat.h"
 #include "extern_symbol.h"
 
 ExternSymbol::ExternSymbol( std::string _symbol) {

@@ -1,3 +1,4 @@
+#include "../goat.h"
 #include "assembly_block.h"
 
 void AssemblyBlock::aaa() {

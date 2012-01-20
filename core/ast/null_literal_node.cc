@@ -1,3 +1,4 @@
+#include "../goat.h"
 #include "../ast_node.h"
 
 void NullLiteralNode::Analyse( Scope *_scope ) {

@@ -65,10 +65,10 @@
  * digit                 = "0" - "9"
  *
  */
+#include "goat.h"
 #include "source_file.h"
 #include "ast_node.h"
 #include "parser.h"
-#include "goat.h"
 
 const char *TOKEN_TYPES[]={
 	"Asm",

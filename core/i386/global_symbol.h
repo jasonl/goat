@@ -1,8 +1,6 @@
 #ifndef GLOBAL_SYMBOL_H
 #define GLOBAL_SYMBOL_H
 
-#include <string>
-#include <iostream>
 #include "assembler_item.h"
 
 class GlobalSymbol : public AssemblerItem {

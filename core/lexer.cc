@@ -1,9 +1,7 @@
-#include <iostream>
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <cstring> // For memset
-
 
 #include "goat.h"
 #include "source_file.h"

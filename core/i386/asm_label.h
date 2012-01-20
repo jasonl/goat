@@ -1,10 +1,8 @@
 #ifndef __ASM_LABEL_H
 #define __ASM_LABEL_H
 
-#include <string>
-
-class SourceFile;
 class Operand;
+class SourceFile;
 
 class AsmLabel {
  public:

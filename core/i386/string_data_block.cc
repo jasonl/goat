@@ -1,3 +1,4 @@
+#include "../goat.h"
 #include "string_data_block.h"
 
 StringDataBlock::StringDataBlock( std::string _contents, int _bits ) {

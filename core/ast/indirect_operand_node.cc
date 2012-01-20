@@ -1,3 +1,4 @@
+#include "../goat.h"
 #include "../ast_node.h"
 
 Operand *IndirectOperandNode::GenerateOperand() const
@@ -44,4 +45,3 @@ Operand *IndirectOperandNode::GenerateOperand() const
 
   return &_[*base];
 }
-

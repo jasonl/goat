@@ -7,16 +7,15 @@
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
+
 #include <string.h>
-#include <iostream>
-#include <string>
 #include <libgen.h>
 
+#include "goat.h"
 #include "build_set.h"
 #include "lexer.h"
 #include "ast_node.h"
 #include "parser.h"
-#include "goat.h"
 #include "source_file.h"
 
 std::string libraryDirectory;

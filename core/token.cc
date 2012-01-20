@@ -1,3 +1,4 @@
+#include "goat.h"
 #include "token.hpp"
 
 Token::Token( TokenType _type ) : type(_type) {

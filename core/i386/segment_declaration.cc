@@ -1,3 +1,4 @@
+#include "../goat.h"
 #include "segment_declaration.h"
 
 SegmentDeclaration::SegmentDeclaration( std::string _segment ) {

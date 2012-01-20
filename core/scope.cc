@@ -1,5 +1,5 @@
-#include <string>
 #include <sstream>
+#include "goat.h"
 #include "scope.h"
 #include "variable.h"
 

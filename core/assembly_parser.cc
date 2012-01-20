@@ -1,9 +1,7 @@
-#include <string>
-#include <iostream>
+#include "goat.h"
 #include "lexer.h"
 #include "ast_node.h"
 #include "parser.h"
-#include "goat.h"
 
 extern const char *TOKEN_TYPES[];
 

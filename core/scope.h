@@ -11,8 +11,6 @@
 #ifndef __SCOPE_H
 #define __SCOPE_H
 
-#include <string>
-#include <list>
 #include "i386/operand.h"
 
 typedef signed long offset;

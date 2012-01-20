@@ -1,3 +1,4 @@
+#include "../goat.h"
 #include "assembler_item.h"
 
 std::ostream& operator<<( std::ostream &_stream, const AssemblerItem& ai ) {

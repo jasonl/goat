@@ -1,4 +1,4 @@
-#include <string>
+#include "goat.h"
 #include "variable.h"
 
 Variable::Variable( std::string name, enum VAR_TYPE _type ) {

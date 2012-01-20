@@ -1,3 +1,4 @@
+#include "../goat.h"
 #include "../ast_node.h"
 
 // An ASTNode corresponding to a return statement. It has exactly one child

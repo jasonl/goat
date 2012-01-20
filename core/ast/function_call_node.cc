@@ -1,5 +1,5 @@
-#include "../ast_node.h"
 #include "../goat.h"
+#include "../ast_node.h"
 #include "../source_file.h"
 
 extern std::string GenerateClassMethodLabel(const std::string, const std::string);

@@ -1,3 +1,4 @@
+#include "../goat.h"
 #include "global_symbol.h"
 
 GlobalSymbol::GlobalSymbol( std::string _symbol ) {

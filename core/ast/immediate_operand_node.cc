@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include "../goat.h"
 #include "../ast_node.h"
 
 Operand *ImmediateOperandNode::GenerateOperand() const

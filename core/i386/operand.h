@@ -1,7 +1,6 @@
 #ifndef OPERAND_H
 #define OPERAND_H
 
-#include <iostream>
 #include <stdint.h>
 #include "asm_label.h"
 
@@ -9,7 +8,7 @@ typedef uint32_t Register;
 
 class Operand {
 public:
-  enum OperandType { 
+  enum OperandType {
     Null,
     Direct,
     Indirect,
@@ -31,7 +30,7 @@ public:
   Operand& operator-(const int32_t);
   Operand& operator*(const uint8_t);
   bool isPrototype();
-  void SetSize( OperandSize _size ) { size = _size; } 
+  void SetSize( OperandSize _size ) { size = _size; }
   friend std::ostream& operator<<( std::ostream&, const Operand& );
   friend std::string BuildIndirectOperand( const Operand& );
  private:

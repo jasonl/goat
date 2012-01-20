@@ -1,6 +1,5 @@
-#include <iostream>
+#include "goat.h"
 #include "ast_node.h"
-
 
 ASTNode::ASTNode()
 {

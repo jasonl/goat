@@ -1,6 +1,8 @@
 #include <fstream>
-#include "build_set.h"
 #include "goat.h"
+#include "source_file.h"
+#include "build_set.h"
+
 
 void BuildSet::AddSourceFile(SourceFile& sourceFile)
 {

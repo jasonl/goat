@@ -1,11 +1,7 @@
 #ifndef __SOURCE_FILE_H
 #define __SOURCE_FILE_H
 
-#include <string>
-#include <list>
 #include <stack>
-#include <set>
-#include <iostream>
 #include "token.hpp"
 #include "i386/assembly_block.h"
 

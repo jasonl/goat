@@ -1,3 +1,5 @@
+#include "../goat.h"
+#include "../source_file.h"
 #include "../ast_node.h"
 #include "../scope.h"
 #include "../lexer.h"

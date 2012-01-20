@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include "../goat.h"
 #include "../ast_node.h"
 
 // Generates the code to put the integer object into EAX/ECX/EDX.

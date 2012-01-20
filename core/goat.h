@@ -9,11 +9,13 @@
 #define	_GOAT_H
 
 #include <string>
+#include <map>
+#include <set>
+#include <list>
+#include <iostream>
 
 #define TRUE 1
 #define FALSE 0
-
-class ASTNode;
 
 #define VERBOSE_TOKENS 0x01
 #define VERBOSE_AST 0x02
@@ -27,4 +29,3 @@ std::string parseCommandLine( int, char**, int*, bool*);
 void goatFatalError( std::string );
 void goatError( int, std::string, ... );
 #endif	/* _GOAT_H */
-

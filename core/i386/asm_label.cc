@@ -1,5 +1,6 @@
 #include <sstream>
 
+#include "../goat.h"
 #include "asm_label.h"
 #include "operand.h"
 #include "../source_file.h"

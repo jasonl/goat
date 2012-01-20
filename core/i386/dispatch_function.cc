@@ -1,6 +1,4 @@
-#include <string>
-#include <map>
-
+#include "../goat.h"
 #include "../ast_node.h"   // For goatHash
 
 #include "assembly_block.h"

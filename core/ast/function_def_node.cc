@@ -1,5 +1,4 @@
-#include <string>
-#include <list>
+#include "../goat.h"
 #include "../ast_node.h"
 #include "../lexer.h"
 /*
