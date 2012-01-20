@@ -1,5 +1,6 @@
 #include "../ast_node.h"
 #include "../source_file.h"
+#include "../build_set.h"
 
 void SourceFileNode::Analyse( Scope *_scope ) {
   ASTNode *nextNode;
@@ -64,11 +65,21 @@ AssemblyBlock *SourceFileNode::GenerateCode() {
     a->mov(eax, Dword(0));
     a->LabelLastInstruction("start");
 
+	// Call new on all Singletons
+	BuildSet *bs = scope->GetSourceFile()->GetBuildSet();
+	Namespace::iterator end = bs->LastSingleton();
 
+	for (Namespace::iterator i = bs->FirstSingleton(); i != end; i++) {
+		a->mov(ebx, Dword(goatHash("new")));
+		a->call(*new Operand("__" + (*i) + "_dispatch"));
+	}
+
+	// Call main on the global object as the entry point.
     a->mov(ebx, Dword(goatHash("main")));
     a->mov(edx, *new Operand(DispatchLabelNameFor("__GLOBAL__")));
     a->call(edx);
-    // Default exit code
+
+    // Default exit code, executed after returning from main.
     a->push( Dword(0) ); // Return exit code of 0
     a->mov(eax, *new Operand(0x01)); // System call number 1 - exit program
     a->sub(esp, *new Operand(0x04)); // OSX / BSD requires extra space on stack

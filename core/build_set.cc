@@ -1,8 +1,10 @@
 #include <fstream>
 #include "build_set.h"
+#include "goat.h"
 
 void BuildSet::AddSourceFile(SourceFile& sourceFile)
 {
+	sourceFile.SetBuildSet(this);
 	files.push_back(sourceFile);
 }
 
@@ -121,3 +123,30 @@ bool BuildSet::Link(std::string target)
 	return system(cmd.c_str());;
 }
 
+void BuildSet::RegisterClass(std::string name)
+{
+	if (!SingletonExists(name)) {
+		classNames.insert(name);
+	} else {
+		goatError(0, "Attempt to declare Class %s when a Singleton named %s already exists", name.c_str(), name.c_str());
+	}
+}
+
+bool BuildSet::ClassExists(std::string name)
+{
+	return(classNames.count(name) > 0);
+}
+
+void BuildSet::RegisterSingleton(std::string name)
+{
+	if (!ClassExists(name)) {
+		singletonNames.insert(name);
+	} else {
+		goatError(0, "Attempt to declare Singleton %s when a Class named %s already exists", name.c_str(), name.c_str());
+	}
+}
+
+bool BuildSet::SingletonExists(std::string name)
+{
+	return(singletonNames.count(name) > 0);
+}

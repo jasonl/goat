@@ -241,6 +241,7 @@ ASTNode *Parser::MatchIncludeStatement() {
 	ASTNode *dummyNode = new SourceFileNode;
 	::SourceFile includedFile( sourceFile->ResolveIncludedFile(currentToken->Content()), true);
 
+	includedFile.SetBuildSet(sourceFile->GetBuildSet());
 	includedFile.Tokenize();
 	includedFile.ParseOntoNode(dummyNode);
 	includedFile.RetainAST();
@@ -864,7 +865,7 @@ SingletonDefinitionNode *Parser::MatchSingletonDefinition()
 
 	if (TokenIs(IndentDecrease)) {
 		ConsumeToken();
-		sourceFile->RegisterClass(singletonName);
+		sourceFile->RegisterSingleton(singletonName);
 		return thisNode;
 	} else {
 		goatError(CurrentSourcePosition(), "Unexpected token %s found when indent decrease to close singleton definition block expected.", TOKEN_TYPES[currentToken->Type()]);

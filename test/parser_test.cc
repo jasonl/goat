@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include "token.hpp"
 #include "ast_node.h"
+#include "build_set.h"
 #include "source_file.h"
 #include "parser.h"
 
@@ -13,6 +14,7 @@ namespace {
   protected:
 	  ParserTest() {
 		  sourceFile = new ::SourceFile("dummy.gt", false);
+		  sourceFile->SetBuildSet(new BuildSet);
 	  };
 
 	  ~ParserTest() {

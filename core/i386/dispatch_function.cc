@@ -20,7 +20,14 @@ AssemblyBlock *DispatchFunction::GenerateDispatchAssembly() const
 		dispatch->je(*new Operand((*i).second));
 	}
 
+	// Add a dummy "new" function if one hasn't been defined.
+	dispatch->cmp(ebx, Dword(goatHash("new")));
+	dispatch->jne(*new Operand(".not_new"));
+	dispatch->ret();
+
 	dispatch->push(Dword(5));
+	dispatch->LabelLastInstruction(".not_new");
+
 	dispatch->mov(eax, *new Operand(0x01));
 	dispatch->sub(esp, *new Operand(0x04));
 	dispatch->_int(*new Operand(0x80));

@@ -11,6 +11,7 @@
 
 class ASTNode;
 class Scope;
+class BuildSet;
 
 typedef std::set<std::string> SymbolTable;
 
@@ -22,7 +23,7 @@ typedef struct {
 class SourceFile {
   friend class Lexer;
 public:
-  SourceFile( std::string, bool );
+  SourceFile(std::string, bool);
   ~SourceFile();
   void Tokenize();
   void Parse();
@@ -37,9 +38,13 @@ public:
   void AddGlobalSymbol(std::string);
   void RegisterClass(std::string);
   bool ClassExists(std::string);
+  void RegisterSingleton(std::string);
+  bool SingletonExists(std::string);
   std::string AddString(std::string);
   std::string ResolveIncludedFile(const std::string&) const;
   bool IsLibrary() { return isLibrary; }
+  void SetBuildSet(BuildSet *bs) { buildSet = bs; }
+  BuildSet* GetBuildSet() { return buildSet; }
   TokenIterator FirstToken() { return tokenStream.begin(); };
   TokenIterator LastToken() { return tokenStream.end(); };
   std::list<Token>& GetTokenStream() { return tokenStream; }
@@ -63,9 +68,9 @@ private:
   AssemblyBlock *assembly;
   SymbolTable externSymbols;
   SymbolTable globalSymbols;
-  SymbolTable classNames;
   bool isLibrary;
   int strCounter;
+  BuildSet *buildSet;
 };
 
 #endif

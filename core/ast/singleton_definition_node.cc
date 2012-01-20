@@ -59,6 +59,8 @@ AssemblyBlock *SingletonDefinitionNode::GenerateCode()
 
     dispatch = d.GenerateDispatchAssembly();
 
+	dispatch->LabelFirstInstruction("__" + name + "_dispatch");
+
 	dispatch->AppendBlock(a);
     return dispatch;
 }

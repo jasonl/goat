@@ -12,6 +12,7 @@
 #include "scope.h"
 #include "parser.h"
 #include "source_file.h"
+#include "build_set.h"
 
 extern std::string libraryDirectory;
 
@@ -197,12 +198,22 @@ void SourceFile::PrintAsm(std::ostream &stream) {
 
 void SourceFile::RegisterClass(std::string className)
 {
-	classNames.insert(className);
+	buildSet->RegisterClass(className);
 }
 
 bool SourceFile::ClassExists(std::string className)
 {
-	return(classNames.count(className) > 0);
+	return buildSet->ClassExists(className);
+}
+
+void SourceFile::RegisterSingleton(std::string singletonName)
+{
+	buildSet->RegisterSingleton(singletonName);
+}
+
+bool SourceFile::SingletonExists(std::string singletonName)
+{
+	return buildSet->SingletonExists(singletonName);
 }
 
 void SourceFile::AddExternSymbol( std::string symbol) {
