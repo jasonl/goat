@@ -57,7 +57,11 @@ AssemblyBlock *SingletonDefinitionNode::GenerateCode()
 
     dispatch = d.GenerateDispatchAssembly();
 
-	dispatch->LabelFirstInstruction("__" + name + "_dispatch");
+	std::string dispatchLabel = DispatchLabelNameFor(name);
+
+	dispatch->LabelFirstInstruction(dispatchLabel);
+	dispatch->PrependItem(new GlobalSymbol(dispatchLabel));
+	scope->GetSourceFile()->AddGlobalSymbol(dispatchLabel);
 
 	dispatch->AppendBlock(a);
     return dispatch;

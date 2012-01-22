@@ -66,13 +66,17 @@ AssemblyBlock *SourceFileNode::GenerateCode() {
     a->mov(eax, Dword(0));
     a->LabelLastInstruction("start");
 
-	// Call new on all Singletons
+	// Call initialize on all Singletons
 	BuildSet *bs = scope->GetSourceFile()->GetBuildSet();
 	Namespace::iterator end = bs->LastSingleton();
 
 	for (Namespace::iterator i = bs->FirstSingleton(); i != end; i++) {
-		a->mov(ebx, Dword(goatHash("new")));
-		a->call(*new Operand("__" + (*i) + "_dispatch"));
+		a->mov(eax, *new Operand("__" + (*i) + "_ivars"));
+		a->mov(ecx, Dword(goatHash(*i)));
+		a->mov(edx, *DispatchOperandFor(*i, scope->GetSourceFile()));
+
+		a->mov(ebx, Dword(goatHash("initialize")));
+		a->call(edx);
 	}
 
 	// Call main on the global object as the entry point.

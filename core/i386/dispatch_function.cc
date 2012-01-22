@@ -19,7 +19,7 @@ AssemblyBlock *DispatchFunction::GenerateDispatchAssembly() const
 	}
 
 	// Add a dummy "new" function if one hasn't been defined.
-	dispatch->cmp(ebx, Dword(goatHash("new")));
+	dispatch->cmp(ebx, Dword(goatHash("initialize")));
 	dispatch->jne(*new Operand(".not_new"));
 	dispatch->ret();
 
