@@ -6,11 +6,7 @@ Operand *IndirectOperandTermNode::ModifyOperand(Operand* op) const
 {
 	IntegerLiteralNode *i = dynamic_cast<IntegerLiteralNode*>(firstChild);
 
-	std::cout << typeid(*firstChild).name();
-
 	if (i) {
-		std::cout << "Rahhhh";
-
 		uint32_t val = i->Value();
 
 		switch (operation[0]) {
