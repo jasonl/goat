@@ -1,0 +1,29 @@
+class System
+  self.mmap: λ(address, length, protected, flags, fd, offset)
+    allocated_address = 0
+    asm
+      and esp, 4 ; Should be 0xFFFFFF0 - Ensure ESP is 16-byte aligned
+      sub esp, 4 ; 4 bytes padding needed to keep everything 16-byte aligned.
+      push dword offset.payload
+      push dword fd.payload
+      push dword flags.payload
+      push dword protected.payload
+      push dword length.payload
+      push dword address.payload
+      ; OSX will add another 4 bytes here
+      call "_mmap"
+      mov allocated_address.payload, eax ; address returned in eax
+
+    return allocated_address
+
+  self.print: λ(str)
+    asm
+      mov  ebx, str.payload
+      push dword [ebx - 4]        ; length of string
+      push dword str.payload      ; string
+      push 1                      ; file descriptor (STDOUT)
+      mov  eax, 4                 ; System call number
+      sub  esp, 4                 ; 4 bytes for OSX
+      int  128                    ; System Call
+      add  esp, 16
+    return null

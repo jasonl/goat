@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include "goat.h"
 #include "token.hpp"
 #include "ast_node.h"
 #include "build_set.h"

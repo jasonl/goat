@@ -15,8 +15,10 @@ Operand *IndirectOperandNode::GenerateOperand() const
     if( reg == "edi" ) base = &edi;
     if( reg == "ebp" ) base = &ebp;
     if( reg == "esp" ) base = &esp;
+
     // Invalid Register
-    return NULL;
+	if (base == NULL)
+		return NULL;
   }
 
   if( reg.length() == 2 ) {
@@ -38,10 +40,16 @@ Operand *IndirectOperandNode::GenerateOperand() const
     if( reg == "dl" ) base = &dl;
     if( reg == "dh" ) base = &dh;
     // Invalid register
-    return NULL;
+	if (base == NULL)
+		return NULL;
   }
 
-  // TODO: Generate correct offsets etc from terms
+  Operand *ind = &_[*base];
+  ind->SetSize(size);
 
-  return &_[*base];
+  for (OperandIterator i = Operands(); i != end; i++) {
+	  ind = i->ModifyOperand(ind);
+  }
+
+  return ind;
 }

@@ -4,14 +4,15 @@
 
 // Generates the code to put the integer object into EAX/ECX/EDX.
 
+int32_t IntegerLiteralNode::Value() const
+{
+	return atol(contents.c_str());
+}
+
 AssemblyBlock *IntegerLiteralNode::GenerateCode() {
   AssemblyBlock *a = new AssemblyBlock;
 
-  // All integer values are 32-bit signed values
-  int32_t val = atol( contents.c_str() );
-
-
-  a->mov( eax, Dword(val) );
+  a->mov( eax, Dword(Value()) );
   a->mov( ecx, Dword(goatHash("Integer")));
   a->mov( edx, *DispatchOperandFor("Integer", scope->GetSourceFile()));
 
@@ -26,12 +27,9 @@ AssemblyBlock *IntegerLiteralNode::GenerateCode() {
 AssemblyBlock *IntegerLiteralNode::PushOntoStack() {
   AssemblyBlock *a = new AssemblyBlock;
 
-  // All integer values are 32-bit signed values
-  int32_t val = atol( contents.c_str() );
-
   a->push( Dword(goatHash("Integer")) );
   a->push( *DispatchOperandFor("Integer", scope->GetSourceFile()));
-  a->push( Dword(val) );
+  a->push( Dword(Value()) );
 
   a->CommentLastInstruction("Push Integer " + contents + " onto stack");
 

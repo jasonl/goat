@@ -5,6 +5,7 @@ class IndirectOperandNode : public OperandNode {
  public:
   IndirectOperandNode(const std::string &_reg) : OperandNode(), reg(_reg) {};
   Operand *GenerateOperand() const;
+  OperandIterator Operands() const { return OperandIterator(firstOperand); }
   std::string Print() const { return "IndirectOperand: " + reg; }
 #ifdef GOATTEST
   std::string Register() const { return reg; }

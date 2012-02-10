@@ -1,0 +1,10 @@
+- .goat directory needs to be made automatically
+- Class variables? Where to allocate storage?
+- object instantiation
+- Allocator singleton?
+- Closure around self in anonymous functions
+- [BUG] End of file requires a newline
+- Ensure instance variables are initialised to null
+- Rename ClassVariables to InstanceVariables
+- Ensure redefinition of a method name over-writes previous definition
+- Add ability to require files which includes them in the buildset

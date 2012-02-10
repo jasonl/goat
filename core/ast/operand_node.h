@@ -7,10 +7,14 @@ class OperandNode : public ASTNode {
   friend class OperandIterator;
  protected:
     Operand::OperandSize size;
+	OperandNode *firstOperand;
+	OperandNode *lastOperand;
  public:
- OperandNode() : ASTNode(), nextOperand(NULL), size(Operand::None) {};
-  void SetSize(Operand::OperandSize _size) { size = _size; }
-  virtual Operand *GenerateOperand() const { std::cout << "fail"; return NULL; }
+	void AppendOperand(OperandNode*);
+    OperandNode() : ASTNode(), nextOperand(NULL), size(Operand::None) {};
+    void SetSize(Operand::OperandSize _size) { size = _size; }
+	virtual Operand *GenerateOperand() const { std::cout << "fail"; return NULL; }
+	virtual Operand *ModifyOperand(Operand* o) const { return o; }
 };
 
 class OperandIterator {

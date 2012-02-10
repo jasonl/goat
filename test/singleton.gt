@@ -1,0 +1,19 @@
+include "integer.gt"
+include "boolean.gt"
+include "string.gt"
+include "null.gt"
+include "assertions.gt"
+
+singleton Allocator
+  allocate: λ()
+    return 1
+
+  deallocate: λ()
+    @other = 1
+    return @test
+
+singleton Second
+  initialize: λ()
+    print("initialize")
+    @ivar = "test"
+    return 6

@@ -263,8 +263,8 @@ IndirectOperandNode *Parser::MatchIndirectOperand() {
   thisNode = new IndirectOperandNode(currentToken->Content());
   ConsumeToken();
 
-  while((termNode = MATCH(IndirectOperandTerm))) {
-    thisNode->AppendChild( termNode );
+  while((termNode = MatchIndirectOperandTerm())) {
+    thisNode->AppendOperand(termNode);
   }
 
   if( TokenIsNot(RightSquare) ) {

@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include "goat.h"
 #include "ast_node.h"
 
 namespace {

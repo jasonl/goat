@@ -7,7 +7,7 @@ class IntegerLiteralNode : public ASTNode {
   AssemblyBlock *GenerateCode();
   AssemblyBlock *PushOntoStack();
   std::string Print() const { return "IntegerLiteral: " + contents; }
-
+  int32_t Value() const;
 #ifdef GOATTEST
   std::string Contents() const { return contents; }
 #endif

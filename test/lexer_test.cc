@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include "goat.h"
 #include "lexer.h"
 #include "source_file.h"
 
