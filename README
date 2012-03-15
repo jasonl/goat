@@ -32,6 +32,11 @@ The Goat compiler, goatc, accepts the following command line parameters, useful 
 
 At present, compiling requires directing the assembly code to a file on disk, and manually assembling and linking this file.
 
+Basic Types
+-----------
+Goat supports two types of integers: Signed integers, written normally in base 10 (e.g. 213, 1000) and unsigned integers, written with a prefix of 0x and in hexadecimal. (e.g. 0x10a2, 0xdeadbeef).
+
+
 Methods
 -------
 The lambda character (Unicode: 0x03bb) is used to define a function in Goat, which are, by default anonymous functions. These functions may be passed (anonymously) to other functions, or bound to a variable. The following code example shows a function being bound to the variable "fn".
