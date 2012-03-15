@@ -1,9 +1,10 @@
-include "assertions.gt"
-
 include "integer.gt"
 include "boolean.gt"
 include "null.gt"
 include "string.gt"
+include "system.gt"
+
+include "assertions.gt"
 
 main: λ()
   assert_equal(0, null.as_integer)

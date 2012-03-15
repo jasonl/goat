@@ -1,9 +1,10 @@
-include "assertions.gt"
-
 include "integer.gt"
 include "boolean.gt"
 include "null.gt"
 include "string.gt"
+include "system.gt"
+
+include "assertions.gt"
 
 main: λ()
   ; Equality
@@ -38,5 +39,3 @@ main: λ()
   assert_equal(1, 1 / 1)
   assert_equal(2, 2 / 1)
   assert_equal(4, 16 / 4)
-
-

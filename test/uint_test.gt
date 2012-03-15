@@ -1,10 +1,11 @@
-include "assertions.gt"
-
 include "integer.gt"
 include "unsigned_integer.gt"
 include "boolean.gt"
 include "null.gt"
 include "string.gt"
+include "system.gt"
+
+include "assertions.gt"
 
 main: λ()
   test_equality()
