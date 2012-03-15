@@ -81,6 +81,7 @@ const char *TOKEN_TYPES[]={
 	"End",
 	"EndOfFile",
 	"Equals",
+	"False",
 	"Identifier",
 	"If",
 	"Include",
@@ -92,11 +93,15 @@ const char *TOKEN_TYPES[]={
 	"LeftParen",
 	"New",
 	"Newline",
+	"Null",
 	"Period",
 	"Return",
 	"RightParen",
 	"Self",
+	"Singleton",
 	"String",
+	"True",
+	"UnsignedInteger",
 	"Whitespace",
 
 	// Assembly-only tokens
@@ -291,6 +296,12 @@ INT_MATCHER_FOR( Expression ) {
     return thisNode;
   }
 
+  if (TokenIs(UnsignedInteger)) {
+	  thisNode = new UnsignedIntegerLiteralNode(currentToken->Content());
+	  ConsumeToken();
+	  return thisNode;
+  }
+
   if( TokenIs( Identifier )) {
 	  thisNode = new VariableNode( currentToken->Content() );
     ConsumeToken();
@@ -374,6 +385,12 @@ INT_MATCHER_FOR( Receiver ) {
     return thisNode;
   }
 
+  if (TokenIs(UnsignedInteger)) {
+	  thisNode = new UnsignedIntegerLiteralNode(currentToken->Content());
+	  ConsumeToken();
+	  return thisNode;
+  }
+
   if (TokenIs(Null)) {
 	  thisNode = new NullLiteralNode;
 	  ConsumeToken();
@@ -404,6 +421,8 @@ FunctionCallNode *Parser::MatchFunctionCall() {
 
   if( receiver ) {
     thisNode->AddReceiver( receiver );
+  } else {
+	  thisNode->AddReceiver(new SelfNode);
   }
 
   return thisNode;

@@ -8,11 +8,6 @@ void FunctionCallNode::Analyse(Scope *_scope) {
   ASTIterator end(NULL);
   scope = _scope;
 
-  if(Receiver() == NULL) {
-	  SelfNode *self = new SelfNode();
-	  AddReceiver(self);
-  }
-
   for(ASTIterator i = ChildNodes(); i != end; ++i)
 	  i->Analyse( scope );
 
@@ -20,7 +15,6 @@ void FunctionCallNode::Analyse(Scope *_scope) {
   if(dynamic_cast<ClassLiteralNode*>(Receiver())) {
 	  // Class Method call
 	  type = ClassMethodCall;
-	  std::cout << "CMC" << std::flush;
   } else if(scope->HasVariable(name)) {
 	  // Calling a function object that exists in the local scope
 	  type = FunctionObjectCall;
