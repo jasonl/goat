@@ -32,6 +32,7 @@ enum TokenType {
 	Singleton,
 	String,
 	True,
+	UnsignedInteger,
 	Whitespace,
 
 	// Assembly-only tokens

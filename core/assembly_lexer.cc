@@ -46,85 +46,97 @@ void AssemblyLexer::AssemblyStateTransitions( CodePoint &cp ) {
 //     if( something )
 //    ^ AssemblyLexer finishes here, after pushing the IndentDecrease token
 //
-void AssemblyLexer::Lex() {
-  CodePoint cp;
-  bool firstLine = true;
+void AssemblyLexer::Lex()
+{
+	CodePoint cp;
+	bool firstLine = true;
 
-  GetNextCodePoint( &cp );
-
-  // TODO: suck up whitespace after the asm token
-
-  if( cp.wchar != '\n' ) {
-    lexerState = Newline;
-    currentLine++;
-    PushEmptyToken();
-  } else {
-    // Raise an error
-    return;
-  }
-
-  lexerState = Indent;
-
-  while( sourceNext < sourceEnd ){
-    sourceCurr = sourceNext;
-    GetNextCodePoint( &cp );
-
-    if(cp.wchar == '\r') {
-      continue;
-    }
-
-    switch( lexerState ) {
-    case Indent:
-      if(cp.wchar == ' ') { indent++; break; }
-
-      if( firstLine ) {
-	PushIndentToken();
-	firstLine = false;
-      }
-
-      // Don't worry about changing indent on newlines
-      if(cp.wchar == '\n') {
-	lexerState = Newline;
-	break;
-      }
-
-      if( indent <= baseIndent ) {
-	sourceNext = sourceCurr;
-	return;
-      }
-
-      AssemblyStateTransitions( cp );
-      break;
-
-    case Newline:
-      PushEmptyToken();
-      prevIndent = indent; indent = 0; currentLine++;
-      if (cp.wchar == ' ' || cp.wchar == '\t') {
-	indent++;
-	lexerState = Indent;
-	break;
-      }
-      AssemblyStateTransitions( cp );
-      break;
-
-    case Whitespace:
-      AssemblyStateTransitions( cp );
-      break;
-
-    case Comment:
-      while(cp.wchar != '\n' && sourceNext < sourceEnd) {
 	GetNextCodePoint( &cp );
-      }
-      GetNextCodePoint( &cp );
-      lexerState = Newline;
-      break;
 
-    case Plus:
-    case Minus:
-    case Multiply:
-    case Label:
-      PushToken(); // We want to keep the operator in the Token
-      AssemblyStateTransitions( cp );
+	// TODO: suck up whitespace after the asm token
+
+	if (cp.wchar != '\n') {
+		lexerState = Newline;
+		currentLine++;
+		PushEmptyToken();
+	} else {
+		// Raise an error
+		return;
+	}
+
+	lexerState = Indent;
+
+	while( sourceNext < sourceEnd ){
+		sourceCurr = sourceNext;
+		GetNextCodePoint( &cp );
+
+		if (cp.wchar == '\r') {
+			continue;
+		}
+
+		switch( lexerState ) {
+		case Indent:
+			if(cp.wchar == ' ') { indent++; break; }
+
+			if( firstLine ) {
+				PushIndentToken();
+				firstLine = false;
+			}
+
+			// Don't worry about changing indent on newlines
+			if(cp.wchar == '\n') {
+				lexerState = Newline;
+				break;
+			}
+
+			if (indent <= baseIndent) {
+				sourceNext = sourceCurr;
+				return;
+			}
+
+			AssemblyStateTransitions(cp);
+			break;
+
+		case Newline:
+			// Ignore blank lines
+			while (cp.wchar == '\n' && sourceNext < sourceEnd) {
+				sourceCurr = sourceNext; // Save the address of the current character
+				GetNextCodePoint(&cp);
+				currentLine++;
+			}
+
+			PushEmptyToken();
+			prevIndent = indent; indent = 0; currentLine++;
+
+			if (cp.wchar == ' ' || cp.wchar == '\t') {
+				indent++;
+				lexerState = Indent;
+				break;
+			}
+
+			PushIndentToken();
+
+			AssemblyStateTransitions( cp );
+			break;
+
+		case Whitespace:
+			AssemblyStateTransitions( cp );
+			break;
+
+		case Comment:
+			while(cp.wchar != '\n' && sourceNext < sourceEnd) {
+				GetNextCodePoint( &cp );
+			}
+			GetNextCodePoint( &cp );
+			lexerState = Newline;
+			break;
+
+		case Plus:
+		case Minus:
+		case Multiply:
+		case Label:
+			PushToken(); // We want to keep the operator in the Token
+			AssemblyStateTransitions( cp );
       break;
 
     case Comma:
@@ -152,6 +164,7 @@ void AssemblyLexer::Lex() {
       case '+':  thunkEnd--; PushToken(); StartThunk( cp ); lexerState = Plus; break;
       case '-':  thunkEnd--; PushToken(); StartThunk( cp ); lexerState = Minus; break;
       case '*':  thunkEnd--; PushToken(); StartThunk( cp ); lexerState = Multiply; break;
+      case ';': thunkEnd--; PushToken(); lexerState = Comment; break;
       case '\n': thunkEnd--; PushToken(); lexerState = Newline; break;
       case ':':  lexerState = Label; thunkEnd += cp.bytes; break;
       default:
@@ -184,6 +197,7 @@ void AssemblyLexer::Lex() {
       case '+':  PushToken(); StartThunk( cp ); lexerState = Plus; break;
       case '-':  PushToken(); StartThunk( cp ); lexerState = Minus; break;
       case '*':  PushToken(); StartThunk( cp ); lexerState = Multiply; break;
+      case ';':  PushToken(); lexerState = Comment; break;
       case '\n': PushToken(); lexerState = Newline; break;
       case ':':  lexerState = Label; break;
       default:
@@ -197,15 +211,5 @@ void AssemblyLexer::Lex() {
     }
   }
 
-  // Handle the end of file if we encounter it
-  switch( lexerState ) {
-  case Identifier:
-  case Label:
-  case Integer:
-  case String:
     PushToken();
-  default:
-    break;
-  }
-
 }

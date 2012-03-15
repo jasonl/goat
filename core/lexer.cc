@@ -1,6 +1,7 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <ctype.h>
 #include <cstring> // For memset
 
 #include "goat.h"
@@ -131,22 +132,41 @@ void Lexer::Lex() {
 				}
 
 				PushIndentToken();
-				if(cp.wchar >= '0' && cp.wchar <= '9') {
+
+				if (cp.wchar == '0' && *sourceNext == 'x') {
+					lexerState = UnsignedInteger;
+					StartThunk(cp);
+					GetNextCodePoint(&cp); // Skip the 'x'
+					thunkEnd += cp.bytes;
+					break;
+				}
+
+				if (isdigit(cp.wchar)) {
 					lexerState = Integer;
 					StartThunk( cp );
 					break;
 				}
+
 				DefaultStateTransitions( cp );
 				break;
 
       case Whitespace:
-				if(cp.wchar >= 0x30 && cp.wchar <= 0x39) {
-					lexerState = Integer;
-					StartThunk( cp );
-					break;
-				}
-				DefaultStateTransitions( cp );
-				break;
+		  if (cp.wchar == '0' && *sourceNext == 'x') {
+			  lexerState = UnsignedInteger;
+			  StartThunk(cp);
+			  GetNextCodePoint(&cp); // Skip the 'x'
+			  thunkEnd += cp.bytes;
+			  break;
+		  }
+
+		  if (isdigit(cp.wchar)) {
+			  lexerState = Integer;
+			  StartThunk( cp );
+			  break;
+		  }
+
+		  DefaultStateTransitions( cp );
+		  break;
 
       case RightParen:
       case LeftParen:
@@ -155,35 +175,50 @@ void Lexer::Lex() {
       case Equals:
       case Period:
       case Lambda:
-				PushEmptyToken();
-				if(cp.wchar >= 0x30 && cp.wchar <= 0x39) { lexerState = Integer; thunkStart = sourceCurr; thunkEnd = sourceCurr + cp.bytes - 1; break; }
-				DefaultStateTransitions( cp );
-				break;
+		  PushEmptyToken();
+
+		  if (cp.wchar == '0' && *sourceNext == 'x') {
+			  lexerState = UnsignedInteger;
+			  StartThunk(cp);
+			  GetNextCodePoint(&cp); // Skip the 'x'
+			  thunkEnd += cp.bytes;
+			  break;
+		  }
+
+		  if (isdigit(cp.wchar)) {
+			  lexerState = Integer;
+			  thunkStart = sourceCurr;
+			  thunkEnd = sourceCurr + cp.bytes - 1;
+			  break;
+		  }
+
+		  DefaultStateTransitions( cp );
+		  break;
 
       case Comment:
-				while(cp.wchar != '\n' && sourceNext < sourceEnd) {
-					sourceCurr = sourceNext; // Save the address of the current character
-					GetNextCodePoint( &cp );
-				}
-				lexerState = Newline;
-				break;
+		  while(cp.wchar != '\n' && sourceNext < sourceEnd) {
+			  sourceCurr = sourceNext; // Save the address of the current character
+			  GetNextCodePoint( &cp );
+		  }
+		  lexerState = Newline;
+		  break;
 
       case Newline:
-				// Ignore blank lines
-				while(cp.wchar == '\n' && sourceNext < sourceEnd) {
-					sourceCurr = sourceNext; // Save the address of the current character
-					GetNextCodePoint(&cp);
-					currentLine++;
-				}
+		  // Ignore blank lines
+		  while(cp.wchar == '\n' && sourceNext < sourceEnd) {
+			  sourceCurr = sourceNext; // Save the address of the current character
+			  GetNextCodePoint(&cp);
+			  currentLine++;
+		  }
 
-				PushEmptyToken();
-				indent = 0; currentLine++;
+		  PushEmptyToken();
+		  indent = 0; currentLine++;
 
-				if (cp.wchar == ' ') {
-					indent++;
-					lexerState = Indent;
-					break;
-				}
+		  if (cp.wchar == ' ') {
+			  indent++;
+			  lexerState = Indent;
+			  break;
+		  }
 
 				PushIndentToken();
 
@@ -248,10 +283,24 @@ void Lexer::Lex() {
 				break;
 
       case Integer:
-				if( cp.wchar >= '0' && cp.wchar <= '9') { thunkEnd+=cp.bytes; break; }
-				PushToken();
-				DefaultStateTransitions( cp );
-				break;
+		  if (isdigit(cp.wchar)) {
+			  thunkEnd+=cp.bytes;
+			  break;
+		  }
+
+		  PushToken();
+		  DefaultStateTransitions( cp );
+		  break;
+
+	  case UnsignedInteger:
+		  if (isxdigit(cp.wchar)) {
+			  thunkEnd += cp.bytes;
+			  break;
+		  }
+
+		  PushToken();
+		  DefaultStateTransitions(cp);
+		  break;
 
       case String:
 				switch( cp.wchar )
@@ -277,6 +326,7 @@ void Lexer::Lex() {
       goatError( currentLine, "Unclosed string found at end of file.");
       break;
     case Integer:
+	case UnsignedInteger:
     case Identifier:
       PushToken();
       break;

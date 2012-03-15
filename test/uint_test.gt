@@ -1,0 +1,46 @@
+include "assertions.gt"
+
+include "integer.gt"
+include "unsigned_integer.gt"
+include "boolean.gt"
+include "null.gt"
+include "string.gt"
+
+main: λ()
+  test_equality()
+  test_inequality()
+  test_addition()
+  ;test_subtraction()
+  test_bitwise_or()
+  test_bitwise_and()
+
+test_equality: λ()
+  assert(0x00 ≡ 0x00)
+  assert_false(0x00 ≡ 0x01)
+  assert(0x01 ≡ 0x01)
+
+test_inequality: λ()
+  assert(0x00 ≢ 0x01)
+  assert_false(0x00 ≢ 0x00)
+  assert(0x01 ≢ 0x02)
+
+test_addition: λ()
+  assert_equal(0x02, 0x01 + 0x01)
+  assert_equal(0x01, 0x01 + 0x00)
+  assert_equal(0x00, 0x00 + 0x00)
+  assert_equal(0xff, 0xf0 + 0x0f)
+
+test_subtraction: λ()
+  assert_equal(0x00, 0x00 - 0x00)
+  assert_equal(0x00, 0x01 - 0x01)
+  assert_equal(0x01, 0x01 - 0x00)
+
+test_bitwise_or: λ()
+  assert_equal(0x01, 0x00 | 0x01)
+  assert_equal(0xFF, 0x77 | 0xFF)
+  assert_equal(0x77, 0x77 | 0x00)
+
+test_bitwise_and: λ()
+  assert_equal(0x00, 0x00 & 0x00)
+  assert_equal(0x00, 0xff & 0x00)
+  assert_equal(0x77, 0x77 & 0xff)

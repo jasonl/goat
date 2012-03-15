@@ -73,8 +73,12 @@ namespace {
     EXPECT_EQ( Identifier, (++i)->Type() );
     EXPECT_EQ( "another_identifier", i->Content() );
     EXPECT_EQ( Newline, (++i)->Type() );
-    EXPECT_EQ( Integer, (++i)->Type() );
-    EXPECT_EQ( "123", i->Content() );
+    EXPECT_EQ(Integer, (++i)->Type());
+    EXPECT_EQ("123", i->Content());
+	EXPECT_EQ(Integer, (++i)->Type());
+	EXPECT_EQ("-123", i->Content());
+	EXPECT_EQ(UnsignedInteger, (++i)->Type());
+	EXPECT_EQ("0xdead0123", i->Content());
     EXPECT_EQ( String, (++i)->Type() );
     EXPECT_EQ( "A String", i->Content() );
     EXPECT_EQ( Comma, (++i)->Type() );

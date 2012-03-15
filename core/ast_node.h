@@ -117,6 +117,7 @@ std::ostream& operator<<(std::ostream&, const ASTNode&);
 #include "ast/source_file_node.h"
 #include "ast/string_literal_node.h"
 #include "ast/true_literal_node.h"
+#include "ast/unsigned_integer_literal_node.h"
 #include "ast/variable_node.h"
 
 #endif

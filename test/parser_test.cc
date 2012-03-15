@@ -73,6 +73,14 @@ namespace {
 		EXPECT_EQ( "12345", dynamic_cast<IntegerLiteralNode*>(integerLiteral)->Contents() );
 	}
 
+	TEST_F(ParserTest, ShouldMatchUnsignedIntegerLiteralAsExpression)
+	{
+		Add(UnsignedInteger, "0x1f00");
+		ASTNode* integerLiteral = Parser(sourceFile).MatchExpression();
+		EXPECT_EQ(TYPE(UnsignedIntegerLiteralNode), TYPE(*integerLiteral));
+		EXPECT_EQ( "0x1f00", dynamic_cast<UnsignedIntegerLiteralNode*>(integerLiteral)->Contents() );
+	}
+
 	TEST_F(ParserTest, ShouldMatchTrueLiteralAsExpression)
 	{
 		Add(True);
