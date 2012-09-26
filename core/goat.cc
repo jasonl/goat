@@ -21,31 +21,33 @@
 std::string libraryDirectory;
 
 #ifndef GOATTEST
-int main(int argc, char** argv) {
-  int verbose = 0;
-  bool library = false;
-  std::string sourceFileName;
-  BuildSet buildSet;
+int main(int argc, char** argv)
+{
+	int verbose = 0;
+	bool library = false;
+	std::string sourceFileName;
+	BuildSet buildSet;
 
-  sourceFileName = parseCommandLine( argc, argv, &verbose, &library );
+	sourceFileName = parseCommandLine(argc, argv, &verbose, &library);
 
-  SourceFile sourceFile( sourceFileName, library );
+	SourceFile sourceFile( sourceFileName, library );
 
-  buildSet.AddSourceFile(sourceFile);
+	buildSet.AddSourceFile(sourceFile);
+	buildSet.Tokenize(verbose & VERBOSE_TOKENS);
+	buildSet.Parse();
+	buildSet.Analyse(verbose & VERBOSE_AST);
+	buildSet.GenerateCode(verbose & VERBOSE_ASM);
+	buildSet.Assemble();
+	buildSet.Link("a.out");
 
-  buildSet.Tokenize(verbose & VERBOSE_TOKENS);
-  buildSet.Parse();
-  buildSet.Analyse(verbose & VERBOSE_AST);
-  buildSet.GenerateCode(verbose & VERBOSE_ASM);
-  buildSet.Assemble();
-  buildSet.Link("a.out");
-  return EXIT_SUCCESS;
+	return EXIT_SUCCESS;
 }
 #endif
 
-void goatFatalError( const std::string msg ) {
-  std::cerr << "FATAL ERROR: %s\n" << msg;
-  exit(1);
+void goatFatalError(const std::string msg)
+{
+	std::cerr << "FATAL ERROR: %s\n" << msg;
+	exit(1);
 }
 
 #ifndef TEST
@@ -70,7 +72,7 @@ std::string GetBaseDirectory(const char *relativePath)
   char *realBaseCommand;
   std::string baseDir;
 
-  if(relativePath[0] == '/') {
+  if (relativePath[0] == '/') {
 	  // When running under GDB, the relative path is the full path. Who knows why.
 	  realBaseCommand = realpath(relativePath, NULL);
   } else {
@@ -120,56 +122,56 @@ std::string parseCommandLine( int argc, char *argv[], int *verbose, bool *librar
     std::cerr << "Correct usage:\n";
     std::cerr << "goat <options> input_file.gt\n\n";
     std::cerr << "options:\n";
-    std::cerr << "-vlex              Print token stream.\n";
-    std::cerr << "-vtree             Print AST.\n";
-    std::cerr << "-vasm              Print generated assembly.\n";
-    std::cerr << "-l                 Compile as library.\n";
+    std::cerr << "-vl        Print token stream.\n";
+    std::cerr << "-vt        Print AST.\n";
+    std::cerr << "-vm        Print generated assembly.\n";
+    std::cerr << "-l         Compile as library.\n";
     exit(1);
   }
 
   for ( i=1; i <= (argc - 1); ++i) {
 
-    if(argv[i][0] == '-') {
-      // Option switch
-      switch( argv[i][1] ){
-      case 'L':
-      case 'l':
-	*library = true;
-	break;
-      case 'V':
-      case 'v':
-	switch( argv[i][2] ){
-	// -vTree - print the AST
-	case 't':
-	case 'T':
-	  *verbose |= VERBOSE_AST;
-	  break;
-	// -vLex - print lexical token stream
-	case 'l':
-	case 'L':
-	  *verbose |= VERBOSE_TOKENS;
-	  break;
-	// -vScope - print scopes
-	case 'S':
-	case 's':
-	  *verbose |= VERBOSE_SCOPES;
-	  break;
-	  // -vAsm - print assembly
-	case 'm':
-	case 'M':
-	  *verbose |= VERBOSE_ASM;
-	break;
+	  if (argv[i][0] == '-') {
+		  // Option switch
+		  switch( argv[i][1] ){
+		  case 'L':
+		  case 'l':
+			  *library = true;
+			  break;
+		  case 'V':
+		  case 'v':
+			  switch (argv[i][2]) {
+				  // -vTree - print the AST
+			  case 't':
+			  case 'T':
+				  *verbose |= VERBOSE_AST;
+				  break;
+				  // -vLex - print lexical token stream
+			  case 'l':
+			  case 'L':
+				  *verbose |= VERBOSE_TOKENS;
+				  break;
+				  // -vScope - print scopes
+			  case 'S':
+			  case 's':
+				  *verbose |= VERBOSE_SCOPES;
+				  break;
+				  // -vAsm - print assembly
+			  case 'm':
+			  case 'M':
+				  *verbose |= VERBOSE_ASM;
+				  break;
+			  }
+			  break;
+		  default:
+			  std::cerr << "Invalid option: " << argv[i] << "\n";
+			  exit(0);
+		  }
 	  }
-	break;
-      default:
-	std::cerr << "Invalid option: " << argv[i] << "\n";
-	exit(0);
-      }
-    }
-    else {
-      // Input file
-      fileName = argv[i];
-    }
+	  else {
+		  // Input file
+		  fileName = argv[i];
+	  }
   }
 
   return fileName;
