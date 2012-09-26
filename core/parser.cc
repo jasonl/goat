@@ -373,6 +373,13 @@ INT_MATCHER_FOR( Receiver ) {
       }
   }
 
+  if (TokenIs(ClassVar)) {
+	  thisNode = new ClassVariableNode(currentToken->Content());
+	  ConsumeToken();
+	  return thisNode;
+  }
+
+
   if (TokenIs( String ) ) {
 	thisNode = new StringLiteralNode( currentToken->Content() );
     ConsumeToken();
