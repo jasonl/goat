@@ -176,6 +176,33 @@ namespace {
 		EXPECT_EQ( "function_name", functionCall->Name() );
 
 		ASTIterator params = functionCall->ChildNodes();
+		EXPECT_EQ(TYPE(SelfNode), TYPE(*params));
+
+		params++;
+		EXPECT_EQ(TYPE(ParameterNode), TYPE(*params));
+
+		params++;
+		EXPECT_EQ(TYPE(ParameterNode), TYPE(*params));
+	}
+
+	TEST_F(ParserTest, ShouldMatchFunctionCallWith3Parameters)
+	{
+		Add(Identifier, "function_name"); Add(LeftParen);
+		Add(Integer, "1"); Add(Comma);
+		Add(Integer, "2"); Add(Comma);
+		Add(String, "abc"); Add(RightParen);
+
+		FunctionCallNode *functionCall = Parser(sourceFile).MatchFunctionCall();
+		EXPECT_EQ(TYPE(FunctionCallNode), TYPE(*functionCall));
+		EXPECT_EQ("function_name", functionCall->Name());
+
+		ASTIterator params = functionCall->ChildNodes();
+		EXPECT_EQ(TYPE(SelfNode), TYPE(*params));
+
+		params++;
+		EXPECT_EQ(TYPE(ParameterNode), TYPE(*params));
+
+		params++;
 		EXPECT_EQ(TYPE(ParameterNode), TYPE(*params));
 
 		params++;
