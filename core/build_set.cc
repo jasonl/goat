@@ -45,13 +45,13 @@ void BuildSet::Analyse(bool printFirst)
 	SourceFileIterator end = files.end();
 
 	// If there's a first SourceFile, print it
-	if(printFirst && i != end) {
+	if (printFirst && i != end) {
 		i->Analyse();
 		i->PrintAST();
 		i++;
 	}
 
-	while(i != end) {
+	while (i != end) {
 		i->Analyse();
 		i++;
 	}
@@ -82,7 +82,7 @@ bool BuildSet::Assemble()
 	std::ofstream asmFile;
 	bool allGood = true;
 
-	while(i != end) {
+	while (i != end) {
 		std::string asmFileName = BaseWorkingDirectory() + ASM_DIRECTORY + i->BaseFileName() + ".asm";
 		asmFile.open(asmFileName.c_str(), std::ios::out);
 		i->PrintAsm(asmFile);
@@ -111,7 +111,7 @@ bool BuildSet::Link(std::string target)
 	SourceFileIterator end = files.end();
 	std::string cmd = "ld ";
 
-	while(i != end) {
+	while (i != end) {
 		std::string objFileName = BaseWorkingDirectory() + OBJ_DIRECTORY + i->BaseFileName() + ".o";
 		cmd += objFileName;
 		cmd += " ";

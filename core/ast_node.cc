@@ -9,123 +9,129 @@ ASTNode::ASTNode()
 	prevSibling = NULL;
 }
 
-ASTNode::~ASTNode() {
-  ASTNode *childNode = NULL, *tempNode = NULL;
+ASTNode::~ASTNode()
+{
+	ASTNode *childNode = NULL, *tempNode = NULL;
 
-  childNode = firstChild;
+	childNode = firstChild;
 
-  while (childNode != NULL) {
-    tempNode = childNode->nextSibling;
-    delete childNode;
-    childNode = tempNode;
-  }
+	while (childNode != NULL) {
+		tempNode = childNode->nextSibling;
+		delete childNode;
+		childNode = tempNode;
+	}
 }
 
-void ASTNode::Analyse( Scope* _scope) {
-  ASTIterator end(NULL);
-  scope = _scope;
+void ASTNode::Analyse( Scope* _scope)
+{
+	ASTIterator end(NULL);
+	scope = _scope;
 
-  for( ASTIterator i = ChildNodes(); i != end; i++)
-    i->Analyse(_scope);
+	for (ASTIterator i = ChildNodes(); i != end; i++)
+		i->Analyse(_scope);
 }
 
-AssemblyBlock* ASTNode::GetAuxiliaryCode() {
-  ASTIterator end(NULL);
-  AssemblyBlock *a = new AssemblyBlock;
+AssemblyBlock* ASTNode::GetAuxiliaryCode()
+{
+	ASTIterator end(NULL);
+	AssemblyBlock *a = new AssemblyBlock;
 
-  for( ASTIterator i = ChildNodes(); i != end; i++) {
-    a->AppendBlock( i->GetAuxiliaryCode() );
-  }
+	for (ASTIterator i = ChildNodes(); i != end; i++)
+		a->AppendBlock( i->GetAuxiliaryCode() );
 
-  return a;
+	return a;
 }
 
-void ASTNode::AppendChild( ASTNode *child ) {
-  ASTNode *lastSibling = this->firstChild;
-  ASTNode *lastChildNode = child;
+void ASTNode::AppendChild(ASTNode *child)
+{
+	ASTNode *lastSibling = this->firstChild;
+	ASTNode *lastChildNode = child;
 
-  if(!child) return;
+	if(!child) return;
 
-  while(lastChildNode) {
-	  lastChildNode->parent = this;
-	  lastChildNode = lastChildNode->nextSibling;
-  }
+	while (lastChildNode) {
+		lastChildNode->parent = this;
+		lastChildNode = lastChildNode->nextSibling;
+	}
 
-  if( !this->firstChild ) {
-    firstChild = child;
-    return;
-  }
+	if (!this->firstChild) {
+		firstChild = child;
+		return;
+	}
 
-  // Find the last existing child node
-  while( lastSibling ) {
-    if( lastSibling->nextSibling ) {
-      lastSibling = lastSibling->nextSibling;
-    } else {
-      break;
-    }
-  }
+	// Find the last existing child node
+	while (lastSibling) {
+		if (lastSibling->nextSibling) {
+			lastSibling = lastSibling->nextSibling;
+		} else {
+			break;
+		}
+	}
 
-  lastSibling->nextSibling = child;
-  child->prevSibling = lastSibling;
-  return;
+	lastSibling->nextSibling = child;
+	child->prevSibling = lastSibling;
+	return;
 }
 
 // Insert a new AST-Node as the first child, rather than
 // the last one.
-void ASTNode::InsertFirstChild( ASTNode *child ) {
-  ASTNode *secondChild;
+void ASTNode::InsertFirstChild(ASTNode *child)
+{
+	ASTNode *secondChild;
 
-  if (!child) return;
+	if (!child) return;
 
-  child->parent = this;
+	child->parent = this;
 
-  if( !firstChild) {
-    firstChild = child;
-    return;
-  }
+	if (!firstChild) {
+		firstChild = child;
+		return;
+	}
 
-  secondChild = firstChild;
-  firstChild = child;
-  secondChild->prevSibling = child;
-  child->nextSibling = secondChild;
-  return;
+	secondChild = firstChild;
+	firstChild = child;
+	secondChild->prevSibling = child;
+	child->nextSibling = secondChild;
+	return;
 }
 
 // Replaces a child node with a new one
-void ASTNode::ReplaceChild( ASTNode *childToReplace, ASTNode *newChild ) {
-  ASTNode *currentChild = firstChild;
-  if( childToReplace == NULL || newChild == NULL ) return;
+void ASTNode::ReplaceChild(ASTNode *childToReplace, ASTNode *newChild)
+{
+	ASTNode *currentChild = firstChild;
 
-  // Ensure that the childToReplace exists as a child node.
-  while( currentChild ) {
-    if( currentChild == childToReplace ) break;
-    currentChild = currentChild->nextSibling;
-  }
+	if( childToReplace == NULL || newChild == NULL ) return;
 
-  // We may have got to here with currentChild == NULL
-  if( currentChild ) {
-    newChild->parent = this;
+	// Ensure that the childToReplace exists as a child node.
+	while (currentChild) {
+		if (currentChild == childToReplace) break;
+		currentChild = currentChild->nextSibling;
+	}
 
-    if( currentChild->prevSibling) {
-      currentChild->prevSibling->nextSibling = newChild;
-      newChild->prevSibling = currentChild->prevSibling;
-    }
+	// We may have got to here with currentChild == NULL
+	if (currentChild) {
+		newChild->parent = this;
 
-    if( currentChild->nextSibling ) {
-      currentChild->nextSibling->prevSibling = newChild;
-      newChild->nextSibling = currentChild->nextSibling;
-    }
+		if (currentChild->prevSibling) {
+			currentChild->prevSibling->nextSibling = newChild;
+			newChild->prevSibling = currentChild->prevSibling;
+		}
 
-    // Modify the first node pointer if we're replacing that.
-    if( firstChild == currentChild ) {
-      firstChild = newChild;
-    }
-  }
+		if (currentChild->nextSibling) {
+			currentChild->nextSibling->prevSibling = newChild;
+			newChild->nextSibling = currentChild->nextSibling;
+		}
 
-  return;
+		// Modify the first node pointer if we're replacing that.
+		if (firstChild == currentChild)
+			firstChild = newChild;
+
+	}
+
+	return;
 }
 
-void ASTNode::DetachChild( ASTNode *childNode )
+void ASTNode::DetachChild(ASTNode *childNode)
 {
 	ASTNode *currentChild = firstChild, *prevChild = NULL;
 
@@ -153,15 +159,17 @@ void ASTNode::DetachChild( ASTNode *childNode )
 
 }
 
-ASTNode *ASTNode::MoveNodeTo( ASTNode *newParent ) {
-  ASTNode *nextNode = nextSibling;
-  parent->DetachChild(this);
-  newParent->AppendChild(this);
-  return nextNode;
+ASTNode *ASTNode::MoveNodeTo(ASTNode *newParent)
+{
+	ASTNode *nextNode = nextSibling;
+	parent->DetachChild(this);
+	newParent->AppendChild(this);
+	return nextNode;
 }
 
-ASTIterator ASTNode::ChildNodes() {
-  return ASTIterator(firstChild);
+ASTIterator ASTNode::ChildNodes()
+{
+	return ASTIterator(firstChild);
 }
 
 
@@ -192,26 +200,26 @@ std::ostream& operator<<(std::ostream &stream, const ASTNode &node)
 }
 
 // Recursive function to print a tree of the AST
-void ASTNode::print(int depth, int skip, char *prev_cols) {
-  ASTIterator end(NULL);
+void ASTNode::print(int depth, int skip, char *prev_cols)
+{
+	ASTIterator end(NULL);
 
-  std::cout << *this;
-  std::cout << "\n";
+	std::cout << *this;
+	std::cout << "\n";
 
-  for( ASTIterator i = ChildNodes(); i != end; i++) {
+	for (ASTIterator i = ChildNodes(); i != end; i++) {
 
-    for(int j=0; j < (depth); j++) {
-      std::cout << ( prev_cols[j] ? "\u2502" : " ");
-    }
+		for(int j=0; j < (depth); j++)
+			std::cout << (prev_cols[j] ? "\u2502" : " ");
 
-    if (i->nextSibling == NULL) {
-      std::cout << "\u2514";
-      prev_cols[depth] = 0;
-      i->print(depth+1, skip+1, prev_cols);
-    } else {
-      std::cout << "\u251c";
-      prev_cols[depth] = 1;
-      i->print(depth+1, skip, prev_cols);
-    }
-  }
+		if (i->nextSibling == NULL) {
+			std::cout << "\u2514";
+			prev_cols[depth] = 0;
+			i->print(depth+1, skip+1, prev_cols);
+		} else {
+			std::cout << "\u251c";
+			prev_cols[depth] = 1;
+			i->print(depth+1, skip, prev_cols);
+		}
+	}
 }
