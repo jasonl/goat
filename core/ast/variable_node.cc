@@ -49,8 +49,8 @@ AssemblyBlock *VariableNode::GenerateAssignmentCode()
 	AssemblyBlock *a = new AssemblyBlock;
 
 	a->mov(scope->GeneratePayloadOperand(name), eax);
-	a->mov(scope->GenerateTypeHashOperand(name), edx);
-	a->mov(scope->GenerateDispatchOperand(name), ecx);
+	a->mov(scope->GenerateTypeHashOperand(name), ecx);
+	a->mov(scope->GenerateDispatchOperand(name), edx);
 
 	return a;
 }
