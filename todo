@@ -8,3 +8,6 @@
 - Rename ClassVariables to InstanceVariables
 - Ensure redefinition of a method name over-writes previous definition
 - Add ability to require files which includes them in the buildset
+- [BUG] Function call with no params requires parenthesis
+- Add parsing of negative signed integers. (Also + signed)
+- Add 'require' directive that adds the file to the build set
