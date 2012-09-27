@@ -81,7 +81,7 @@ class UnsignedInteger
       cmp ecx, #UnsignedInteger
       jne UnsignedInteger_u26_incorrect_type
       and eax, operand.payload
-      ; edx is already &UnsignedInteger
+      mov edx, &UnsignedInteger      ; dispatch function
       mov ecx, #UnsignedInteger
       add esp, 12
       pop ebp
@@ -95,7 +95,7 @@ class UnsignedInteger
       cmp ecx, #UnsignedInteger
       jne UnsignedInteger_u7c_incorrect_type
       or eax, operand.payload
-      ; edx is already &UnsignedInteger
+      mov edx, &UnsignedInteger      ; dispatch function
       mov ecx, #UnsignedInteger
       add esp, 12
       pop ebp

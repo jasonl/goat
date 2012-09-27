@@ -1,0 +1,33 @@
+singleton Allocator
+  initialize: λ()
+    ; From sys/mman.h
+    PROT_NONE  = 0x00
+    PROT_READ  = 0x01
+    PROT_WRITE = 0x02
+    PROT_EXEC  = 0x04
+
+    MAP_SHARED  = 0x0001
+    MAP_PRIVATE = 0x0002
+    MAP_FIXED   = 0x0010
+    MAP_NOCACHE = 0x0400
+
+    MAP_FILE = 0x0000
+    MAP_ANON = 0x1000
+
+    MAP_FAILED = 0xFFFFFFFF ; -1 in two's complement
+
+    ; Allocate 1mb to start with
+    @segment_size = 0x0400 * 0x0400
+    prot_flags = PROT_READ | PROT_WRITE
+    map_flags = MAP_ANON | MAP_PRIVATE
+
+    @next_address = System.mmap(0, @segment_size, prot_flags, map_flags, 0, 0)
+
+    ; Check that the allocation actually worked.
+    if @next_address ≡ MAP_FAILED
+      System.print("Unable to allocate heap.")
+      System.exit(1)
+
+  allocate: λ(size)
+    size_u = size_u & 0x000F
+    @next_address = @next_address + size_u

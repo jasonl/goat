@@ -1,6 +1,6 @@
 class System
   self.mmap: λ(address, length, protected, flags, fd, offset)
-    allocated_address = 0
+    allocated_address = 0x00
     asm
       and esp, 4294967280         ; 0xFFFFFF0 - Ensure ESP is 16-byte aligned
       sub esp, 8
