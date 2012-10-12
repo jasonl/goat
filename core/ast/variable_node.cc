@@ -2,42 +2,45 @@
 #include "../ast_node.h"
 #include "../source_file.h"
 
-void VariableNode::Analyse( Scope *_scope ) {
-  scope = _scope;
+void VariableNode::Analyse(Scope *_scope)
+{
+	scope = _scope;
 
-  // If the identifer exists as a classname, transform the receiver into
-  // a ClassLiteral node, which the FunctionCall node will use to generate
-  // the correct code.
-  if(scope->GetSourceFile()->ClassExists(name))
-  {
-	  ClassLiteralNode *cl = new ClassLiteralNode(name);
-	  parent->ReplaceChild(this,cl);
-	  cl->Analyse(scope);
+	// If the identifer exists as a classname, transform the receiver into
+	// a ClassLiteral node, which the FunctionCall node will use to generate
+	// the correct code.
+	if (scope->GetSourceFile()->ClassExists(name))
+	{
+		ClassLiteralNode *cl = new ClassLiteralNode(name);
+		parent->ReplaceChild(this,cl);
+		cl->Analyse(scope);
 
-	  delete this;
-	  return;
-  }
+		delete this;
+		return;
+	}
 
-  // If the variable doesn't exist, transform it into a function call
-  // and deal with it at runtime.
-  if( !scope->HasVariable(name) ) {
-    FunctionCallNode *fc = new FunctionCallNode(name);
-    SelfNode *sn = new SelfNode();
-    fc->AddReceiver( sn );
-    parent->ReplaceChild( this, fc );
-    fc->Analyse(scope);
+	// If the variable doesn't exist, transform it into a function call
+	// and deal with it at runtime.
+	if (!scope->HasVariable(name))
+	{
+		FunctionCallNode *fc = new FunctionCallNode(name);
+		SelfNode *sn = new SelfNode();
+		fc->AddReceiver( sn );
+		parent->ReplaceChild( this, fc );
+		fc->Analyse(scope);
 
-    delete this;
-    return;
-  }
+		delete this;
+		return;
+	}
 }
 
-AssemblyBlock *VariableNode::GenerateCode(){
+AssemblyBlock *VariableNode::GenerateCode()
+{
   AssemblyBlock *a = new AssemblyBlock();
 
-  a->mov( eax, scope->GeneratePayloadOperand(name) );
-  a->mov( ecx, scope->GenerateTypeHashOperand(name) );
-  a->mov( edx, scope->GenerateDispatchOperand(name) );
+  a->mov(eax, scope->GeneratePayloadOperand(name));
+  a->mov(ecx, scope->GenerateTypeHashOperand(name));
+  a->mov(edx, scope->GenerateDispatchOperand(name));
 
   a->CommentLastInstruction("Move " + name + " into eax/ecx/edx");
 
