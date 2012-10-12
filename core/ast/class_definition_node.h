@@ -13,6 +13,12 @@ public:
   void AddClassVariable(const std::string&);
   int ClassVariablePosition(const std::string&) const;
 
+  void RegisterMethod(const std::string&);
+  void RegisterClassMethod(const std::string&);
+
+  bool HasMethod(const std::string&);
+  bool HasClassMethod(const std::string&);
+
   std::string Print() const { return "ClassDefinition: " + name; }
 
 #ifdef GOATTEST
@@ -23,6 +29,8 @@ public:
   const std::string name;
   ClassVarMap classVars;
   int lastVarPosition;
+  std::set<std::string> methods;
+  std::set<std::string> classMethods;
 };
 
 #endif

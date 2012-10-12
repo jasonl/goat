@@ -3,20 +3,22 @@
 #include "../scope.h"
 #include "../lexer.h"
 
-void ClassMethodAssignmentNode::Analyse( Scope *_scope ) {
+void ClassMethodAssignmentNode::Analyse(Scope *_scope)
+{
   scope = _scope;
 
-  if(scope->HasVariable(lValue)) {
-    // Error - redefining a method
-  }
+  ClassDefinitionNode *enclosingClass = dynamic_cast<ClassDefinitionNode*>(parent);
 
-  scope->AddLocalVariable(lValue);
+  if (enclosingClass)
+	  enclosingClass->RegisterClassMethod(lValue);
+
 
   firstChild->Analyse( scope );
 }
 
-void ClassMethodAssignmentNode::SetRValue( ASTNode* _rValue ) {
-  AppendChild( _rValue );
+void ClassMethodAssignmentNode::SetRValue(ASTNode* _rValue)
+{
+  AppendChild(_rValue);
 }
 
 AssemblyBlock *ClassMethodAssignmentNode::GenerateCode() const
