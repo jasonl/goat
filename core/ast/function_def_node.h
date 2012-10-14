@@ -10,12 +10,14 @@ public:
   ASTIterator BodyNodes();
   void AddBody( ASTNode* );
   void AddParameterDef( ASTNode* );
+  int ParameterCount() const { return paramCount; }
   AssemblyBlock *GenerateCode();
   AssemblyBlock *GetAuxiliaryCode();
   std::string Print() const { return "FunctionDef"; }
 private:
   AssemblyBlock *bodyAsm;
   ASTNode *body;
+  int paramCount;
 };
 
 #endif

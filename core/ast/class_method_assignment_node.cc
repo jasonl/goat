@@ -6,19 +6,13 @@
 void ClassMethodAssignmentNode::Analyse(Scope *_scope)
 {
   scope = _scope;
-
-  ClassDefinitionNode *enclosingClass = dynamic_cast<ClassDefinitionNode*>(parent);
-
-  if (enclosingClass)
-	  enclosingClass->RegisterClassMethod(lValue);
-
-
   firstChild->Analyse( scope );
 }
 
-void ClassMethodAssignmentNode::SetRValue(ASTNode* _rValue)
+void ClassMethodAssignmentNode::SetRValue(FunctionDefNode* _rValue)
 {
   AppendChild(_rValue);
+  functionNode = _rValue;
 }
 
 AssemblyBlock *ClassMethodAssignmentNode::GenerateCode() const

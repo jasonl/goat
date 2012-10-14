@@ -815,18 +815,30 @@ ClassDefinitionNode *Parser::MatchClassDefinition() {
   }
   ConsumeToken();
 
-  while((newNode = MatchMethodAssignment()) ||
-		(newNode = MatchClassMethodAssignment()) ||
+  MethodAssignmentNode *newMethod = NULL;
+  ClassMethodAssignmentNode *newClassMethod = NULL;
+
+  while((newMethod = MatchMethodAssignment()) ||
+		(newClassMethod = MatchClassMethodAssignment()) ||
 		TokenIs(Newline)) {
-    if( newNode ) {
-      thisNode->AppendChild(newNode);
-    } else if( TokenIs( Newline )) {
-      ConsumeToken();
-    } else {
-      goatError(CurrentSourcePosition(), "Unexpected token %s found in class definition block. Could not match assignment", TOKEN_TYPES[currentToken->Type()]);
-      ResetTokenPosition( savedCurr );
-      return NULL;
-    }
+	  if (newMethod)
+	  {
+		  thisNode->AppendMethod(newMethod);
+	  }
+	  else if (newClassMethod)
+	  {
+		  thisNode->AppendClassMethod(newClassMethod);
+	  }
+ 	  else if (TokenIs(Newline))
+	  {
+		  ConsumeToken();
+	  }
+	  else
+	  {
+		  goatError(CurrentSourcePosition(), "Unexpected token %s found in class definition block. Could not match assignment", TOKEN_TYPES[currentToken->Type()]);
+		  ResetTokenPosition( savedCurr );
+		  return NULL;
+	  }
   }
 
   if( TokenIs( IndentDecrease )) {
@@ -905,7 +917,7 @@ MethodAssignmentNode *Parser::MatchMethodAssignment()
 {
 	TokenIterator variable, savedCurr = currentToken;
 	MethodAssignmentNode *thisNode = NULL;
-	ASTNode *rValue;
+	FunctionDefNode *rValue;
 
 	if(TokenIsNot(Identifier))
 		return NULL;
@@ -920,7 +932,7 @@ MethodAssignmentNode *Parser::MatchMethodAssignment()
 	}
 	ConsumeToken();
 
-	if((rValue = MATCH(Expression)))
+	if((rValue = MatchFunctionDef()))
 	{
 		thisNode = new MethodAssignmentNode(variable->Content());
 		thisNode->SetRValue(rValue);
@@ -936,7 +948,7 @@ ClassMethodAssignmentNode *Parser::MatchClassMethodAssignment()
 {
 	TokenIterator variable, savedCurr = currentToken;
 	ClassMethodAssignmentNode *thisNode = NULL;
-	ASTNode *rValue;
+	FunctionDefNode *rValue;
 
 	if(TokenIsNot(Self))
 		return NULL;
@@ -963,7 +975,7 @@ ClassMethodAssignmentNode *Parser::MatchClassMethodAssignment()
 	}
 	ConsumeToken();
 
-	if((rValue = MATCH(Expression)))
+	if((rValue = MatchFunctionDef()))
 	{
 		thisNode = new ClassMethodAssignmentNode(variable->Content());
 		thisNode->SetRValue(rValue);

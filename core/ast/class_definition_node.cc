@@ -6,15 +6,22 @@
 
 void ClassDefinitionNode::Analyse(Scope *_scope)
 {
-	ASTIterator end(NULL);
-
 	scope = new Scope(_scope);
 
-	// Add a class variable for every assignment (including functions)
-	for(ASTIterator i = ChildNodes(); i != end; i++)
+	for(ClassMethodIterator i = classMethodNodes.begin(); i != classMethodNodes.end(); i++)
 	{
-		i->Analyse(scope);
+		ClassMethodAssignmentNode *c = *i;
+		c->Analyse(scope);
+		RegisterClassMethod(c->Name(), c->ParameterCount());
 	}
+
+	for(MethodIterator i = methodNodes.begin(); i != methodNodes.end(); i++)
+	{
+		MethodAssignmentNode *m = *i;
+		m->Analyse(scope);
+		RegisterMethod(m->Name(), m->ParameterCount());
+	}
+
 }
 
 void ClassDefinitionNode::AddClassVariable(const std::string &name)
@@ -34,24 +41,44 @@ int ClassDefinitionNode::ClassVariablePosition(const std::string &name) const
 	}
 }
 
-void ClassDefinitionNode::RegisterMethod(const std::string& methodName)
+void ClassDefinitionNode::RegisterMethod(const std::string& methodName, int paramCount)
 {
-	methods.insert(methodName);
+	methods[methodName] = paramCount;
 }
 
-void ClassDefinitionNode::RegisterClassMethod(const std::string& methodName)
+void ClassDefinitionNode::RegisterClassMethod(const std::string& methodName, int paramCount)
 {
-	classMethods.insert(methodName);
+	classMethods[methodName] = paramCount;
 }
 
-bool ClassDefinitionNode::HasMethod(const std::string& methodName)
+bool ClassDefinitionNode::HasMethod(const std::string &methodName)
 {
 	return methods.find(methodName) != methods.end();
 }
 
-bool ClassDefinitionNode::HasClassMethod(const std::string& methodName)
+bool ClassDefinitionNode::HasClassMethod(const std::string &methodName)
 {
 	return classMethods.find(methodName) != classMethods.end();
+}
+
+int ClassDefinitionNode::ParamCountForClassMethod(const std::string &methodName)
+{
+	return classMethods[methodName];
+}
+
+int ClassDefinitionNode::ParamCountForMethod(const std::string &methodName)
+{
+	return methods[methodName];
+}
+
+void ClassDefinitionNode::AppendMethod(MethodAssignmentNode *newMethod)
+{
+	methodNodes.push_back(newMethod);
+}
+
+void ClassDefinitionNode::AppendClassMethod(ClassMethodAssignmentNode *newClassMethod)
+{
+	classMethodNodes.push_back(newClassMethod);
 }
 
 AssemblyBlock *ClassDefinitionNode::GenerateCode()
@@ -61,33 +88,30 @@ AssemblyBlock *ClassDefinitionNode::GenerateCode()
 	AssemblyBlock *fn;
 	AssemblyBlock *dispatch = new AssemblyBlock;
 
-	for(ASTIterator i = ChildNodes(); i != end; i++) {
-		MethodAssignmentNode *m = dynamic_cast<MethodAssignmentNode*>(&(*i));
+	for (MethodIterator i = methodNodes.begin(); i != methodNodes.end(); i++)
+	{
+		MethodAssignmentNode *m = *i;
+		m->GenerateCode();
+		fn = m->GetAuxiliaryCode();
+		fn->LabelFirstInstruction(GenerateFunctionLabel(m->Name(), name));
 
-		if (m)
-		{
-			m->GenerateCode();
-			fn = m->GetAuxiliaryCode();
-			fn->LabelFirstInstruction(GenerateFunctionLabel(m->Name(), name));
+		dispatch->cmp(ebx, Dword(goatHash(m->Name())));
+		dispatch->je(*new Operand(GenerateFunctionLabel(m->Name(), name)));
 
-			dispatch->cmp(ebx, Dword(goatHash(m->Name())));
-			dispatch->je(*new Operand(GenerateFunctionLabel(m->Name(), name)));
+		a->AppendBlock(fn);
+	}
 
-			a->AppendBlock(fn);
-		}
+	for (ClassMethodIterator i = classMethodNodes.begin(); i != classMethodNodes.end(); i++)
+	{
+		ClassMethodAssignmentNode *c = *i;
+		std::string cfnLabel = GenerateClassMethodLabel(c->Name(), name);
 
-		ClassMethodAssignmentNode *c = dynamic_cast<ClassMethodAssignmentNode*>(&(*i));
-		if (c)
-		{
-			std::string cfnLabel = GenerateClassMethodLabel(c->Name(), name);
-
-			c->GenerateCode();
-			fn = c->GetAuxiliaryCode();
-			fn->LabelFirstInstruction(cfnLabel);
-			fn->PrependItem(new GlobalSymbol(cfnLabel));
-			scope->GetSourceFile()->AddGlobalSymbol(cfnLabel);
-			a->AppendBlock(fn);
-		}
+		c->GenerateCode();
+		fn = c->GetAuxiliaryCode();
+		fn->LabelFirstInstruction(cfnLabel);
+		fn->PrependItem(new GlobalSymbol(cfnLabel));
+		scope->GetSourceFile()->AddGlobalSymbol(cfnLabel);
+		a->AppendBlock(fn);
 	}
 
 	// If a method isn't found, exit with error code 5
