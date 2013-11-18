@@ -30,7 +30,7 @@ void FunctionCallNode::AddReceiver( ASTNode *_receiver ) {
   InsertFirstChild( _receiver );
 }
 
-AssemblyBlock *FunctionCallNode::GenerateCode()
+AssemblyBlock *FunctionCallNode::GenerateCode() const
 {
   AssemblyBlock *a = new AssemblyBlock;
   int paramCount = 0;
@@ -60,7 +60,7 @@ AssemblyBlock *FunctionCallNode::GenerateCode()
   return a;
 }
 
-void FunctionCallNode::GenerateClassMethodCall(AssemblyBlock *a)
+void FunctionCallNode::GenerateClassMethodCall(AssemblyBlock *a) const
 {
 	ClassLiteralNode *classNode = dynamic_cast<ClassLiteralNode*>(Receiver());
 	std::string cmLabel = GenerateClassMethodLabel(name, classNode->Name());
@@ -68,7 +68,7 @@ void FunctionCallNode::GenerateClassMethodCall(AssemblyBlock *a)
 	a->call(*new Operand(cmLabel));
 }
 
-void FunctionCallNode::GenerateMethodCall(AssemblyBlock *a)
+void FunctionCallNode::GenerateMethodCall(AssemblyBlock *a) const
 {
 	if(Receiver() == NULL) {
 		goatFatalError("Null receiver found in FunctionalCall AST-Node inferred to be a method call");
@@ -82,13 +82,13 @@ void FunctionCallNode::GenerateMethodCall(AssemblyBlock *a)
 	a->CommentLastInstruction("Function Call: " + name);
 }
 
-void FunctionCallNode::GenerateFunctionObjectCall(AssemblyBlock *a)
+void FunctionCallNode::GenerateFunctionObjectCall(AssemblyBlock *a) const
 {
 	// TODO: Add run-time check that the object is actually a function
 	a->call(scope->GeneratePayloadOperand(name));
 }
 
-int FunctionCallNode::PushParametersOntoStack(AssemblyBlock *a, bool skipFirst)
+int FunctionCallNode::PushParametersOntoStack(AssemblyBlock *a, bool skipFirst) const
 {
 	int paramCount = 0;
 	ASTIterator i = ChildNodes(), end(NULL);
@@ -107,7 +107,7 @@ int FunctionCallNode::PushParametersOntoStack(AssemblyBlock *a, bool skipFirst)
 }
 
 // Pushes the value returned by calling the function on to the stack
-AssemblyBlock *FunctionCallNode::PushOntoStack()
+AssemblyBlock *FunctionCallNode::PushOntoStack() const
 {
   AssemblyBlock *a = GenerateCode();
 

@@ -5,7 +5,7 @@ void NullLiteralNode::Analyse( Scope *_scope ) {
   scope = _scope;
 }
 
-AssemblyBlock *NullLiteralNode::GenerateCode() {
+AssemblyBlock *NullLiteralNode::GenerateCode() const {
   AssemblyBlock *a = new AssemblyBlock();
 
   a->mov( eax, Dword(0) );
@@ -17,7 +17,7 @@ AssemblyBlock *NullLiteralNode::GenerateCode() {
   return a;
 }
 
-AssemblyBlock *NullLiteralNode::PushOntoStack() {
+AssemblyBlock *NullLiteralNode::PushOntoStack() const { 
   AssemblyBlock *a = new AssemblyBlock();
 
   a->push( Dword(goatHash("Null")));

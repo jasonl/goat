@@ -5,8 +5,8 @@ class TrueLiteralNode : public ASTNode {
  public:
 	TrueLiteralNode() {};
 	void Analyse( Scope* );
-	AssemblyBlock *GenerateCode();
-	AssemblyBlock *PushOntoStack();
+	AssemblyBlock *GenerateCode() const;
+	AssemblyBlock *PushOntoStack() const;
 	std::string Print() const { return "TrueLiteral"; }
 };
 

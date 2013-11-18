@@ -9,7 +9,7 @@ uint32_t UnsignedIntegerLiteralNode::Value() const
 	return strtol(contents.c_str(), NULL, 16);
 }
 
-AssemblyBlock *UnsignedIntegerLiteralNode::GenerateCode()
+AssemblyBlock *UnsignedIntegerLiteralNode::GenerateCode() const
 {
 	AssemblyBlock *a = new AssemblyBlock;
 
@@ -24,7 +24,7 @@ AssemblyBlock *UnsignedIntegerLiteralNode::GenerateCode()
 
 // Generates the assembly to push the integer object onto the stack
 // for a function call.
-AssemblyBlock *UnsignedIntegerLiteralNode::PushOntoStack()
+AssemblyBlock *UnsignedIntegerLiteralNode::PushOntoStack() const
 {
 	AssemblyBlock *a = new AssemblyBlock;
 

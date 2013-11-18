@@ -167,7 +167,7 @@ ASTNode *ASTNode::MoveNodeTo(ASTNode *newParent)
 	return nextNode;
 }
 
-ASTIterator ASTNode::ChildNodes()
+ASTIterator ASTNode::ChildNodes() const
 {
 	return ASTIterator(firstChild);
 }

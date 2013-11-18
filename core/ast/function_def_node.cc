@@ -19,11 +19,11 @@ FunctionDefNode::~FunctionDefNode() {
   if( bodyAsm ) delete bodyAsm;
 }
 
-ASTIterator FunctionDefNode::ParameterDefs() {
+ASTIterator FunctionDefNode::ParameterDefs() const {
   return ASTIterator( firstChild );
 }
 
-ASTIterator FunctionDefNode::BodyNodes() {
+ASTIterator FunctionDefNode::BodyNodes() const {
   return ASTIterator( body );
 }
 
@@ -72,7 +72,7 @@ void FunctionDefNode::Analyse( Scope *_scope ) {
   body->Analyse( scope );
 }
 
-AssemblyBlock *FunctionDefNode::GenerateCode() {
+AssemblyBlock *FunctionDefNode::GenerateCode() const {
   ASTIterator end( NULL );
   std::string functionName;
   uint32_t bytesForLocals;

@@ -4,11 +4,11 @@
 class FunctionCallNode : public ASTNode {
  public:
  FunctionCallNode(const std::string &_name) : name(_name) {};
-  ASTNode *Receiver() { return firstChild; }
+  ASTNode *Receiver() const { return firstChild; }
   void AddReceiver( ASTNode* );
   void Analyse( Scope* );
-  AssemblyBlock *GenerateCode();
-  AssemblyBlock *PushOntoStack();
+  AssemblyBlock *GenerateCode() const;
+  AssemblyBlock *PushOntoStack() const;
   std::string Print() const { return "FunctionCall: " + name; }
 
 #ifdef GOATTEST
@@ -19,10 +19,10 @@ class FunctionCallNode : public ASTNode {
   enum FC_TYPE {FunctionObjectCall, ClassMethodCall, MethodCall } type;
   const std::string name;
 
-  void GenerateClassMethodCall(AssemblyBlock*);
-  void GenerateFunctionObjectCall(AssemblyBlock*);
-  void GenerateMethodCall(AssemblyBlock*);
-  int PushParametersOntoStack(AssemblyBlock*, bool);
+  void GenerateClassMethodCall(AssemblyBlock*) const;
+  void GenerateFunctionObjectCall(AssemblyBlock*) const;
+  void GenerateMethodCall(AssemblyBlock*) const;
+  int PushParametersOntoStack(AssemblyBlock*, bool) const;
 };
 
 #endif

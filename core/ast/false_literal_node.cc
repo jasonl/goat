@@ -6,7 +6,7 @@ void FalseLiteralNode::Analyse( Scope *_scope )
   scope = _scope;
 }
 
-AssemblyBlock *FalseLiteralNode::GenerateCode()
+AssemblyBlock *FalseLiteralNode::GenerateCode() const
 {
 	AssemblyBlock *a = new AssemblyBlock();
 
@@ -19,7 +19,7 @@ AssemblyBlock *FalseLiteralNode::GenerateCode()
 	return a;
 }
 
-AssemblyBlock *FalseLiteralNode::PushOntoStack()
+AssemblyBlock *FalseLiteralNode::PushOntoStack() const
 {
 	AssemblyBlock *a = new AssemblyBlock();
 

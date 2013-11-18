@@ -8,8 +8,9 @@ void ReturnStatementNode::SetReturnValue( ASTNode *_returnValue ) {
   returnValue = _returnValue;
 }
 
-ASTIterator ReturnStatementNode::ChildNodes() {
-  return ASTIterator( returnValue );
+ASTIterator ReturnStatementNode::ChildNodes() const
+{
+  return ASTIterator(returnValue);
 }
 
 void ReturnStatementNode::Analyse( Scope *_scope ) {
@@ -17,7 +18,7 @@ void ReturnStatementNode::Analyse( Scope *_scope ) {
   if(returnValue) returnValue->Analyse( scope );
 }
 
-AssemblyBlock *ReturnStatementNode::GenerateCode()
+AssemblyBlock *ReturnStatementNode::GenerateCode() const
 {
 	AssemblyBlock *a = returnValue->GenerateCode();
 	a->mov(esp, ebp);

@@ -13,6 +13,6 @@ void ParameterNode::Analyse( Scope *_scope ) {
 
 // Generates the code to push the parameter onto the stack for a
 // function call.
-AssemblyBlock *ParameterNode::PushOntoStack() {
+AssemblyBlock *ParameterNode::PushOntoStack() const {
   return ChildNodes()->PushOntoStack();
 }

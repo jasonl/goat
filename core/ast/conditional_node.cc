@@ -31,7 +31,7 @@ void ConditionalNode::Analyse( Scope *_scope ) {
   }
 }
 
-AssemblyBlock *ConditionalNode::GenerateCode() {
+AssemblyBlock *ConditionalNode::GenerateCode() const {
   AssemblyBlock *a = expression->GenerateCode();
   AssemblyBlock *elseClauseAsm = NULL;
 

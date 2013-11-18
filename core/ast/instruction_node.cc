@@ -3,7 +3,7 @@
 #include "../lexer.h"
 #include "../i386/instruction.h"
 
-AssemblyBlock *InstructionNode::GenerateCode() {
+AssemblyBlock *InstructionNode::GenerateCode() const {
   AssemblyBlock *a = new AssemblyBlock;
   ::Instruction *ins = NULL;
   OperandIterator end(NULL);

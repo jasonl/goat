@@ -8,7 +8,7 @@ class MutableAssignmentNode : public ASTNode
   public:
 	MutableAssignmentNode(AssignmentTargetNode*, ASTNode*);
 	void Analyse( Scope* );
-	AssemblyBlock *GenerateCode();
+	AssemblyBlock *GenerateCode() const;
 	std::string VariableName() const { return target->Name(); }
 	std::string Print() const { return "MutableAssignment"; }
 	bool IsRelocatedToGlobalObject() const { return true; }

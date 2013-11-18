@@ -8,14 +8,14 @@ void ClassDefinitionNode::Analyse(Scope *_scope)
 {
 	scope = new Scope(_scope);
 
-	for(ClassMethodIterator i = classMethodNodes.begin(); i != classMethodNodes.end(); i++)
+	for(ClassMethodList::iterator i = classMethodNodes.begin(); i != classMethodNodes.end(); i++)
 	{
 		ClassMethodAssignmentNode *c = *i;
 		c->Analyse(scope);
 		RegisterClassMethod(c->Name(), c->ParameterCount());
 	}
 
-	for(MethodIterator i = methodNodes.begin(); i != methodNodes.end(); i++)
+	for(MethodNodeList::iterator i = methodNodes.begin(); i != methodNodes.end(); i++)
 	{
 		MethodAssignmentNode *m = *i;
 		m->Analyse(scope);
@@ -51,24 +51,24 @@ void ClassDefinitionNode::RegisterClassMethod(const std::string& methodName, int
 	classMethods[methodName] = paramCount;
 }
 
-bool ClassDefinitionNode::HasMethod(const std::string &methodName)
+bool ClassDefinitionNode::HasMethod(const std::string &methodName) const
 {
 	return methods.find(methodName) != methods.end();
 }
 
-bool ClassDefinitionNode::HasClassMethod(const std::string &methodName)
+bool ClassDefinitionNode::HasClassMethod(const std::string &methodName) const
 {
 	return classMethods.find(methodName) != classMethods.end();
 }
 
-int ClassDefinitionNode::ParamCountForClassMethod(const std::string &methodName)
+int ClassDefinitionNode::ParamCountForClassMethod(const std::string &methodName) const
 {
-	return classMethods[methodName];
+  return classMethods.at(methodName);
 }
 
-int ClassDefinitionNode::ParamCountForMethod(const std::string &methodName)
+int ClassDefinitionNode::ParamCountForMethod(const std::string &methodName) const
 {
-	return methods[methodName];
+  return methods.at(methodName);
 }
 
 void ClassDefinitionNode::AppendMethod(MethodAssignmentNode *newMethod)
@@ -81,14 +81,16 @@ void ClassDefinitionNode::AppendClassMethod(ClassMethodAssignmentNode *newClassM
 	classMethodNodes.push_back(newClassMethod);
 }
 
-AssemblyBlock *ClassDefinitionNode::GenerateCode()
+AssemblyBlock *ClassDefinitionNode::GenerateCode() const
 {
 	ASTIterator end(NULL);
 	AssemblyBlock *a = new AssemblyBlock;
 	AssemblyBlock *fn;
 	AssemblyBlock *dispatch = new AssemblyBlock;
 
-	for (MethodIterator i = methodNodes.begin(); i != methodNodes.end(); i++)
+	GenerateInitializer(a);
+
+	for (MethodNodeList::const_iterator i = methodNodes.begin(); i != methodNodes.end(); i++)
 	{
 		MethodAssignmentNode *m = *i;
 		m->GenerateCode();
@@ -101,7 +103,7 @@ AssemblyBlock *ClassDefinitionNode::GenerateCode()
 		a->AppendBlock(fn);
 	}
 
-	for (ClassMethodIterator i = classMethodNodes.begin(); i != classMethodNodes.end(); i++)
+	for (ClassMethodList::const_iterator i = classMethodNodes.begin(); i != classMethodNodes.end(); i++)
 	{
 		ClassMethodAssignmentNode *c = *i;
 		std::string cfnLabel = GenerateClassMethodLabel(c->Name(), name);

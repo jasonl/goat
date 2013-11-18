@@ -19,7 +19,7 @@ void ConstantAssignmentNode::SetRValue( ASTNode* _rValue ) {
   AppendChild( _rValue );
 }
 
-AssemblyBlock *ConstantAssignmentNode::GenerateCode()
+AssemblyBlock *ConstantAssignmentNode::GenerateCode() const
 {
   AssemblyBlock *a = firstChild->GenerateCode();
 

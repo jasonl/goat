@@ -5,7 +5,7 @@ class AddressOperandNode : public OperandNode {
  public:
  AddressOperandNode( const std::string &_address ) : address(_address) {};
   Operand *GenerateOperand() const;
-  std::string Print() { return "AddressOperand: " + address; }
+  std::string Print() const { return "AddressOperand: " + address; }
  private:
   const std::string address;
 };

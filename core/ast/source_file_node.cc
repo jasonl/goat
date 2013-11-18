@@ -52,7 +52,7 @@ void SourceFileNode::Analyse( Scope *_scope ) {
 
 }
 
-AssemblyBlock *SourceFileNode::GenerateCode() {
+AssemblyBlock *SourceFileNode::GenerateCode() const {
   AssemblyBlock *a = new AssemblyBlock;
   ASTIterator end(NULL);
 

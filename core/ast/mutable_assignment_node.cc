@@ -22,7 +22,7 @@ void MutableAssignmentNode::Analyse( Scope *_scope )
 		i->Analyse(_scope);
 }
 
-AssemblyBlock *MutableAssignmentNode::GenerateCode()
+AssemblyBlock *MutableAssignmentNode::GenerateCode() const
 {
 	// Move the rValue into eax/ecx/edx
 	AssemblyBlock *a = rValue->GenerateCode();

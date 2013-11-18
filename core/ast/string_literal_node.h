@@ -5,8 +5,8 @@ class StringLiteralNode : public ASTNode {
  public:
   StringLiteralNode(const std::string &_contents) : contents(_contents) {};
   void Analyse( Scope * );
-  AssemblyBlock *GenerateCode();
-  AssemblyBlock *PushOntoStack();
+  AssemblyBlock *GenerateCode() const;
+  AssemblyBlock *PushOntoStack() const;
   std::string Print() const { return "StringLiteral: \"" + contents + "\""; }
 
 #ifdef GOATTEST

@@ -11,7 +11,7 @@ void InlineAssemblyNode::Analyse( Scope *_scope) {
   }
 }
 
-AssemblyBlock *InlineAssemblyNode::GenerateCode() {
+AssemblyBlock *InlineAssemblyNode::GenerateCode() const {
   AssemblyBlock *a = new AssemblyBlock;
   ASTIterator end(NULL);
 

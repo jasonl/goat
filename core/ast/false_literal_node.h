@@ -6,8 +6,8 @@ class FalseLiteralNode : public ASTNode
   public:
 	FalseLiteralNode() {};
 	void Analyse(Scope*);
-	AssemblyBlock *GenerateCode();
-	AssemblyBlock *PushOntoStack();
+	AssemblyBlock *GenerateCode() const;
+	AssemblyBlock *PushOntoStack() const;
 	std::string Print() const { return "FalseLiteral"; }
 };
 

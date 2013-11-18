@@ -6,12 +6,12 @@ public:
   FunctionDefNode();
   ~FunctionDefNode();
   void Analyse( Scope * );
-  ASTIterator ParameterDefs();
-  ASTIterator BodyNodes();
+  ASTIterator ParameterDefs() const;
+  ASTIterator BodyNodes() const;
   void AddBody( ASTNode* );
   void AddParameterDef( ASTNode* );
   int ParameterCount() const { return paramCount; }
-  AssemblyBlock *GenerateCode();
+  AssemblyBlock *GenerateCode() const;
   AssemblyBlock *GetAuxiliaryCode();
   std::string Print() const { return "FunctionDef"; }
 private:

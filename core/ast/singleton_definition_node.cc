@@ -30,7 +30,7 @@ int SingletonDefinitionNode::InstanceVariablePosition(const std::string &name) c
 	}
 }
 
-AssemblyBlock *SingletonDefinitionNode::GenerateCode()
+AssemblyBlock *SingletonDefinitionNode::GenerateCode() const
 {
     ASTIterator end(NULL);
     AssemblyBlock *a = new AssemblyBlock;

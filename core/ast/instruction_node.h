@@ -4,9 +4,9 @@
 class InstructionNode : public ASTNode {
  public:
  InstructionNode(const std::string &_label, const std::string &_mnemonic) : label(_label), mnemonic(_mnemonic), firstOperand(NULL), lastOperand(NULL) {};
-  AssemblyBlock *GenerateCode();
+  AssemblyBlock *GenerateCode() const;
   void AppendOperand( OperandNode* );
-  OperandIterator Operands() { return OperandIterator(firstOperand); }
+  OperandIterator Operands() const { return OperandIterator(firstOperand); }
   std::string Print() const { return "Instruction: " + mnemonic; }
 #ifdef GOATTEST
   std::string Mnemonic() const { return mnemonic; }

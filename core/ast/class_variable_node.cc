@@ -23,7 +23,7 @@ void ClassVariableNode::Analyse(Scope *_scope)
 	goatError(0, "Class Variable referenced outside Class Definition");
 }
 
-AssemblyBlock *ClassVariableNode::GenerateCode()
+AssemblyBlock *ClassVariableNode::GenerateCode() const
 {
 	AssemblyBlock *a = new AssemblyBlock();
 
@@ -40,7 +40,7 @@ AssemblyBlock *ClassVariableNode::GenerateCode()
 	return a;
 }
 
-AssemblyBlock *ClassVariableNode::GenerateAssignmentCode()
+AssemblyBlock *ClassVariableNode::GenerateAssignmentCode() const
 {
 	AssemblyBlock *a = new AssemblyBlock();
 
@@ -52,7 +52,7 @@ AssemblyBlock *ClassVariableNode::GenerateAssignmentCode()
 	return a;
 }
 
-AssemblyBlock *ClassVariableNode::PushOntoStack()
+AssemblyBlock *ClassVariableNode::PushOntoStack() const
 {
 	AssemblyBlock *a = new AssemblyBlock;
 

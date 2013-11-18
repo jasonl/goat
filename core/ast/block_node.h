@@ -6,7 +6,7 @@ class BlockNode : public ASTNode
   public:
     BlockNode() {};
 	void Analyse( Scope* );
-	AssemblyBlock *GenerateCode();
+	AssemblyBlock *GenerateCode() const;
 	std::string Print() const { return "Block"; }
 };
 

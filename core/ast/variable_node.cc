@@ -34,7 +34,7 @@ void VariableNode::Analyse(Scope *_scope)
 	}
 }
 
-AssemblyBlock *VariableNode::GenerateCode()
+AssemblyBlock *VariableNode::GenerateCode() const
 {
   AssemblyBlock *a = new AssemblyBlock();
 
@@ -47,7 +47,7 @@ AssemblyBlock *VariableNode::GenerateCode()
   return a;
 }
 
-AssemblyBlock *VariableNode::GenerateAssignmentCode()
+AssemblyBlock *VariableNode::GenerateAssignmentCode() const
 {
 	AssemblyBlock *a = new AssemblyBlock;
 
@@ -58,7 +58,7 @@ AssemblyBlock *VariableNode::GenerateAssignmentCode()
 	return a;
 }
 
-AssemblyBlock *VariableNode::PushOntoStack(){
+AssemblyBlock *VariableNode::PushOntoStack() const {
   AssemblyBlock *a = new AssemblyBlock();
 
   a->push( Dword(scope->GenerateTypeHashOperand(name)) );

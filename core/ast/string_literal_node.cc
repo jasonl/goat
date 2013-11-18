@@ -7,7 +7,7 @@ void StringLiteralNode::Analyse( Scope *_scope ) {
   strLabelName = scope->GetSourceFile()->AddString(contents);
 }
 
-AssemblyBlock *StringLiteralNode::GenerateCode() {
+AssemblyBlock *StringLiteralNode::GenerateCode() const {
   AssemblyBlock *a = new AssemblyBlock;
 
   a->mov(eax, *new Operand(strLabelName));
@@ -18,7 +18,7 @@ AssemblyBlock *StringLiteralNode::GenerateCode() {
   return a;
 }
 
-AssemblyBlock *StringLiteralNode::PushOntoStack() {
+AssemblyBlock *StringLiteralNode::PushOntoStack() const {
   AssemblyBlock *a = new AssemblyBlock;
 
   a->push( Dword(goatHash("String")) );

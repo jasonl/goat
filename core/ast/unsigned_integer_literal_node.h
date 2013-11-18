@@ -5,8 +5,8 @@ class UnsignedIntegerLiteralNode : public ASTNode
 {
  public:
  UnsignedIntegerLiteralNode(const std::string &_contents) : contents(_contents) {};
-  AssemblyBlock *GenerateCode();
-  AssemblyBlock *PushOntoStack();
+  AssemblyBlock *GenerateCode() const;
+  AssemblyBlock *PushOntoStack() const;
   std::string Print() const { return "UnsignedIntegerLiteral: " + contents; }
   uint32_t Value() const;
 #ifdef GOATTEST

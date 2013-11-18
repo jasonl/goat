@@ -9,7 +9,7 @@ int32_t IntegerLiteralNode::Value() const
 	return atol(contents.c_str());
 }
 
-AssemblyBlock *IntegerLiteralNode::GenerateCode() {
+AssemblyBlock *IntegerLiteralNode::GenerateCode() const {
   AssemblyBlock *a = new AssemblyBlock;
 
   a->mov( eax, Dword(Value()) );
@@ -23,8 +23,7 @@ AssemblyBlock *IntegerLiteralNode::GenerateCode() {
 
 // Generates the assembly to push the integer object onto the stack
 // for a function call.
-
-AssemblyBlock *IntegerLiteralNode::PushOntoStack() {
+AssemblyBlock *IntegerLiteralNode::PushOntoStack() const {
   AssemblyBlock *a = new AssemblyBlock;
 
   a->push( Dword(goatHash("Integer")) );

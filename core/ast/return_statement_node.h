@@ -6,9 +6,9 @@ public:
 	ReturnStatementNode() {};
 	void SetReturnValue( ASTNode* );
 	ASTNode *ReturnExpr() { return returnValue; }
-	ASTIterator ChildNodes();
+	ASTIterator ChildNodes() const;
 	void Analyse( Scope* );
-	AssemblyBlock *GenerateCode();
+	AssemblyBlock *GenerateCode() const;
 	std::string Print() const { return "ReturnStatement"; }
 private:
   ASTNode *returnValue;

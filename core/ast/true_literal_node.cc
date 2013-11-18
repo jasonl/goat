@@ -6,7 +6,7 @@ void TrueLiteralNode::Analyse(Scope *_scope)
 	scope = _scope;
 }
 
-AssemblyBlock *TrueLiteralNode::GenerateCode()
+AssemblyBlock *TrueLiteralNode::GenerateCode() const
 {
 	AssemblyBlock *a = new AssemblyBlock();
 
@@ -19,7 +19,7 @@ AssemblyBlock *TrueLiteralNode::GenerateCode()
 	return a;
 }
 
-AssemblyBlock *TrueLiteralNode::PushOntoStack()
+AssemblyBlock *TrueLiteralNode::PushOntoStack() const
 {
 	AssemblyBlock *a = new AssemblyBlock();
 

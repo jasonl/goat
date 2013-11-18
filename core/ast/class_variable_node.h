@@ -14,9 +14,9 @@ class ClassVariableNode : public AssignmentTargetNode
   public:
     ClassVariableNode(std::string _name) : name(_name) {};
 	void Analyse(Scope*);
-	AssemblyBlock *GenerateCode();
-	AssemblyBlock *GenerateAssignmentCode();
-	AssemblyBlock *PushOntoStack();
+	AssemblyBlock *GenerateCode() const;
+	AssemblyBlock *GenerateAssignmentCode() const;
+	AssemblyBlock *PushOntoStack() const;
 
 	int32_t TypeHashOffset() const;
 	int32_t DispatchOffset() const;

@@ -5,7 +5,7 @@ void SelfNode::Analyse( Scope *_scope ) {
   scope = _scope;
 }
 
-AssemblyBlock *SelfNode::GenerateCode() {
+AssemblyBlock *SelfNode::GenerateCode() const {
   AssemblyBlock *a = new AssemblyBlock;
 
   a->mov( eax, scope->GeneratePayloadOperand("self") );
@@ -17,7 +17,7 @@ AssemblyBlock *SelfNode::GenerateCode() {
   return a;
 }
 
-AssemblyBlock *SelfNode::PushOntoStack() {
+AssemblyBlock *SelfNode::PushOntoStack() const {
   AssemblyBlock *a = new AssemblyBlock;
 
   a->push( Dword(scope->GenerateTypeHashOperand("self")) );

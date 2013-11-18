@@ -26,7 +26,7 @@ class ASTNode {
   friend class ASTNodeTest;
  public:
   ASTNode();
-  ~ASTNode();
+  virtual ~ASTNode();
 
   ASTNode *FirstChild() { return firstChild; }
 
@@ -37,15 +37,15 @@ class ASTNode {
   void SetParent(ASTNode* p) { parent = p; }
   void SetFirstChild(ASTNode *fc) { firstChild = fc; }
   ASTNode *MoveNodeTo( ASTNode* );
-  virtual ASTIterator ChildNodes();
+  virtual ASTIterator ChildNodes() const;
 
   ASTNode* MutableFindEnclosingNode(const std::string&);
   const ASTNode *FindEnclosingNode(const std::string&) const;
 
   virtual void Analyse( Scope* );
-  virtual AssemblyBlock* GenerateCode() { return new AssemblyBlock(); }
+  virtual AssemblyBlock* GenerateCode() const { return new AssemblyBlock(); }
   virtual AssemblyBlock* GetAuxiliaryCode();
-  virtual AssemblyBlock* PushOntoStack() { return new AssemblyBlock(); }
+  virtual AssemblyBlock* PushOntoStack() const { return new AssemblyBlock(); }
 
   virtual std::string Print() const { return "Unimplemented"; }
   virtual bool IsRelocatedToGlobalObject() const { return false; }

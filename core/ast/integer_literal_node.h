@@ -4,8 +4,8 @@
 class IntegerLiteralNode : public ASTNode {
  public:
  IntegerLiteralNode( const std::string &_contents ) : contents(_contents) {};
-  AssemblyBlock *GenerateCode();
-  AssemblyBlock *PushOntoStack();
+  AssemblyBlock *GenerateCode() const;
+  AssemblyBlock *PushOntoStack() const;
   std::string Print() const { return "IntegerLiteral: " + contents; }
   int32_t Value() const;
 #ifdef GOATTEST

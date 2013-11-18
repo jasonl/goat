@@ -21,7 +21,7 @@ void BlockNode::Analyse( Scope *_scope)
   }
 }
 
-AssemblyBlock *BlockNode::GenerateCode()
+AssemblyBlock *BlockNode::GenerateCode() const
 {
 	AssemblyBlock *a = new AssemblyBlock;
 	ASTIterator end(NULL);
