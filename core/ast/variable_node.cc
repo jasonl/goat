@@ -34,38 +34,25 @@ void VariableNode::Analyse(Scope *_scope)
 	}
 }
 
-AssemblyBlock *VariableNode::GenerateCode() const
+void VariableNode::GenerateCode(AssemblyBlock* a) const
 {
-  AssemblyBlock *a = new AssemblyBlock();
-
-  a->mov(eax, scope->GeneratePayloadOperand(name));
-  a->mov(ecx, scope->GenerateTypeHashOperand(name));
-  a->mov(edx, scope->GenerateDispatchOperand(name));
-
-  a->CommentLastInstruction("Move " + name + " into eax/ecx/edx");
-
-  return a;
+	a->mov(eax, scope->GeneratePayloadOperand(name));
+	a->mov(ecx, scope->GenerateTypeHashOperand(name));
+	a->mov(edx, scope->GenerateDispatchOperand(name));
+	a->CommentLastInstruction("Move " + name + " into eax/ecx/edx");
 }
 
-AssemblyBlock *VariableNode::GenerateAssignmentCode() const
+void VariableNode::GenerateAssignmentCode(AssemblyBlock* a) const
 {
-	AssemblyBlock *a = new AssemblyBlock;
-
 	a->mov(scope->GeneratePayloadOperand(name), eax);
 	a->mov(scope->GenerateTypeHashOperand(name), ecx);
 	a->mov(scope->GenerateDispatchOperand(name), edx);
-
-	return a;
 }
 
-AssemblyBlock *VariableNode::PushOntoStack() const {
-  AssemblyBlock *a = new AssemblyBlock();
-
-  a->push( Dword(scope->GenerateTypeHashOperand(name)) );
-  a->push( Dword(scope->GenerateDispatchOperand(name)) );
-  a->push( Dword(scope->GeneratePayloadOperand(name)) );
-
-  a->CommentLastInstruction("Push " + name + " on to stack");
-
-  return a;
+void VariableNode::PushOntoStack(AssemblyBlock* a) const 
+{
+	a->push(Dword(scope->GenerateTypeHashOperand(name)));
+	a->push(Dword(scope->GenerateDispatchOperand(name)));
+	a->push(Dword(scope->GeneratePayloadOperand(name)));
+	a->CommentLastInstruction("Push " + name + " on to stack");
 }

@@ -11,13 +11,13 @@ public:
   void AddBody( ASTNode* );
   void AddParameterDef( ASTNode* );
   int ParameterCount() const { return paramCount; }
-  AssemblyBlock *GenerateCode() const;
-  AssemblyBlock *GetAuxiliaryCode();
+  void GenerateCode(AssemblyBlock*) const;
+  void GetAuxiliaryCode(AssemblyBlock*) const;
   std::string Print() const { return "FunctionDef"; }
 private:
-  AssemblyBlock *bodyAsm;
   ASTNode *body;
   int paramCount;
+  std::string functionName;
 };
 
 #endif

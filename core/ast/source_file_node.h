@@ -5,7 +5,7 @@ class SourceFileNode : public ASTNode {
  public:
 	SourceFileNode() {};
 	void Analyse( Scope* );
-	AssemblyBlock *GenerateCode() const;
+	void GenerateCode(AssemblyBlock*) const;
 	std::string Print() const { return "SourceFile: " + scope->GetSourceFile()->FileName(); }
  private:
   ClassDefinitionNode *globalObject;

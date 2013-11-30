@@ -11,12 +11,12 @@ class AssignmentTargetNode;
 
 class ClassVariableNode : public AssignmentTargetNode
 {
-  public:
-    ClassVariableNode(std::string _name) : name(_name) {};
+public:
+	ClassVariableNode (std::string _name) : name(_name) {};
 	void Analyse(Scope*);
-	AssemblyBlock *GenerateCode() const;
-	AssemblyBlock *GenerateAssignmentCode() const;
-	AssemblyBlock *PushOntoStack() const;
+	void GenerateCode(AssemblyBlock*) const;
+	void GenerateAssignmentCode(AssemblyBlock*) const;
+	void PushOntoStack(AssemblyBlock*) const;
 
 	int32_t TypeHashOffset() const;
 	int32_t DispatchOffset() const;
@@ -30,7 +30,8 @@ class ClassVariableNode : public AssignmentTargetNode
 
 	std::string Print() const { return "ClassVariable: " + name; }
 	std::string Name() const { return name; }
- private:
-   const std::string name;
-   enum {CLASS_IVAR, SINGLETON_IVAR} type;
+
+private:
+	const std::string name;
+	enum {CLASS_IVAR, SINGLETON_IVAR} type;
 };

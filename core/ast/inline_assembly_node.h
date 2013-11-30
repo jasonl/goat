@@ -5,7 +5,7 @@ class InlineAssemblyNode : public ASTNode {
  public:
 	InlineAssemblyNode() {};
 	void Analyse( Scope* );
-	AssemblyBlock *GenerateCode() const;
+	void GenerateCode(AssemblyBlock*) const;
 	std::string Print() const { return "InlineAssembly"; }
 };
 

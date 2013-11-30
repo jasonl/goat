@@ -5,12 +5,12 @@
 
 class MethodAssignmentNode : public ASTNode {
   public:
-    MethodAssignmentNode(const std::string &_lValue) : lValue(_lValue){};
+ MethodAssignmentNode(const std::string &_lValue) : lValue(_lValue), functionNode(NULL){};
 	void Analyse(Scope*);
 	void SetRValue(FunctionDefNode*);
 	const std::string& Name() const { return lValue; }
 	int ParameterCount() const { return functionNode->ParameterCount(); }
-	AssemblyBlock *GenerateCode() const;
+	void GenerateCode(AssemblyBlock*) const;
 	std::string Print() const { return "MethodAssignment: " + lValue; }
 
   private:

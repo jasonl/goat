@@ -30,46 +30,40 @@ int SingletonDefinitionNode::InstanceVariablePosition(const std::string &name) c
 	}
 }
 
-AssemblyBlock *SingletonDefinitionNode::GenerateCode() const
+void SingletonDefinitionNode::GenerateCode(AssemblyBlock* a) const
 {
     ASTIterator end(NULL);
-    AssemblyBlock *a = new AssemblyBlock;
-    AssemblyBlock *fn;
-	AssemblyBlock *dispatch = new AssemblyBlock;
+    AssemblyBlock *functions = new AssemblyBlock;
+    AssemblyBlock *dispatch = new AssemblyBlock;
     DispatchFunction d;
 
-    for(ASTIterator i = ChildNodes(); i != end; i++) {
+    for (ASTIterator i = ChildNodes(); i != end; i++) {
+	    MethodAssignmentNode *m = dynamic_cast<MethodAssignmentNode*>(&(*i));
 
-        MethodAssignmentNode *m = dynamic_cast<MethodAssignmentNode*>(&(*i));
-
-		if (m) {
-			std::string methodLabel = GenerateFunctionLabel(m->Name(), name);
-
-			m->GenerateCode();
-			fn = m->GetAuxiliaryCode();
-			fn->LabelFirstInstruction(methodLabel);
-
-			d.AddMethod(m->Name(), methodLabel);
-
-            a->AppendBlock(fn);
-        }
+	    if (m) {
+		    AssemblyBlock *fn = new AssemblyBlock;
+		    std::string methodLabel = GenerateFunctionLabel(m->Name(), name);
+		    m->GetAuxiliaryCode(fn);
+		    fn->LabelFirstInstruction(methodLabel);
+		    d.AddMethod(m->Name(), methodLabel);
+		    functions->AppendBlock(fn); // Implicit delete
+	    }
     }
 
-    dispatch = d.GenerateDispatchAssembly();
+    d.GenerateDispatchAssembly(a);
 
-	std::string dispatchLabel = DispatchLabelNameFor(name);
+    std::string dispatchLabel = DispatchLabelNameFor(name);
 
-	dispatch->LabelFirstInstruction(dispatchLabel);
-	dispatch->PrependItem(new GlobalSymbol(dispatchLabel));
-	scope->GetSourceFile()->AddGlobalSymbol(dispatchLabel);
+    dispatch->LabelFirstInstruction(dispatchLabel);
+    dispatch->PrependItem(new GlobalSymbol(dispatchLabel));
+    scope->GetSourceFile()->AddGlobalSymbol(dispatchLabel);
 
-	dispatch->AppendBlock(a);
-    return dispatch;
+    a->AppendBlock(dispatch); // Implcit delete
+    a->AppendBlock(functions); // Implicit delete
 }
 
-AssemblyBlock *SingletonDefinitionNode::GetAuxiliaryCode()
+void SingletonDefinitionNode::GetAuxiliaryCode(AssemblyBlock* a) const
 {
-	AssemblyBlock *a = new AssemblyBlock;
 	AssemblyBlock *b = new AssemblyBlock;
 	a->SetSegment(".data");
 
@@ -83,6 +77,4 @@ AssemblyBlock *SingletonDefinitionNode::GetAuxiliaryCode()
 	a->AppendBlock(b);
 
 	a->SetSegment(".text");
-
-	return a;
 }

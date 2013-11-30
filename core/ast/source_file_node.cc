@@ -52,50 +52,47 @@ void SourceFileNode::Analyse( Scope *_scope ) {
 
 }
 
-AssemblyBlock *SourceFileNode::GenerateCode() const {
-  AssemblyBlock *a = new AssemblyBlock;
+void SourceFileNode::GenerateCode(AssemblyBlock* a) const {
   ASTIterator end(NULL);
 
   a->SetSegment(".text");
 
-  if(!scope->GetSourceFile()->IsLibrary()) {
-    // Call __Global__#main to start things
-    // Add a "start" label for the linker as an entry point
-    a->AppendItem(new GlobalSymbol("start"));
+  if (!scope->GetSourceFile()->IsLibrary()) {
+	  // Call __Global__#main to start things
+	  // Add a "start" label for the linker as an entry point
+	  a->AppendItem(new GlobalSymbol("start"));
 
-    a->mov(eax, Dword(0));
-    a->LabelLastInstruction("start");
+	  a->mov(eax, Dword(0));
+	  a->LabelLastInstruction("start");
 
-	// Call initialize on all Singletons
-	BuildSet *bs = scope->GetSourceFile()->GetBuildSet();
-	Namespace::iterator end = bs->LastSingleton();
+	  // Call initialize on all Singletons
+	  BuildSet *bs = scope->GetSourceFile()->GetBuildSet();
+	  Namespace::iterator end = bs->LastSingleton();
 
-	for (Namespace::iterator i = bs->FirstSingleton(); i != end; i++) {
-		a->mov(eax, *new Operand("__" + (*i) + "_ivars"));
-		a->mov(ecx, Dword(goatHash(*i)));
-		a->mov(edx, *DispatchOperandFor(*i, scope->GetSourceFile()));
+	  for (Namespace::iterator i = bs->FirstSingleton(); i != end; i++) {
+		  a->mov(eax, *new Operand("__" + (*i) + "_ivars"));
+		  a->mov(ecx, Dword(goatHash(*i)));
+		  a->mov(edx, *DispatchOperandFor(*i, scope->GetSourceFile()));
+		  
+		  a->mov(ebx, Dword(goatHash("initialize")));
+		  a->call(edx);
+	  }
 
-		a->mov(ebx, Dword(goatHash("initialize")));
-		a->call(edx);
-	}
+	  // Call main on the global object as the entry point.
+	  a->mov(ebx, Dword(goatHash("main")));
+	  a->mov(edx, *new Operand(DispatchLabelNameFor("__GLOBAL__")));
+	  a->call(edx);
 
-	// Call main on the global object as the entry point.
-    a->mov(ebx, Dword(goatHash("main")));
-    a->mov(edx, *new Operand(DispatchLabelNameFor("__GLOBAL__")));
-    a->call(edx);
+	  // Default exit code, executed after returning from main.
+	  a->push(Dword(0)); // Return exit code of 0
+	  a->mov(eax, *new Operand(0x01)); // System call number 1 - exit program
+	  a->sub(esp, *new Operand(0x04)); // OSX / BSD requires extra space on stack
+	  a->_int(*new Operand(0x80));  // Make the system call
 
-    // Default exit code, executed after returning from main.
-    a->push( Dword(0) ); // Return exit code of 0
-    a->mov(eax, *new Operand(0x01)); // System call number 1 - exit program
-    a->sub(esp, *new Operand(0x04)); // OSX / BSD requires extra space on stack
-    a->_int(*new Operand(0x80));  // Make the system call
-
-    a->CommentLastInstruction("Default exit back to system");
+	  a->CommentLastInstruction("Default exit back to system");
   }
 
   for( ASTIterator i = ChildNodes(); i != end; i++ ) {
-    a->AppendBlock( i->GenerateCode() );
+	  i->GenerateCode(a);
   }
-
-  return a;
 }

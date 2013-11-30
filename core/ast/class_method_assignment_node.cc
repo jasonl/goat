@@ -15,9 +15,8 @@ void ClassMethodAssignmentNode::SetRValue(FunctionDefNode* _rValue)
   functionNode = _rValue;
 }
 
-AssemblyBlock *ClassMethodAssignmentNode::GenerateCode() const
+void ClassMethodAssignmentNode::GenerateCode(AssemblyBlock* a) const
 {
-  AssemblyBlock *a = firstChild->GenerateCode();
-
-  return a;
+    firstChild->GenerateCode(a);
+    return;
 }

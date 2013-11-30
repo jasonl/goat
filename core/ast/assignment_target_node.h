@@ -1,10 +1,10 @@
 class AssignmentTargetNode : public ASTNode
 {
-  public:
+public:
     AssignmentTargetNode() {};
-	virtual void Analyse(Scope*) = 0;
-	virtual AssemblyBlock* GenerateCode() const = 0;
-	virtual AssemblyBlock* PushOntoStack() const = 0;
-	virtual AssemblyBlock* GenerateAssignmentCode() const = 0;
-	virtual std::string Name() const = 0;
+    virtual void Analyse(Scope*) = 0;
+    virtual void GenerateCode(AssemblyBlock*) const = 0;
+    virtual void PushOntoStack(AssemblyBlock*) const = 0;
+    virtual void GenerateAssignmentCode(AssemblyBlock*) const = 0;
+    virtual std::string Name() const = 0;
 };

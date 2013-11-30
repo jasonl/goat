@@ -169,7 +169,7 @@ Operand& Operand::operator-(const int32_t displacement) {
 Operand& Operand::operator+( Operand &offset ) {
 
   if( offset.prototype ) {
-    Operand &this_op = *new Operand( Null );
+    Operand &this_op = *new Operand(Null);
     this_op.offset = offset.base;
     this_op.displacement = offset.displacement;
     this_op.scale = offset.scale;

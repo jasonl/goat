@@ -11,13 +11,11 @@ void InlineAssemblyNode::Analyse( Scope *_scope) {
   }
 }
 
-AssemblyBlock *InlineAssemblyNode::GenerateCode() const {
-  AssemblyBlock *a = new AssemblyBlock;
-  ASTIterator end(NULL);
+void InlineAssemblyNode::GenerateCode(AssemblyBlock* a) const 
+{
+	ASTIterator end(NULL);
 
-  for(ASTIterator i = ChildNodes(); i != end; i++) {
-    a->AppendBlock( i->GenerateCode() );
-  }
-
-  return a;
+	for (ASTIterator i = ChildNodes(); i != end; i++) {
+		i->GenerateCode(a);
+	}
 }

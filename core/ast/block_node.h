@@ -1,13 +1,13 @@
 #ifndef __BLOCK_NODE_H
 #define __BLOCK_NODE_H
 
-class BlockNode : public ASTNode
+class BlockNode : public ASTNode 
 {
-  public:
+public:
     BlockNode() {};
-	void Analyse( Scope* );
-	AssemblyBlock *GenerateCode() const;
-	std::string Print() const { return "Block"; }
+    void Analyse( Scope* );
+    void GenerateCode(AssemblyBlock*) const;
+    std::string Print() const { return "Block"; }
 };
 
 #endif

@@ -81,62 +81,63 @@ void ClassDefinitionNode::AppendClassMethod(ClassMethodAssignmentNode *newClassM
 	classMethodNodes.push_back(newClassMethod);
 }
 
-AssemblyBlock *ClassDefinitionNode::GenerateCode() const
+void ClassDefinitionNode::GenerateCode(AssemblyBlock* a) const
 {
 	ASTIterator end(NULL);
-	AssemblyBlock *a = new AssemblyBlock;
-	AssemblyBlock *fn;
+	AssemblyBlock *functionBodies = new AssemblyBlock;
 	AssemblyBlock *dispatch = new AssemblyBlock;
 
 	GenerateInitializer(a);
 
 	for (MethodNodeList::const_iterator i = methodNodes.begin(); i != methodNodes.end(); i++)
 	{
-		MethodAssignmentNode *m = *i;
-		m->GenerateCode();
-		fn = m->GetAuxiliaryCode();
-		fn->LabelFirstInstruction(GenerateFunctionLabel(m->Name(), name));
+	    MethodAssignmentNode *m = *i;
+	    AssemblyBlock* fn = new AssemblyBlock;
+	    std::string fnLabel = GenerateFunctionLabel(m->Name(), name);
 
-		dispatch->cmp(ebx, Dword(goatHash(m->Name())));
-		dispatch->je(*new Operand(GenerateFunctionLabel(m->Name(), name)));
+	    m->GetAuxiliaryCode(fn);
+	    fn->LabelFirstInstruction(fnLabel);
 
-		a->AppendBlock(fn);
+	    dispatch->cmp(ebx, Dword(goatHash(m->Name())));
+	    dispatch->je(*new Operand(fnLabel));
+
+	    functionBodies->AppendBlock(fn); // Delete is in here for fn.
 	}
 
 	for (ClassMethodList::const_iterator i = classMethodNodes.begin(); i != classMethodNodes.end(); i++)
 	{
-		ClassMethodAssignmentNode *c = *i;
-		std::string cfnLabel = GenerateClassMethodLabel(c->Name(), name);
-
-		c->GenerateCode();
-		fn = c->GetAuxiliaryCode();
-		fn->LabelFirstInstruction(cfnLabel);
-		fn->PrependItem(new GlobalSymbol(cfnLabel));
-		scope->GetSourceFile()->AddGlobalSymbol(cfnLabel);
-		a->AppendBlock(fn);
+	    ClassMethodAssignmentNode *c = *i;
+	    std::string cfnLabel = GenerateClassMethodLabel(c->Name(), name);
+	    AssemblyBlock* fn = new AssemblyBlock;
+	    
+	    c->GetAuxiliaryCode(fn);
+	    fn->LabelFirstInstruction(cfnLabel);
+	    fn->PrependItem(new GlobalSymbol(cfnLabel));
+	    scope->GetSourceFile()->AddGlobalSymbol(cfnLabel);
+	    functionBodies->AppendBlock(fn); // delete is in here for fn
 	}
-
+	
 	// If a method isn't found, exit with error code 5
 	// TODO: Write an actual error message.
 	dispatch->push(Dword(5));
 	dispatch->mov(eax, *new Operand(0x01));
 	dispatch->sub(esp, *new Operand(0x04));
 	dispatch->_int(*new Operand(0x80));
-
 	dispatch->CommentLastInstruction("Exit with code 5 if not found");
 
 	std::string dispatchLabel = DispatchLabelNameFor(name);
 
-	dispatch->LabelFirstInstruction(DispatchLabelNameFor(name));
+	dispatch->LabelFirstInstruction(dispatchLabel);
 	dispatch->PrependItem(new GlobalSymbol(dispatchLabel));
 	scope->GetSourceFile()->AddGlobalSymbol(dispatchLabel);
 
-	dispatch->AppendBlock(a);
-	return dispatch;
+	a->AppendBlock(dispatch); // implicit delete of dispatch
+	a->AppendBlock(functionBodies); // implicit delete of functionBodies
 }
 
-AssemblyBlock *ClassDefinitionNode::GetAuxiliaryCode() {
-	return new AssemblyBlock;
+void ClassDefinitionNode::GetAuxiliaryCode(AssemblyBlock *a) const
+{
+	return;
 }
 
 std::string GenerateFunctionLabel(const std::string functionName, const std::string className)

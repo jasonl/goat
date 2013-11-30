@@ -2,11 +2,11 @@
 #define __TRUE_LITERAL_NODE
 
 class TrueLiteralNode : public ASTNode {
- public:
+public:
 	TrueLiteralNode() {};
 	void Analyse( Scope* );
-	AssemblyBlock *GenerateCode() const;
-	AssemblyBlock *PushOntoStack() const;
+	void GenerateCode(AssemblyBlock*) const;
+	void PushOntoStack(AssemblyBlock*) const;
 	std::string Print() const { return "TrueLiteral"; }
 };
 

@@ -32,6 +32,8 @@ SourceFile::~SourceFile() {
   // Free the Scope tree
   // TODO - We need to iterate over all scopes somehow
   if( lobby ) delete lobby;
+
+  if (assembly) delete assembly;
 }
 
 void SourceFile::Tokenize() {
@@ -91,28 +93,31 @@ void SourceFile::Analyse() {
   }
 }
 
-void SourceFile::GenerateCode() {
-  if( astRoot ) {
-    assembly = astRoot->GenerateCode();
-    assembly->AppendBlock(astRoot->GetAuxiliaryCode());
+void SourceFile::GenerateCode() 
+{
+	assembly = new AssemblyBlock();
 
-    for( SymbolTable::iterator i = externSymbols.begin(); i != externSymbols.end(); i++) {
-		if(globalSymbols.count(*i) == 0) {
-			assembly->AppendItem(new ExternSymbol(*i));
+	if (astRoot) {
+		astRoot->GenerateCode(assembly);
+		astRoot->GetAuxiliaryCode(assembly);
+
+		for (SymbolTable::iterator i = externSymbols.begin(); i != externSymbols.end(); i++) {
+			if (globalSymbols.count(*i) == 0) {
+				assembly->AppendItem(new ExternSymbol(*i));
+			}
 		}
-    }
 
-    assembly->SetSegment(".data");
+		assembly->SetSegment(".data");
 
-    for( std::list<StringData>::iterator i = strings.begin(); i != strings.end(); i++) {
-      assembly->dw((*i).contents.length());
-      assembly->db((*i).contents);
-      assembly->LabelLastInstruction((*i).label );
-    }
-
-  } else {
-    std::cerr << "No Abstract Syntax Tree was built from this source file";
-  }
+		for( std::list<StringData>::iterator i = strings.begin(); i != strings.end(); i++) {
+			assembly->dw((*i).contents.length());
+			assembly->db((*i).contents);
+			assembly->LabelLastInstruction((*i).label );
+		}
+		
+	} else {
+		std::cerr << "No Abstract Syntax Tree was built from this source file";
+	}
 }
 
 void SourceFile::PrintTokens() {

@@ -42,10 +42,10 @@ class ASTNode {
   ASTNode* MutableFindEnclosingNode(const std::string&);
   const ASTNode *FindEnclosingNode(const std::string&) const;
 
-  virtual void Analyse( Scope* );
-  virtual AssemblyBlock* GenerateCode() const { return new AssemblyBlock(); }
-  virtual AssemblyBlock* GetAuxiliaryCode();
-  virtual AssemblyBlock* PushOntoStack() const { return new AssemblyBlock(); }
+  virtual void Analyse(Scope*);
+  virtual void GenerateCode(AssemblyBlock*) const { return; }
+  virtual void GetAuxiliaryCode(AssemblyBlock*) const;
+  virtual void PushOntoStack(AssemblyBlock*) const { return; }
 
   virtual std::string Print() const { return "Unimplemented"; }
   virtual bool IsRelocatedToGlobalObject() const { return false; }

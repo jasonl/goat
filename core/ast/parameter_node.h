@@ -4,9 +4,9 @@
 class ParameterNode : public ASTNode {
 public:
 	ParameterNode() {};
-  void Analyse( Scope* );
-  AssemblyBlock *PushOntoStack() const;
-  std::string Print() const { return "Parameter"; }
+	void Analyse(Scope*);
+	void PushOntoStack(AssemblyBlock*) const;
+	std::string Print() const { return "Parameter"; }
 };
 
 #endif

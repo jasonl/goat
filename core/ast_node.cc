@@ -31,15 +31,12 @@ void ASTNode::Analyse( Scope* _scope)
 		i->Analyse(_scope);
 }
 
-AssemblyBlock* ASTNode::GetAuxiliaryCode()
+void ASTNode::GetAuxiliaryCode(AssemblyBlock* a) const
 {
 	ASTIterator end(NULL);
-	AssemblyBlock *a = new AssemblyBlock;
 
 	for (ASTIterator i = ChildNodes(); i != end; i++)
-		a->AppendBlock( i->GetAuxiliaryCode() );
-
-	return a;
+		i->GetAuxiliaryCode(a);
 }
 
 void ASTNode::AppendChild(ASTNode *child)

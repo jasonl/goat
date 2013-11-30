@@ -5,26 +5,19 @@ void SelfNode::Analyse( Scope *_scope ) {
   scope = _scope;
 }
 
-AssemblyBlock *SelfNode::GenerateCode() const {
-  AssemblyBlock *a = new AssemblyBlock;
-
-  a->mov( eax, scope->GeneratePayloadOperand("self") );
-  a->mov( ecx, scope->GenerateTypeHashOperand("self") );
-  a->mov( edx, scope->GenerateDispatchOperand("self") );
-
-  a->CommentLastInstruction("Move self into eax/ecx/edx");
-
-  return a;
+void SelfNode::GenerateCode(AssemblyBlock* a) const
+{
+	a->mov(eax, scope->GeneratePayloadOperand("self"));
+	a->mov(ecx, scope->GenerateTypeHashOperand("self"));
+	a->mov(edx, scope->GenerateDispatchOperand("self"));
+	a->CommentLastInstruction("Move self into eax/ecx/edx");
 }
 
-AssemblyBlock *SelfNode::PushOntoStack() const {
-  AssemblyBlock *a = new AssemblyBlock;
+void SelfNode::PushOntoStack(AssemblyBlock* a) const
+{
+	a->push(Dword(scope->GenerateTypeHashOperand("self")));
+	a->push(Dword(scope->GenerateDispatchOperand("self")));
+	a->push(Dword(scope->GeneratePayloadOperand("self")));
+	a->CommentLastInstruction("Push self onto stack");
 
-  a->push( Dword(scope->GenerateTypeHashOperand("self")) );
-  a->push( Dword(scope->GenerateDispatchOperand("self")) );
-  a->push( Dword(scope->GeneratePayloadOperand("self")) );
-
-  a->CommentLastInstruction("Push self onto stack");
-
-  return a;
 }

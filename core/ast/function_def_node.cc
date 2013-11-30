@@ -11,12 +11,12 @@
 FunctionDefNode::FunctionDefNode()
 {
 	scope = NULL;
-	bodyAsm = new AssemblyBlock;
+	paramCount = 0;
 }
 
-FunctionDefNode::~FunctionDefNode() {
+FunctionDefNode::~FunctionDefNode() 
+{
   if( scope ) delete scope;
-  if( bodyAsm ) delete bodyAsm;
 }
 
 ASTIterator FunctionDefNode::ParameterDefs() const {
@@ -36,6 +36,7 @@ void FunctionDefNode::AddParameterDef( ASTNode *_param )
 {
 	// Assumes the body has yet to be added
 	AppendChild( _param );
+	paramCount++;
 }
 
 void FunctionDefNode::Analyse( Scope *_scope ) {
@@ -68,29 +69,7 @@ void FunctionDefNode::Analyse( Scope *_scope ) {
   // to the locals.
   scope->AddLocalVariable( "self" );
 
-  // Now analyse the function body
-  body->Analyse( scope );
-}
-
-AssemblyBlock *FunctionDefNode::GenerateCode() const {
-  ASTIterator end( NULL );
-  std::string functionName;
-  uint32_t bytesForLocals;
-
-  bodyAsm->push( ebp );
-  bodyAsm->mov( ebp, esp );
-
-  bytesForLocals = scope->GetLocalVariableCount() * 12;
-  bodyAsm->sub( esp, *new Operand(bytesForLocals) );
-
-  // Move self into the locals from the registers, so we're free to nuke eax/ecx/edx
-  // TODO: Don't generate this if self isn't referenced in the code.
-  bodyAsm->mov( scope->GeneratePayloadOperand("self"), eax );
-  bodyAsm->mov( scope->GenerateTypeHashOperand("self"), ecx );
-  bodyAsm->mov( scope->GenerateDispatchOperand("self"), edx );
-
-  bodyAsm->CommentLastInstruction("Move self passed in registers to locals");
-
+  // Generate the function name
   ConstantAssignmentNode *p = dynamic_cast<ConstantAssignmentNode*>(parent);
 
   if(p && (p->VariableName().length() > 0)) {
@@ -99,39 +78,52 @@ AssemblyBlock *FunctionDefNode::GenerateCode() const {
     functionName = scope->GenerateUniqueLabel("anonymous_fn");
   }
 
-  bodyAsm->LabelFirstInstruction( functionName );
-
-  for( ASTIterator i = BodyNodes(); i != end; i++ ) {
-    bodyAsm->AppendBlock( i->GenerateCode() );
-  }
-
-  // Return a default null if code execution reaches here
-  bodyAsm->mov( eax, Dword(0) );
-  bodyAsm->mov( ecx, Dword(goatHash("Null")));
-  bodyAsm->mov( edx, *DispatchOperandFor("Null", scope->GetSourceFile()));
-
-  bodyAsm->mov( esp, ebp );
-  bodyAsm->pop( ebp );
-  bodyAsm->ret();
-
-  // Generate code for the actual function object
-  AssemblyBlock *a = new AssemblyBlock;
-
-  a->mov( eax, *new Operand(functionName));
-  a->mov( ecx, Dword(goatHash("Function")));
-  a->mov( edx, *DispatchOperandFor("Null", scope->GetSourceFile())); //TODO This needs to reference a label
-
-  a->CommentLastInstruction("Function object for " + functionName);
-
-  return a;
+  // Now analyse the function body
+  body->Analyse( scope );
 }
 
-AssemblyBlock *FunctionDefNode::GetAuxiliaryCode() {
-  ASTIterator end(NULL);
+void FunctionDefNode::GenerateCode(AssemblyBlock* a) const 
+{
+	a->mov(eax, *new Operand(functionName));
+	a->mov(ecx, Dword(goatHash("Function")));
+	a->mov(edx, *DispatchOperandFor("Null", scope->GetSourceFile())); //TODO This needs to reference a label
+	a->CommentLastInstruction("Function object for " + functionName);
+}
 
-  for( ASTIterator i = ChildNodes(); i != end; i++) {
-    bodyAsm->AppendBlock( i->GetAuxiliaryCode() );
-  }
+void FunctionDefNode::GetAuxiliaryCode(AssemblyBlock* a) const
+{
+	ASTIterator end(NULL);
+	uint32_t bytesForLocals;
 
-  return bodyAsm;
+	a->push(ebp);
+	a->LabelLastInstruction(functionName);
+	a->mov(ebp, esp);
+	
+	bytesForLocals = scope->GetLocalVariableCount() * 12;
+	a->sub(esp, *new Operand(bytesForLocals));
+  
+	// Move self into the locals from the registers, so we're free to nuke eax/ecx/edx
+	// TODO: Don't generate this if self isn't referenced in the code.
+	a->mov(scope->GeneratePayloadOperand("self"), eax);
+	a->mov(scope->GenerateTypeHashOperand("self"), ecx);
+	a->mov(scope->GenerateDispatchOperand("self"), edx);
+	a->CommentLastInstruction("Move self passed in registers to locals");
+
+	// Add the actual code for all the statements in the function
+	for (ASTIterator i = BodyNodes(); i != end; i++) {
+		i->GenerateCode(a);
+	}
+
+	// Return a default null if code execution reaches here
+	a->mov(eax, Dword(0));
+	a->mov(ecx, Dword(goatHash("Null")));
+	a->mov(edx, *DispatchOperandFor("Null", scope->GetSourceFile()));
+	
+	a->mov(esp, ebp);
+	a->pop(ebp);
+	a->ret();
+	
+	for (ASTIterator i = ChildNodes(); i != end; i++) {
+		i->GetAuxiliaryCode(a);
+	}
 }

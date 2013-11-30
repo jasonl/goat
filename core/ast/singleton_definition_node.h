@@ -5,8 +5,8 @@ class SingletonDefinitionNode : public ASTNode
 {
    public:
     SingletonDefinitionNode(const std::string &_name) : name(_name), lastVarPosition(0) {};
-	AssemblyBlock *GenerateCode() const;
-	AssemblyBlock *GetAuxiliaryCode();
+	void GenerateCode(AssemblyBlock*) const;
+	void GetAuxiliaryCode(AssemblyBlock*) const;
 	void Analyse(Scope*);
 
 	void AddInstanceVariable(const std::string&);

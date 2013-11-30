@@ -31,39 +31,42 @@ void ConditionalNode::Analyse( Scope *_scope ) {
   }
 }
 
-AssemblyBlock *ConditionalNode::GenerateCode() const {
-  AssemblyBlock *a = expression->GenerateCode();
-  AssemblyBlock *elseClauseAsm = NULL;
+void ConditionalNode::GenerateCode(AssemblyBlock* a) const 
+{
+	std::string isBoolean = scope->GenerateUniqueLabel("is_boolean");
+	std::string endConditional = scope->GenerateUniqueLabel("end_conditional");
+	std::string elseLabel = scope->GenerateUniqueLabel("else_clause");
 
-  std::string isBoolean = scope->GenerateUniqueLabel("is_boolean");
-  std::string endConditional = scope->GenerateUniqueLabel("end_conditional");
-  std::string elseLabel = scope->GenerateUniqueLabel("else_clause");
+	// Generate the code to put the result of the expressing in eax/ecx/edx
+	expression->GenerateCode(a);
 
-  // If the expression isn't a boolean, try to convert it
-  a->cmp( ecx, Dword(goatHash("Boolean")));
-  a->je( *new Operand(isBoolean) );
-  a->mov( ebx, Dword(goatHash("asBoolean")));
-  a->call( edx );
+	// If the eax/edx/ecs isn't a boolean, try to convert it
+	a->cmp(ecx, Dword(goatHash("Boolean")));
+	a->je(*new Operand(isBoolean));
+	a->mov(ebx, Dword(goatHash("asBoolean")));
+	a->call(edx);
+  
+	// eax/ecx/edx now has a boolean in it.
+	a->test(eax, eax);
+	a->LabelLastInstruction(isBoolean);
 
-  // eax/ecx/edx now has a boolean in it.
-  a->test( eax, eax );
-  a->LabelLastInstruction( isBoolean );
+	// Jump based on the result.
+	if (elseBlock) {
+		a->jz(*new Operand(elseLabel));
+	} else {
+		a->jz(*new Operand(endConditional));
+	}
 
-  if( elseBlock ) {
-    a->jz( *new Operand(elseLabel) );
-    a->AppendBlock( ifBlock->GenerateCode() );
-    a->jmp( *new Operand(endConditional) );
+	// Generate the code for the true case
+	ifBlock->GenerateCode(a);
+	a->jmp(*new Operand(endConditional));
 
-    elseClauseAsm = elseBlock->GenerateCode();
-    elseClauseAsm->LabelFirstInstruction( elseLabel );
-    a->AppendBlock( elseClauseAsm );
+	if (elseBlock) {
+		AssemblyBlock *elseClauseAsm = new AssemblyBlock;
+		elseBlock->GenerateCode(elseClauseAsm);
+		elseClauseAsm->LabelFirstInstruction(elseLabel);
+		a->AppendBlock(elseClauseAsm); // Implicit delete of elseClauseAsm
+	}
 
-    a->AddHangingLabel( endConditional );
-  } else {
-    a->jz( *new Operand(endConditional) );
-    a->AppendBlock( ifBlock->GenerateCode() );
-    a->AddHangingLabel( endConditional );
-    }
-
-  return a;
+	a->AddHangingLabel(endConditional);	
 }

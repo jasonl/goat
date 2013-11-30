@@ -22,16 +22,13 @@ void MutableAssignmentNode::Analyse( Scope *_scope )
 		i->Analyse(_scope);
 }
 
-AssemblyBlock *MutableAssignmentNode::GenerateCode() const
+void MutableAssignmentNode::GenerateCode(AssemblyBlock* a) const
 {
 	// Move the rValue into eax/ecx/edx
-	AssemblyBlock *a = rValue->GenerateCode();
+	rValue->GenerateCode(a);
 
 	// Now we've got the rValue in eax/ecx/edx, assign it.
-	AssemblyBlock *assignmentAsm = target->GenerateAssignmentCode();
+	target->GenerateAssignmentCode(a);
 
-	a->AppendBlock(assignmentAsm);
 	a->CommentLastInstruction("Assignment to " + VariableName());
-
-	return a;
 }

@@ -21,15 +21,11 @@ void BlockNode::Analyse( Scope *_scope)
   }
 }
 
-AssemblyBlock *BlockNode::GenerateCode() const
+void BlockNode::GenerateCode(AssemblyBlock* a) const
 {
-	AssemblyBlock *a = new AssemblyBlock;
-	ASTIterator end(NULL);
+    ASTIterator end(NULL);
 
-	for(ASTIterator i = ChildNodes(); i != end; i++)
-	{
-		a->AppendBlock( i->GenerateCode() );
-	}
-
-	return a;
+    for(ASTIterator i = ChildNodes(); i != end; i++) {
+	i->GenerateCode(a);
+    }
 }

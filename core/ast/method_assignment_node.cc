@@ -16,9 +16,7 @@ void MethodAssignmentNode::SetRValue(FunctionDefNode* _rValue)
   functionNode = _rValue;
 }
 
-AssemblyBlock *MethodAssignmentNode::GenerateCode() const
+void MethodAssignmentNode::GenerateCode(AssemblyBlock* a) const
 {
-  AssemblyBlock *a = firstChild->GenerateCode();
-
-  return a;
+	firstChild->GenerateCode(a);
 }

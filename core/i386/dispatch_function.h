@@ -8,7 +8,7 @@ class DispatchFunction
 {
   public:
 	void AddMethod(std::string, std::string);
-	AssemblyBlock *GenerateDispatchAssembly() const;
+	void GenerateDispatchAssembly(AssemblyBlock*) const;
   private:
 	 DispatchMap methods;
 };

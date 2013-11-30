@@ -11,7 +11,7 @@ class ClassMethodAssignmentNode : public ASTNode
 	void SetRValue( FunctionDefNode* );
 	const std::string& Name() const { return lValue; }
 	int ParameterCount() const { return functionNode->ParameterCount(); }
-	AssemblyBlock *GenerateCode() const;
+	void GenerateCode(AssemblyBlock*) const;
 	std::string Print() const { return "ClassMethodAssignment: " + lValue; }
 
   private:

@@ -9,28 +9,20 @@ int32_t IntegerLiteralNode::Value() const
 	return atol(contents.c_str());
 }
 
-AssemblyBlock *IntegerLiteralNode::GenerateCode() const {
-  AssemblyBlock *a = new AssemblyBlock;
-
-  a->mov( eax, Dword(Value()) );
-  a->mov( ecx, Dword(goatHash("Integer")));
-  a->mov( edx, *DispatchOperandFor("Integer", scope->GetSourceFile()));
-
-  a->CommentLastInstruction("Move Integer " + contents + " into eax/ecx/edx");
-
-  return a;
+void IntegerLiteralNode::GenerateCode(AssemblyBlock* a) const 
+{
+	a->mov(eax, Dword(Value()));
+	a->mov(ecx, Dword(goatHash("Integer")));
+	a->mov(edx, *DispatchOperandFor("Integer", scope->GetSourceFile()));
+	a->CommentLastInstruction("Move Integer " + contents + " into eax/ecx/edx");
 }
 
 // Generates the assembly to push the integer object onto the stack
 // for a function call.
-AssemblyBlock *IntegerLiteralNode::PushOntoStack() const {
-  AssemblyBlock *a = new AssemblyBlock;
-
-  a->push( Dword(goatHash("Integer")) );
-  a->push( *DispatchOperandFor("Integer", scope->GetSourceFile()));
-  a->push( Dword(Value()) );
-
-  a->CommentLastInstruction("Push Integer " + contents + " onto stack");
-
-  return a;
+void IntegerLiteralNode::PushOntoStack(AssemblyBlock* a) const
+{
+	a->push(Dword(goatHash("Integer")));
+	a->push(*DispatchOperandFor("Integer", scope->GetSourceFile()));
+	a->push(Dword(Value()));
+	a->CommentLastInstruction("Push Integer " + contents + " onto stack");
 }

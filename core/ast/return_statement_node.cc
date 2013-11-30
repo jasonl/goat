@@ -18,11 +18,10 @@ void ReturnStatementNode::Analyse( Scope *_scope ) {
   if(returnValue) returnValue->Analyse( scope );
 }
 
-AssemblyBlock *ReturnStatementNode::GenerateCode() const
+void ReturnStatementNode::GenerateCode(AssemblyBlock*a) const
 {
-	AssemblyBlock *a = returnValue->GenerateCode();
+	returnValue->GenerateCode(a);
 	a->mov(esp, ebp);
 	a->pop(ebp);
 	a->ret();
-	return a;
 }

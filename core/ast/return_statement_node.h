@@ -8,7 +8,7 @@ public:
 	ASTNode *ReturnExpr() { return returnValue; }
 	ASTIterator ChildNodes() const;
 	void Analyse( Scope* );
-	AssemblyBlock *GenerateCode() const;
+	void GenerateCode(AssemblyBlock*) const;
 	std::string Print() const { return "ReturnStatement"; }
 private:
   ASTNode *returnValue;

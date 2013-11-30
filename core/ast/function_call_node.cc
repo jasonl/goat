@@ -30,34 +30,32 @@ void FunctionCallNode::AddReceiver( ASTNode *_receiver ) {
   InsertFirstChild( _receiver );
 }
 
-AssemblyBlock *FunctionCallNode::GenerateCode() const
+void FunctionCallNode::GenerateCode(AssemblyBlock* a) const
 {
-  AssemblyBlock *a = new AssemblyBlock;
-  int paramCount = 0;
+	int paramCount = 0;
 
-  switch(type)
-  {
-  case ClassMethodCall:
-	  paramCount = PushParametersOntoStack(a, true);
-	  GenerateClassMethodCall(a);
-	  break;
+	switch(type)
+	{
+	case ClassMethodCall:
+		paramCount = PushParametersOntoStack(a, true);
+		GenerateClassMethodCall(a);
+		break;
+		
+	case FunctionObjectCall:
+		paramCount = PushParametersOntoStack(a, false);
+		GenerateFunctionObjectCall(a);
+		break;
 
-  case FunctionObjectCall:
-	  paramCount = PushParametersOntoStack(a, false);
-	  GenerateFunctionObjectCall(a);
-	  break;
-
-  case MethodCall:
-	  paramCount = PushParametersOntoStack(a, true);
-	  GenerateMethodCall(a);
-	  break;
-  }
-
-  // If we've passed any parameters on the stack, release the space on return
-  if(paramCount > 0)
-	  a->add(esp, *new Operand(paramCount * 12));
-
-  return a;
+	case MethodCall:
+		paramCount = PushParametersOntoStack(a, true);
+		GenerateMethodCall(a);
+		break;
+	}
+	
+	// If we've passed any parameters on the stack, release the space on return
+	if (paramCount > 0) {
+		a->add(esp, *new Operand(paramCount * 12));
+	}
 }
 
 void FunctionCallNode::GenerateClassMethodCall(AssemblyBlock *a) const
@@ -75,7 +73,7 @@ void FunctionCallNode::GenerateMethodCall(AssemblyBlock *a) const
 	}
 
 	// Put the receiver (i.e. this ) onto eax/ecx/edx
-	a->AppendBlock(Receiver()->GenerateCode());
+	Receiver()->GenerateCode(a);
 
 	a->mov(ebx, Dword(goatHash(name)));
 	a->call(edx);
@@ -97,8 +95,8 @@ int FunctionCallNode::PushParametersOntoStack(AssemblyBlock *a, bool skipFirst) 
 		i++; // Ignore the first node, which is the receiver
 
 	// Push the parameters onto the stack
-	while(i != end) {
-		a->AppendBlock(i->PushOntoStack());
+	while (i != end) {
+		i->PushOntoStack(a);
 		paramCount++;
 		i++;
 	}
@@ -107,13 +105,11 @@ int FunctionCallNode::PushParametersOntoStack(AssemblyBlock *a, bool skipFirst) 
 }
 
 // Pushes the value returned by calling the function on to the stack
-AssemblyBlock *FunctionCallNode::PushOntoStack() const
+void FunctionCallNode::PushOntoStack(AssemblyBlock* a) const
 {
-  AssemblyBlock *a = GenerateCode();
+	GenerateCode(a);
 
-  a->push( ecx );   // Type Hash of the object
-  a->push( edx );   // Dispatch Fnof the object
-  a->push( eax );   // Object payload
-
-  return a;
+	a->push(ecx);   // Type Hash of the object
+	a->push(edx);   // Dispatch Fnof the object
+	a->push(eax);   // Object payload
 }

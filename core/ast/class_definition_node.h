@@ -12,9 +12,10 @@ typedef std::list<ClassMethodAssignmentNode*> ClassMethodList;
 class ClassDefinitionNode : public ASTNode {
 public:
  ClassDefinitionNode( const std::string &_name ) : name(_name), lastVarPosition(0) {};
-  AssemblyBlock *GenerateCode() const;
-  AssemblyBlock *GetAuxiliaryCode();
-  void Analyse( Scope* );
+  void GenerateCode(AssemblyBlock*) const;
+  void GetAuxiliaryCode(AssemblyBlock*) const;
+  void GenerateInitializer(AssemblyBlock*) const;
+  void Analyse(Scope*);
 
   void AddClassVariable(const std::string&);
   int ClassVariablePosition(const std::string&) const;

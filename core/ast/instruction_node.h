@@ -4,7 +4,7 @@
 class InstructionNode : public ASTNode {
  public:
  InstructionNode(const std::string &_label, const std::string &_mnemonic) : label(_label), mnemonic(_mnemonic), firstOperand(NULL), lastOperand(NULL) {};
-  AssemblyBlock *GenerateCode() const;
+	void GenerateCode(AssemblyBlock *) const;
   void AppendOperand( OperandNode* );
   OperandIterator Operands() const { return OperandIterator(firstOperand); }
   std::string Print() const { return "Instruction: " + mnemonic; }

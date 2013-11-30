@@ -3,30 +3,30 @@
 #include "../lexer.h"
 #include "../i386/instruction.h"
 
-AssemblyBlock *InstructionNode::GenerateCode() const {
-  AssemblyBlock *a = new AssemblyBlock;
-  ::Instruction *ins = NULL;
-  OperandIterator end(NULL);
-  Operand *operands[3] = {NULL, NULL, NULL};
-  int j = 0;
+void InstructionNode::GenerateCode(AssemblyBlock* a) const 
+{
+	::Instruction *ins = NULL;
+	OperandIterator end(NULL);
+	Operand *operands[3] = {NULL, NULL, NULL};
+	int j = 0;
+	
+	for (OperandIterator i = Operands(); i != end; i++) {
+		if( j >= 3 ) {
+			// Uhh, we've a fourth operand.
+			// TODO - raise an error;
+			return;
+		}
+		operands[j] = i->GenerateOperand();
+		j++;
+	}
 
-  for(OperandIterator i = Operands(); i != end; i++) {
-    if( j >= 3 ) {
-      // Uhh, we've a fourth operand.
-      // TODO - raise an error;
-      return NULL;
-    }
-    operands[j] = i->GenerateOperand();
-    j++;
-  }
-
-  ins = new ::Instruction(mnemonic, operands[0], operands[1], operands[2]);
-
-  if(label.length() > 0)
-    ins->SetLabel( label );
-
-  a->AppendInstruction(ins);
-  return a;
+	ins = new ::Instruction(mnemonic, operands[0], operands[1], operands[2]);
+	
+	if (label.length() > 0) {
+		ins->SetLabel(label);
+	}
+	
+	a->AppendInstruction(ins);
 }
 
 void InstructionNode::AppendOperand( OperandNode *op ) {

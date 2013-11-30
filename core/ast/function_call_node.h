@@ -7,8 +7,8 @@ class FunctionCallNode : public ASTNode {
   ASTNode *Receiver() const { return firstChild; }
   void AddReceiver( ASTNode* );
   void Analyse( Scope* );
-  AssemblyBlock *GenerateCode() const;
-  AssemblyBlock *PushOntoStack() const;
+  void GenerateCode(AssemblyBlock*) const;
+  void PushOntoStack(AssemblyBlock*) const;
   std::string Print() const { return "FunctionCall: " + name; }
 
 #ifdef GOATTEST
